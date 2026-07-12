@@ -1,0 +1,52 @@
+# ~/.bashrc – NixOS 自定义命令
+
+# 1. 构建系统并自动打标签、上载
+rebuild() {
+    # 获取 sudo 权限
+    sudo -v || return 1
+
+    cd /etc/nixos || return
+    git add -A
+    local date_str=$(LC_TIME=C date '+%Y年%-m月%-d号 %p %I:%M:%S')
+    echo "🔨 开始编译（编译时间：${date_str}）"
+    start_time=$(date +%s)
+
+    if sudo nixos-rebuild switch --upgrade; then
+        end_time=$(date +%s)
+        elapsed=$((end_time - start_time))
+
+        # 获取新生成的世代编号
+        GEN=$(sudo nix-env -p /nix/var/nix/profiles/system --list-generations | tail -1 | awk '{print $1}')
+
+        # 提交更改（允许空提交）
+        git commit -m "gen-${GEN}: $(date +%m-%d_%H:%M) (耗时 ${elapsed}s)" --allow-empty
+
+        # 创建标签：格式 gen-世代号-年月日-时分秒
+        TAG="gen-${GEN}-$(date +%Y%m%d-%H%M%S)"
+        git tag "$TAG"
+
+        # 推送提交以及当前提交上的标签（不会推送其他标签）
+        git push --follow-tags
+
+        echo "✅ 编译成功，耗时 ${elapsed}s，世代 ${GEN} 已上载到github（标签 ${TAG}）"
+    else
+        echo "❌ 编译失败，未上载到github"
+        cd - > /dev/null
+        return 1
+    fi
+
+    cd - > /dev/null
+}
+
+# 2. 重启网络管理器
+net() {
+    sudo systemctl restart NetworkManager   &&  sudo nmtui
+}
+
+# 3. 查看最近 10 个系统世代（函数版）
+last10() {
+    nixos-rebuild list-generations | head -n 11
+}
+
+# 4. 快捷别名（等价于 last10）
+alias gens='nixos-rebuild list-generations | head -n 11'

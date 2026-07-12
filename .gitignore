@@ -1,0 +1,6 @@
+*.nixbak
+result
+.DS_Store
+*.bak*
+*~
+*.swp
