@@ -27,37 +27,36 @@
       };
 
       display.separator = " ";
-
       modules = [
-        "title"
-        "separator"
+  "title"
+  "separator"
 
-        { type = "os"; key = "󱄅"; }
-        { type = "kernel"; key = "󰒋"; }
-        { type = "host"; key = "󰇅"; }
-        { type = "uptime"; key = "󰅐"; }
-        { type = "packages"; key = "󰏖"; }
+  { type = "os"; key = "󱄅"; keyColor = "blue"; }
+  { type = "kernel"; key = "󰒋"; keyColor = "cyan"; }
+  { type = "host"; key = "󰇅"; keyColor = "magenta"; }
+  { type = "uptime"; key = "󰅐"; keyColor = "green"; }
+  { type = "packages"; key = "󰏖"; keyColor = "yellow"; }
 
-        { type = "wm"; key = "󰖯"; }
-        { type = "de"; key = "󰧨"; }
-        { type = "terminal"; key = ""; }
+  { type = "wm"; key = "󰖯"; keyColor = "magenta"; }
+  { type = "de"; key = "󰧨"; keyColor = "blue"; }
+  { type = "terminal"; key = ""; keyColor = "cyan"; }
 
-        "break"
+  "break"
 
-        { type = "cpu"; key = ""; }
-        { type = "gpu"; key = "󰢮"; }
-        { type = "memory"; key = ""; format = "{percentage} ({used}/{total})"; }
+  { type = "cpu"; key = ""; keyColor = "red"; }
+  { type = "gpu"; key = "󰢮"; keyColor = "green"; }
+  { type = "memory"; key = ""; keyColor = "yellow"; }
 
-        "break"
+  "break"
 
-        { type = "display"; key = "󰍹"; }
-        { type = "disk"; key = "󰋊"; }
-        { type = "localip"; key = "󰩟"; showIpv4 = true; }
+  { type = "display"; key = "󰍹"; keyColor = "blue"; }
+  { type = "disk"; key = "󰋊"; keyColor = "magenta"; }
+  { type = "localip"; key = "󰩟"; keyColor = "cyan"; showIpv4 = true; }
 
-        "break"
+  "break"
 
-        { type = "colors"; symbol = "block"; }
-      ];
+  { type = "colors"; symbol = "block"; }
+];
     };
   };
 }
