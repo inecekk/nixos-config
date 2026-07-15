@@ -31,30 +31,28 @@
   "title"
   "separator"
 
-  { type = "os"; key = "󱄅"; keyColor = "blue"; }
-  { type = "kernel"; key = "󰒋"; keyColor = "cyan"; }
-  { type = "host"; key = "󰇅"; keyColor = "magenta"; }
+  { type = "os"; key = "󱄅"; keyColor = "magenta"; }
+  { type = "kernel"; key = "󰒋"; keyColor = "blue"; }
+  { type = "host"; key = "󰇅"; keyColor = "cyan"; }
   { type = "uptime"; key = "󰅐"; keyColor = "green"; }
   { type = "packages"; key = "󰏖"; keyColor = "yellow"; }
 
   { type = "wm"; key = "󰖯"; keyColor = "magenta"; }
-  { type = "de"; key = "󰧨"; keyColor = "blue"; }
   { type = "terminal"; key = ""; keyColor = "cyan"; }
 
   "break"
 
-  { type = "cpu"; key = ""; keyColor = "red"; }
-  { type = "gpu"; key = "󰢮"; keyColor = "green"; }
+  { type = "cpu"; key = ""; keyColor = "green"; }
+  { type = "gpu"; key = "󰢮"; keyColor = "cyan"; }
   { type = "memory"; key = ""; keyColor = "yellow"; }
 
   "break"
 
-  { type = "display"; key = "󰍹"; keyColor = "blue"; }
-  { type = "disk"; key = "󰋊"; keyColor = "magenta"; }
+  { type = "disk"; key = "󰋊"; keyColor = "blue"; }
+  { type = "display"; key = "󰍹"; keyColor = "magenta"; }
   { type = "localip"; key = "󰩟"; keyColor = "cyan"; showIpv4 = true; }
 
   "break"
-
   { type = "colors"; symbol = "block"; }
 ];
     };
