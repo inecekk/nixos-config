@@ -17,5 +17,7 @@
       polkit libsecret
     ];
   };
+# 启用 UPower 硬件服务（Noctalia 电量必需）
+services.upower.enable = true;
 programs.niri.enable = true;
 }
