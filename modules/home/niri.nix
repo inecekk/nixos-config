@@ -44,7 +44,7 @@ in
       // code 透明
 	window-rule {
   	match app-id="code"
-  	opacity 0.7
+  	opacity 0.8
 }
 
       layout {
@@ -80,7 +80,7 @@ in
 
       // ==========================================
       // 4. 自启动程序
-spawn-at-startup "qs" "-c" "noctalia-shell"
+      spawn-at-startup "qs" "-c" "noctalia-shell"
       // 延迟拉起 dae 代理服务
       spawn-at-startup "sh" "-c" "sleep 3 && sudo systemctl start dae.service"
       
@@ -126,7 +126,7 @@ spawn-at-startup "qs" "-c" "noctalia-shell"
 "Mod+Shift+P" {
         spawn "sh" "-c" "playerctl -p mpv status && playerctl -p mpv stop || nohup mpv --shuffle --no-video --script-opts=mpris-player=mpv /home/lk/D/Music/ > /dev/null 2>&1 &";
     }
-// 2. Mod+Shift+Alt+P: 彻底关闭 mpv 后台进程
+   // 2. Mod+Shift+Alt+P: 彻底关闭 mpv 后台进程
     Mod+Alt+P { spawn "pkill" "-f" "mpv"; }
     //# === 播放控制 (针对 mpv 实例) ===
     //# -p mpv 参数确保只控制 mpv，而不影响浏览器或其他播放器
