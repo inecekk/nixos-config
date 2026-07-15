@@ -17,19 +17,28 @@
     scripts = [ pkgs.mpvScripts.mpris ];
   };
 
+  # 渐变字母 logo 的 ascii 文件，用 $1~$5 占位符标记每行颜色
+  xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
+$1 _   _ _      ___  ____
+$2| \ | (_)_  _/ _ \/ ___|
+$3|  \| | \ \/ / | | \___ \
+$4| |\  | |>  <| |_| |___) |
+$5|_| \_|_/_/\_\\___/|____/
+'';
+
   programs.fastfetch = {
     enable = true;
     settings = {
       logo = {
-        type = "raw";
-        source = ''
-${"\u001b[38;5;99m"} _   _ _      ___  ____
-${"\u001b[38;5;98m"}| \ | (_)_  _/ _ \/ ___|
-${"\u001b[38;5;68m"}|  \| | \ \/ / | | \___ \
-${"\u001b[38;5;44m"}| |\  | |>  <| |_| |___) |
-${"\u001b[38;5;43m"}|_| \_|_/_/\_\\___/|____/
-${"\u001b[0m"}
-'';
+        type = "file";
+        source = "~/.config/fastfetch/nixos-gradient.txt";
+        color = {
+          "1" = "38;5;99";
+          "2" = "38;5;98";
+          "3" = "38;5;68";
+          "4" = "38;5;44";
+          "5" = "38;5;43";
+        };
         padding = { top = 1; right = 4; };
       };
       display.separator = " ";
@@ -39,7 +48,7 @@ ${"\u001b[0m"}
         { type = "uptime"; key = "󰅐"; keyColor = "green"; }
         { type = "packages"; key = "󰏖"; keyColor = "yellow"; }
         { type = "wm"; key = "󰖯"; keyColor = "magenta"; }
-        { type = "shell"; key = ""; keyColor = "cyan"; }
+        { type = "shell"; key = "";  keyColor = "cyan"; }
         { type = "terminal"; key = ""; keyColor = "blue"; }
         "break"
         { type = "cpu"; key = ""; keyColor = "green"; }
