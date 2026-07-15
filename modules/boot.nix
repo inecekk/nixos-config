@@ -10,7 +10,7 @@ in
 {
   boot = {
     # --- 内核设置 ---
-    kernelPackages = pkgs.linuxPackages_latest; # 使用标准内核
+    kernelPackages = pkgs.linuxPackages; # 使用标准内核
     supportedFilesystems = [ "ntfs" ];   # NTFS 支持
     
     # 网络优化与安全
