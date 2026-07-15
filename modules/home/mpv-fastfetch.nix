@@ -17,13 +17,12 @@
     scripts = [ pkgs.mpvScripts.mpris ];
   };
 
-  xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
-$1 _   _ _       ____   _____ 
-$2| \ | (_)     / __ \ / ____|
-$3|  \| |___  _| |  | | (___  
-$4| . ` | \ \/ / |  | |\___ \ 
-$5| |\  | |>  <| |__| |____) |
-$6|_| \_|_/_/\_\\____/|_____/ 
+  xdg.configFile."fastfetch/nixos-block.txt".text = ''
+$1_|      _|  _|              _|_|      _|_|_|  
+$2_|_|    _|      _|    _|  _|    _|  _|        
+$3_|  _|  _|  _|    _|_|    _|    _|    _|_|    
+$4_|    _|_|  _|  _|    _|  _|    _|        _|  
+$5_|      _|  _|  _|    _|    _|_|    _|_|_|    
 '';
 
   programs.fastfetch = {
@@ -31,18 +30,20 @@ $6|_| \_|_/_/\_\\____/|_____/
     settings = {
       logo = {
         type = "file";
-        source = "~/.config/fastfetch/nixos-gradient.txt";
+        source = "~/.config/fastfetch/nixos-block.txt";
         color = {
           "1" = "38;5;99";
           "2" = "38;5;93";
-          "3" = "38;5;92";
-          "4" = "38;5;68";
-          "5" = "38;5;44";
-          "6" = "38;5;43";
+          "3" = "38;5;69";
+          "4" = "38;5;44";
+          "5" = "38;5;43";
         };
         padding = { top = 1; right = 4; };
       };
-      display.separator = " ";
+      display = {
+        separator = " ";
+        key = { width = 3; };
+      };
       modules = [
         { type = "os"; key = "󱄅 "; keyColor = "magenta"; }
         { type = "kernel"; key = "󰒋 "; keyColor = "blue"; }
