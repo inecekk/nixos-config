@@ -27,8 +27,7 @@
 
       # --- 桌面环境底层 ---
       niri
-# xwayland
-  polkit  libsecret
+      polkit  libsecret
     ];
   };
 }
