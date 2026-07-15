@@ -19,32 +19,23 @@
       ];
     };
   };
-
-  fonts = {
-    packages = with pkgs; [
-      noto-fonts-cjk-sans
-      noto-fonts-cjk-serif
-      source-han-sans
-      jetbrains-mono
-      nerd-fonts.jetbrains-mono
-      font-awesome
-      twemoji-color-font
-      noto-fonts-color-emoji
-      symbola
-      unifont
-      material-design-icons
-      papirus-icon-theme
-    ];
-    fontconfig = {
-      defaultFonts = {
-        sansSerif = [ "Noto Sans CJK SC" "JetBrains Mono Nerd Font" "Twemoji Color Font" ];
-        serif = [ "Noto Serif CJK SC" "Symbola" ];
-        monospace = [ "JetBrains Mono Nerd Font" "Noto Sans CJK SC" ];
-        emoji = [ "Twemoji Color Font" "Noto Color Emoji" ];
-      };
-      antialias = true;
-      hinting = { enable = true; style = "slight"; };
-      subpixel = { rgba = "rgb"; lcdfilter = "default"; };
+fonts = {
+  packages = with pkgs; [
+    noto-fonts-cjk-serif
+    nerd-fonts.jetbrains-mono
+    font-awesome
+    noto-fonts-color-emoji
+  ];
+  fontconfig = {
+    defaultFonts = {
+      sansSerif = [ "Noto Sans CJK SC" "JetBrains Mono Nerd Font" "Noto Color Emoji" ];
+      serif = [ "Noto Serif CJK SC" ];
+      monospace = [ "JetBrains Mono Nerd Font" "Noto Sans CJK SC" ];
+      emoji = [ "Noto Color Emoji" ];
     };
+    antialias = true;
+    hinting = { enable = true; style = "slight"; };
+    subpixel = { rgba = "rgb"; lcdfilter = "default"; };
   };
+};
 }
