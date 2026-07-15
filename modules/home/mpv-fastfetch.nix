@@ -17,13 +17,15 @@
     scripts = [ pkgs.mpvScripts.mpris ];
   };
 
-  # 渐变字母 logo 的 ascii 文件，用 $1~$5 占位符标记每行颜色
+  # 放大版渐变字母 logo
   xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
-$1 _   _ _      ___  ____
-$2| \ | (_)_  _/ _ \/ ___|
-$3|  \| | \ \/ / | | \___ \
-$4| |\  | |>  <| |_| |___) |
-$5|_| \_|_/_/\_\\___/|____/
+$1  _   _   _____  __  __
+$1 | \ | | |_ _\ \/ /
+$2 |  \| |  | | \  /
+$3 | |\  |  | | /  \
+$4 |_| \_| |___/_/\_\
+$5
+$5   ██████  ██████
 '';
 
   programs.fastfetch = {
@@ -39,7 +41,7 @@ $5|_| \_|_/_/\_\\___/|____/
           "4" = "38;5;44";
           "5" = "38;5;43";
         };
-        padding = { top = 1; right = 4; };
+        padding = { top = 2; right = 4; };
       };
       display.separator = " ";
       modules = [
@@ -48,18 +50,16 @@ $5|_| \_|_/_/\_\\___/|____/
         { type = "uptime"; key = "󰅐"; keyColor = "green"; }
         { type = "packages"; key = "󰏖"; keyColor = "yellow"; }
         { type = "wm"; key = "󰖯"; keyColor = "magenta"; }
-        { type = "shell"; key = "";  keyColor = "cyan"; }
-        { type = "terminal"; key = ""; keyColor = "blue"; }
+        { type = "shell"; key = "$"; keyColor = "cyan"; }
+        { type = "terminal"; key = ">_"; keyColor = "blue"; }
         "break"
-        { type = "cpu"; key = ""; keyColor = "green"; }
+        { type = "cpu"; key = "󰻠"; keyColor = "green"; }
         { type = "gpu"; key = "󰢮"; keyColor = "cyan"; }
-        { type = "memory"; key = ""; keyColor = "yellow"; }
+        { type = "memory"; key = "󰍛"; keyColor = "yellow"; }
         "break"
         { type = "disk"; key = "󰋊"; folders = [ "/" ]; keyColor = "blue"; }
         { type = "display"; key = "󰍹"; keyColor = "magenta"; }
         { type = "localip"; key = "󰩟"; keyColor = "cyan"; showIpv4 = true; }
-        "break"
-        { type = "colors"; symbol = "block"; }
       ];
     };
   };
