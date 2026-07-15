@@ -14,8 +14,8 @@
       iw pciutils usbutils
 
       # --- 桌面环境底层 ---
-      niri
       polkit libsecret
     ];
   };
+programs.niri.enable = true;
 }
