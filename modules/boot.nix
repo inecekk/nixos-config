@@ -21,6 +21,7 @@ in
     extraModprobeConfig = ''
       options cfg80211_regdom=CN
       options mac80211 minstrel_vht_only=0
+      options snd_hda_interpower_save=0 power_save_node=0
     '';
 
     # --- 内核引导参数 (Kernel Parameters) ---
@@ -31,7 +32,8 @@ in
       "amd_pmc.enable_stb=1"              # AMD 电源管理调试
       "amd_pmc.pref_ignore_msr=1"         # 忽略 MSR 错误
       "button.lid_init_state=method"      # 修复合盖状态检测
-      "amdgpu.runpm=1"                    # 启用 AMDGPU 运行时电源管理
+      "amdgpu.runpm=0"                    # 启用 AMDGPU 运行时电源管理
+      "pcie_aspm+force"
       "acpi_osi=!acpi_osi=Linux"          # 硬件兼容性伪装
     ];
 
