@@ -21,18 +21,18 @@
 
   fonts = {
     packages = with pkgs; [
-      wqy_microhei                # 文泉驿微米黑：体积极小(~5MB)的简体中文字体，牺牲部分美观度换空间
+      wqy_zenhei                   # 文泉正黑
       jetbrains-mono               # 原版等宽字体，无图标补丁，体积较小
-      nerd-fonts.symbols-only      # 仅图标字形，几MB大小，替代完整版 Nerd Font 补丁字体
+      nerd-fonts.symbols-only      # 仅图标
       noto-fonts-color-emoji       # 彩色 emoji（emoji 字体本身不大，暂保留）
     ];
 
     fontconfig = {
       defaultFonts = {
         # 无衬线：中文优先，其次代码字体，图标兜底，最后 emoji
-        sansSerif = [ "WenQuanYi Micro Hei" "JetBrains Mono" "Symbols Nerd Font Mono" "Noto Color Emoji" ];
-        serif = [ "WenQuanYi Micro Hei" ];  # 未装衬线字体，退化用无衬线代替
-        monospace = [ "JetBrains Mono" "Symbols Nerd Font Mono" "WenQuanYi Micro Hei" ];
+        sansSerif = [ "WenQuanYi Zen Hei Mono" "JetBrains Mono" "Symbols Nerd Font Mono" "Noto Color Emoji" ];
+        serif = [ "WenQuanYi Zen Hei Mono" ];  # 未装衬线字体，退化用无衬线代替
+        monospace = [ "JetBrains Mono" "Symbols Nerd Font Mono" "WenQuanYi Zen Hei Mono" ];
         emoji = [ "Noto Color Emoji" ];
       };
       antialias = true;                                   # 抗锯齿保留，高分屏下画质影响不大、开销很小
