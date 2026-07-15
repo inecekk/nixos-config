@@ -3,17 +3,16 @@
 {
   home-manager.users.lk = { pkgs, ... }: {
     imports = [
-        ./niri.nix ./foot.nix ./fcitx5-rime.nix ./mpv-fastfetch.nix
-        ./mako-mpd.nix ./rnote.nix ./noctalia.nix
-	./fish.nix  
-];
+      ./niri.nix ./foot.nix ./fcitx5-rime.nix ./mpv-fastfetch.nix
+      ./mako-mpd.nix ./rnote.nix ./noctalia.nix
+    ];
 
     home.stateVersion = "26.11";
 
     # --- 用户应用软件包 ---
     home.packages = with pkgs; [
       # 终端与文件：
-      fastfetch  yazi p7zip-rar imagemagick fish
+      fastfetch zsh yazi p7zip-rar imagemagick
       # Wayland 工具：
       grim slurp wl-clipboard wf-recorder foot libnotify
       # 浏览器：
