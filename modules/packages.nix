@@ -26,7 +26,7 @@
       iw pciutils usbutils
 
       # --- 桌面环境底层 ---
-      niri
+      niri  
 # xwayland
   polkit  libsecret
     ];

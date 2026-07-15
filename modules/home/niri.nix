@@ -444,13 +444,11 @@ in
           "Mod+E" hotkey-overlay-title="文件管理器" { spawn "nautilus"; }
 
           // --- 焦点移动 ---
-          "Mod+Z" hotkey-overlay-title="左移焦点" { focus-column-left; }
-          "Mod+C" hotkey-overlay-title="右移焦点" { focus-column-right; }
-          "Mod+D" hotkey-overlay-title="切换到下方工作区" { focus-workspace-down; }
+          "Mod+Left" hotkey-overlay-title="左移焦点" { focus-column-left; }
+          "Mod+Right" hotkey-overlay-title="右移焦点" { focus-column-right; }
+          "Mod+Up" hotkey-overlay-title="切换到上方工作区" { focus-workspace-up; }
+          "Mod+Down" hotkey-overlay-title="切换到下方工作区" { focus-workspace-down; }
 
-          "Mod+H" hotkey-overlay-title="左移焦点（备选）" { focus-column-left; }
-          "Mod+J" hotkey-overlay-title="下移焦点" { focus-window-down; }
-          "Mod+K" hotkey-overlay-title="上移焦点" { focus-window-up; }
 
           // --- 列/窗口移动 ---
           "Mod+Shift+Left" hotkey-overlay-title="左移列" { move-column-left; }
