@@ -1,6 +1,6 @@
 # modules/locale.nix
 # ==========================================
-# 本地化（中文环境）与字体配置
+# 本地化（中文环境）与字体配置（精简版）
 # ==========================================
 { pkgs, ... }:
 
@@ -20,31 +20,60 @@
     };
   };
 
+  # ==========================================
+  # 字体配置（仅中文 + 必备图标）
+  # ==========================================
   fonts = {
     packages = with pkgs; [
-      noto-fonts-cjk-sans
-      noto-fonts-cjk-serif
-      source-han-sans
-      jetbrains-mono
-      nerd-fonts.jetbrains-mono
-      font-awesome
-      twemoji-color-font
-      noto-fonts-color-emoji
-      symbola
-      unifont
-      material-design-icons
-      papirus-icon-theme
+      # --- 中文字体 ---
+      noto-fonts-cjk-sans      # Noto 无衬线中文
+      noto-fonts-cjk-serif     # Noto 衬线中文（备选）
+      
+      # --- 图标字体（终端/状态栏需要） ---
+      font-awesome             # 图标字体（Niri/Noctalia 需要）
+      noto-fonts-color-emoji   # 彩色表情（修复：使用正确的包名）
+      
+      # 英文字体使用系统自带的 dejavu，不额外安装
     ];
+    
     fontconfig = {
+      enable = true;
+      
       defaultFonts = {
-        sansSerif = [ "Noto Sans CJK SC" "JetBrains Mono Nerd Font" "Twemoji Color Font" ];
-        serif = [ "Noto Serif CJK SC" "Symbola" ];
-        monospace = [ "JetBrains Mono Nerd Font" "Noto Sans CJK SC" ];
-        emoji = [ "Twemoji Color Font" "Noto Color Emoji" ];
+        # 无衬线字体
+        sansSerif = [
+          "Noto Sans CJK SC"    # 中文主字体
+          "DejaVu Sans"         # 系统自带英文后备
+        ];
+        
+        # 衬线字体
+        serif = [
+          "Noto Serif CJK SC"   # 中文衬线
+          "DejaVu Serif"        # 系统自带英文后备
+        ];
+        
+        # 等宽字体（终端/代码）
+        monospace = [
+          "Noto Sans Mono CJK SC"  # 中文等宽
+          "DejaVu Sans Mono"       # 系统自带英文后备
+        ];
+        
+        # 表情字体
+        emoji = [
+          "Noto Color Emoji"    # 彩色表情
+        ];
       };
+      
+      # 渲染优化
       antialias = true;
-      hinting = { enable = true; style = "slight"; };
-      subpixel = { rgba = "rgb"; lcdfilter = "default"; };
+      hinting = {
+        enable = true;
+        style = "slight";
+      };
+      subpixel = {
+        rgba = "rgb";
+        lcdfilter = "default";
+      };
     };
   };
 }
