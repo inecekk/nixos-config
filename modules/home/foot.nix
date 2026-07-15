@@ -7,7 +7,7 @@
   xdg.configFile."foot/foot.ini".text = ''
     [main]
     # 字体与大小
-    font=JetBrains Mono,WenQuanYi Zen Hei Mono,Symbols Nerd Font Mono:size=16
+    font=JetBrains Mono:size=12
     # 内边距，4x4 像素，居中
     pad=4x4 center
     # 选中文本后自动复制到系统剪贴板
