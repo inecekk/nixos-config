@@ -25,27 +25,37 @@
         type = "auto";
         padding = { top = 1; right = 4; };
       };
-      display.separator = " 󰁔 ";
+
+      display.separator = " ";
+
       modules = [
         "title"
         "separator"
-        { type = "os"; key = "󱄅 OS"; }
-        { type = "kernel"; key = "󰒋 Kernel"; }
-        { type = "host"; key = "󰇅 Host"; }
-        { type = "uptime"; key = "󰅐 Uptime"; }
-        { type = "packages"; key = "󰏖 Packages"; }
-        { type = "wm"; key = "󰖯 WM"; }
-        { type = "de"; key = "󰧨 DE"; }
-        { type = "terminal"; key = " Terminal"; }
+
+        { type = "os"; key = "󱄅"; }
+        { type = "kernel"; key = "󰒋"; }
+        { type = "host"; key = "󰇅"; }
+        { type = "uptime"; key = "󰅐"; }
+        { type = "packages"; key = "󰏖"; }
+
+        { type = "wm"; key = "󰖯"; }
+        { type = "de"; key = "󰧨"; }
+        { type = "terminal"; key = ""; }
+
         "break"
-        { type = "cpu"; key = " CPU"; }
-        { type = "gpu"; key = "󰢮 GPU"; }
-        { type = "memory"; key = " Memory"; format = "{percentage} ({used}/{total})"; }
+
+        { type = "cpu"; key = ""; }
+        { type = "gpu"; key = "󰢮"; }
+        { type = "memory"; key = ""; format = "{percentage} ({used}/{total})"; }
+
         "break"
-        { type = "display"; key = "󰍹 Display"; }
-        { type = "disk"; key = "󰋊 Disk"; }
-        { type = "localip"; key = "󰩟 IP"; showIpv4 = true; }
+
+        { type = "display"; key = "󰍹"; }
+        { type = "disk"; key = "󰋊"; }
+        { type = "localip"; key = "󰩟"; showIpv4 = true; }
+
         "break"
+
         { type = "colors"; symbol = "block"; }
       ];
     };
