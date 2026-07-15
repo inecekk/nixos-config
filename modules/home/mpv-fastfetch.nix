@@ -33,12 +33,12 @@
 
   { type = "os"; key = "󱄅"; keyColor = "magenta"; }
   { type = "kernel"; key = "󰒋"; keyColor = "blue"; }
-  { type = "host"; key = "󰇅"; keyColor = "cyan"; }
   { type = "uptime"; key = "󰅐"; keyColor = "green"; }
   { type = "packages"; key = "󰏖"; keyColor = "yellow"; }
 
   { type = "wm"; key = "󰖯"; keyColor = "magenta"; }
-  { type = "terminal"; key = ""; keyColor = "cyan"; }
+  { type = "shell"; key = ""; keyColor = "cyan"; }
+  { type = "terminal"; key = ""; keyColor = "blue"; }
 
   "break"
 
@@ -48,13 +48,15 @@
 
   "break"
 
-  { type = "disk"; key = "󰋊"; keyColor = "blue"; }
+  { type = "disk"; key = "󰋊"; folders = [ "/" ]; keyColor = "blue"; }
   { type = "display"; key = "󰍹"; keyColor = "magenta"; }
   { type = "localip"; key = "󰩟"; keyColor = "cyan"; showIpv4 = true; }
 
   "break"
+
   { type = "colors"; symbol = "block"; }
-];
+]; 
+
     };
   };
 }
