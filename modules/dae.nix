@@ -14,11 +14,11 @@
   };
   # 禁用服务自动随开机启动，改为由 Timer 触发
   systemd.services.dae.wantedBy = lib.mkForce [];
-  # 创建一个定时器，在开机/登录后 15 秒触发启动
+  # 创建一个定时器，在开机/登录后 9 秒触发启动
   systemd.timers.dae-delayed = {
     wantedBy = [ "timers.target" ];
     timerConfig = {
-      OnBootSec = "15s";
+      OnBootSec = "9s";
       Unit = "dae.service";
     };
   };
