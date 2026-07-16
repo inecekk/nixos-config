@@ -2,7 +2,7 @@
 # ==========================================
 # 系统服务、睡眠/唤醒逻辑、音频、图形等
 # ==========================================
-{ pkgs, config, lib, ... }:   # 注意添加 config, lib 以便使用用户信息
+{ pkgs, config, lib, ... }:
 
 {
   # ==========================================
@@ -67,8 +67,8 @@
     powerDownCommands = ''
       # 注：MPD 关闭与静音已由上方的 pre-suspend-mute 服务提前安全处理
 
-      # 关闭蓝牙（省电）
-      ${pkgs.bluez}/bin/bluetoothctl power on
+      # 关闭蓝牙（修正原配置中 power on 的笔误）
+      ${pkgs.bluez}/bin/bluetoothctl power off
 
       # 关闭 WiFi
       ${pkgs.networkmanager}/bin/nmcli radio wifi off
@@ -78,17 +78,12 @@
         grep -q "$dev.*enabled" /proc/acpi/wakeup && echo "$dev" > /proc/acpi/wakeup
       done
 
-      # 纯原生 shell 逻辑：强行清理并杀死正在读写 /home/lk/D 的所有进程，防止卸载挂死
-      # 遍历 /proc/*/mountinfo 寻找占用 /home/lk/D 目录的进程 PID，并强行 kill -9
-      for pid in $(grep -l "/home/lk/D" /proc/*/mountinfo 2>/dev/null | cut -d'/' -f3); do
-        if [ "$pid" -eq "$pid" ] 2>/dev/null; then
-          kill -9 "$pid" 2>/dev/null || true
-        fi
-      done
+      # 健壮的防卡死挂载处理：对 /home/lk/D 执行 Lazy Umount（懒卸载）
+      # 懒卸载会立即将目录从文件系统树中分离，让系统得以顺利睡眠，而不会因为进程占用引发死锁
+      /run/current-system/sw/bin/umount -l /home/lk/D 2>/dev/null || true
 
-      # 杀掉用户进程（以用户 lk 身份执行）
-      # 使用 su 切换用户执行 pkill，避免 root 误杀系统进程
-      ${pkgs.su} - lk -c "${pkgs.procps}/bin/pkill -9 -x 'qq|chrome|zen|vscode' 2>/dev/null || true"
+      # 杀掉用户高耗能或卡挂载进程（以 root 权限直接向 lk 用户精确发送信号，不使用 su，防止 PAM 锁定）
+      /run/current-system/sw/bin/pkill -9 -u lk -x 'qq|chrome|zen|vscode' 2>/dev/null || true
     '';
 
     # ----- 唤醒后执行（root 权限） -----
@@ -120,8 +115,10 @@
   # ==========================================
   # 5. 硬件补丁（AMD GPU 电源控制）
   # ==========================================
+  # 注意：强制设置 PCI 设备的 power/control="on" 可能会阻止显卡在全局挂起时降级供电，
+  # 导致某些主板/内核无法完成 suspend。如果依然睡死，请保持下方注释状态。
   services.udev.extraRules = ''
-    ACTION=="suspend", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{device}=="0x1681", ATTR{power/control}="on"
+    # ACTION=="suspend", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{device}=="0x1681", ATTR{power/control}="on"
   '';
 
   # ==========================================
