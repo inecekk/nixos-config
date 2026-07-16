@@ -10,8 +10,7 @@
 
     # --- 用户应用软件包 ---
     home.packages = with pkgs; [
-      # 个人 CLI 工具（从系统层挪过来的）：
-      git gnused tree wget foot
+      git gnused tree wget foot bluetui
       # 终端与文件：
       btop fish zsh yazi p7zip-rar imagemagick
       # Wayland 工具：
