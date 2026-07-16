@@ -13,8 +13,8 @@ binds {
         "Mod+G"               hotkey-overlay-title="Chrome 浏览器"   { spawn "google-chrome-stable"; }
         "Mod+Z"               hotkey-overlay-title="Zen 浏览器"      { spawn "zen"; }
         "Mod+Shift+M"         hotkey-overlay-title="Materialgram"   { spawn "materialgram"; }
-        "Mod+Shift+Q"         hotkey-overlay-title="QQ"             { spawn "qq"; }
-        "Mod+Shift+C"         hotkey-overlay-title="VSCode"         { spawn "code"; }
+        "Mod+Shift+Q" 	      hotkey-overlay-title="QQ" { spawn "sh" "-c" "qq --enable-features=UseOzonePlatform --ozone-platform=wayland"; }
+	"Mod+Shift+C"         hotkey-overlay-title="VSCode"         { spawn "code"; }
         "Mod+M"               hotkey-overlay-title="音乐控制"        { spawn "foot" "-e" "rmpc"; }
 
         // --- 3. 窗口与布局控制 ---
