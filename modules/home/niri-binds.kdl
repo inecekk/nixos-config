@@ -65,8 +65,11 @@ binds {
         "XF86AudioPlay"       hotkey-overlay-title="MPV 播放/暂停"   { spawn "playerctl" "-p" "mpv" "play-pause"; }
         "Mod+Period"          hotkey-overlay-title="MPV 下一首"      { spawn "playerctl" "-p" "mpv" "next"; }
         "Mod+Comma"           hotkey-overlay-title="MPV 上一首"      { spawn "playerctl" "-p" "mpv" "previous"; }
-
-        // --- 7. Noctalia 系统控制 ---
+	// 其它
+	"Mod+Alt+Slash" hotkey-overlay-title="资源监控 (btop 内存前50)" {
+    spawn "foot" "--geometry=100x40" "-e" "btop" "--preset" "mem" "--proc_per_page" "50"
+}
+	// --- 7. Noctalia 系统控制 ---
         "Mod+Alt+B"           hotkey-overlay-title="蓝牙切换"         { spawn "noctalia" "msg" "bluetooth-toggle"; }
         "Mod+Alt+W"           hotkey-overlay-title="Wi-Fi 切换"       { spawn "noctalia" "msg" "wifi-toggle"; }
         "Mod+Alt+M"           hotkey-overlay-title="麦克风静音"       { spawn "noctalia" "msg" "mic-mute"; }
@@ -80,7 +83,4 @@ binds {
         "Mod+Ctrl+D"          hotkey-overlay-title="切换 Dock"        { spawn "noctalia" "msg" "dock-toggle"; }
         "Mod+Ctrl+W"          hotkey-overlay-title="切换小部件"       { spawn "noctalia" "msg" "desktop-widgets-toggle"; }
         "Mod+Ctrl+M"          hotkey-overlay-title="主题切换"         { spawn "noctalia" "msg" "theme-mode-toggle"; }
-        "Mod+Alt+Slash" hotkey-overlay-title="资源监控 (Top 30)" {
-        spawn "foot" "-e" "sh" "-c" "top -b -n 1 -o %MEM | head -n 30; read -p '按回车退出...'"
-}
 }
