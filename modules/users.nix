@@ -5,8 +5,8 @@
 { ... }:
 
 {
-  users.users.lk = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "bluetooth" "storage" "disk" "video" "input" "mpd" ];
-  };
+        users.users.lk = {
+        isNormalUser = true;
+        extraGroups = [ "wheel" "networkmanager" "bluetooth" "storage" "disk" "video" "input" "mpd" ];
+        };
 }

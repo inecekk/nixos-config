@@ -42,15 +42,15 @@ echo ""
 read -rp "请选择 [0-3]: " CHOICE
 
 case "$CHOICE" in
-    1|2) INSTALL_MODE="$CHOICE" ;;
-    3)
+        1|2) INSTALL_MODE="$CHOICE" ;;
+        3)
         TMP_CONFIG=$(mktemp -d)
         git clone "$REPO_URL" "$TMP_CONFIG"
         mkdir -p /etc/nixos && cp -a "$TMP_CONFIG"/. /etc/nixos/
         chown -R 1000:100 /etc/nixos
         ok "仓库已克隆到 /etc/nixos"; exit 0 ;;
-    0) info "已退出"; exit 0 ;;
-    *) err "无效选择" ;;
+        0) info "已退出"; exit 0 ;;
+        *) err "无效选择" ;;
 esac
 
 TARGET_USER="$DEFAULT_USER"
@@ -60,28 +60,28 @@ EXTRA_PKGS=()
 # [选项2] 自定义用户名
 # ============================================
 if [[ "$INSTALL_MODE" == "2" ]]; then
-    read -rp "请输入新用户名 (回车使用默认 $DEFAULT_USER): " INPUT_USER
-    TARGET_USER="${INPUT_USER:-$DEFAULT_USER}"
-    if ! [[ "$TARGET_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]; then
+        read -rp "请输入新用户名 (回车使用默认 $DEFAULT_USER): " INPUT_USER
+        TARGET_USER="${INPUT_USER:-$DEFAULT_USER}"
+        if ! [[ "$TARGET_USER" =~ ^[a-z_][a-z0-9_-]*$ ]]; then
         err "用户名 '$TARGET_USER' 不合法 (仅允许小写字母、数字、下划线、连字符)"
-    fi
-    info "目标用户名: $TARGET_USER"
+        fi
+        info "目标用户名: $TARGET_USER"
 
-    # ============================================
-    # [选项2] 自定义额外软件包
-    # ============================================
-    echo ""
-    info "输入需要额外安装的软件包名 (nixpkgs 属性名)"
-    info "多个软件用空格分隔，留空跳过"
-    info "示例: htop neovim tmux ripgrep fd"
-    read -rp "额外软件包: " PKG_INPUT
-    
-    if [[ -n "$PKG_INPUT" ]]; then
+        # ============================================
+        # [选项2] 自定义额外软件包
+        # ============================================
+        echo ""
+        info "输入需要额外安装的软件包名 (nixpkgs 属性名)"
+        info "多个软件用空格分隔，留空跳过"
+        info "示例: htop neovim tmux ripgrep fd"
+        read -rp "额外软件包: " PKG_INPUT
+        
+        if [[ -n "$PKG_INPUT" ]]; then
         read -ra EXTRA_PKGS <<< "$PKG_INPUT"
         info "将注入以下额外软件: ${EXTRA_PKGS[*]}"
-    else
+        else
         info "未指定额外软件，使用仓库默认软件列表"
-    fi
+        fi
 fi
 
 # ============================================
@@ -127,29 +127,29 @@ nixos-generate-config --show-hardware-config > "$TMP_CONFIG/hardware-configurati
 # [自定义模式] 替换用户名
 # ============================================
 if [[ "$INSTALL_MODE" == "2" && "$TARGET_USER" != "$DEFAULT_USER" ]]; then
-    info "替换用户名: $DEFAULT_USER → $TARGET_USER"
-    sed -i "s/\b${DEFAULT_USER}\b/${TARGET_USER}/g" "$TMP_CONFIG/flake.nix"
-    find "$TMP_CONFIG" -type f \( -name "*.nix" -o -name "*.kdl" -o -name "*.ini" \) \
+        info "替换用户名: $DEFAULT_USER → $TARGET_USER"
+        sed -i "s/\b${DEFAULT_USER}\b/${TARGET_USER}/g" "$TMP_CONFIG/flake.nix"
+        find "$TMP_CONFIG" -type f \( -name "*.nix" -o -name "*.kdl" -o -name "*.ini" \) \
         -exec sed -i "s|/home/${DEFAULT_USER}|/home/${TARGET_USER}|g" {} +
-    ok "用户名替换完成"
+        ok "用户名替换完成"
 fi
 
 # ============================================
 # [自定义模式] 自动扫描并替换 NTFS UUID
 # ============================================
 if [[ "$INSTALL_MODE" == "2" ]]; then
-    info "扫描本机 NTFS 分区..."
-    mapfile -t NTFS_PARTS < <(
+        info "扫描本机 NTFS 分区..."
+        mapfile -t NTFS_PARTS < <(
         blkid -t TYPE=ntfs -o device 2>/dev/null | while read dev; do
-            size=$(blockdev --getsize64 "$dev" 2>/dev/null || echo 0)
-            echo "$size $dev"
+        size=$(blockdev --getsize64 "$dev" 2>/dev/null || echo 0)
+        echo "$size $dev"
         done | sort -rn | awk '{print $2}'
-    )
+        )
 
-    OLD_UUID_C="752A6785456870B8"
-    OLD_UUID_D="4A9ED0D09ED0B5A3"
+        OLD_UUID_C="752A6785456870B8"
+        OLD_UUID_D="4A9ED0D09ED0B5A3"
 
-    if [[ ${#NTFS_PARTS[@]} -ge 2 ]]; then
+        if [[ ${#NTFS_PARTS[@]} -ge 2 ]]; then
         NEW_UUID_C=$(blkid -s UUID -o value "${NTFS_PARTS[0]}")
         NEW_UUID_D=$(blkid -s UUID -o value "${NTFS_PARTS[1]}")
         info "NTFS 分区映射:"
@@ -158,32 +158,32 @@ if [[ "$INSTALL_MODE" == "2" ]]; then
         sed -i "s/${OLD_UUID_C}/${NEW_UUID_C}/g" "$TMP_CONFIG/flake.nix"
         sed -i "s/${OLD_UUID_D}/${NEW_UUID_D}/g" "$TMP_CONFIG/flake.nix"
         ok "UUID 替换成功"
-    else
+        else
         warn "未找到足够 NTFS 分区，保留原始 UUID"
-    fi
+        fi
 fi
 
 # ============================================
 # [自定义模式] 注入额外软件包
 # ============================================
 if [[ "$INSTALL_MODE" == "2" && ${#EXTRA_PKGS[@]} -gt 0 ]]; then
-    info "向 environment.systemPackages 注入额外软件..."
-    
-    # 构建要插入的 nix 表达式片段
-    INJECT_LINES=""
-    for pkg in "${EXTRA_PKGS[@]}"; do
+        info "向 environment.systemPackages 注入额外软件..."
+        
+        # 构建要插入的 nix 表达式片段
+        INJECT_LINES=""
+        for pkg in "${EXTRA_PKGS[@]}"; do
         INJECT_LINES+="              pkgs.${pkg}\n"
-    done
-    
-    # 在 systemPackages 列表的第一个元素前插入额外软件
-    # 匹配 "# 基础工具与终端" 注释作为锚点，确保插入位置正确
-    sed -i "/# 基础工具与终端/a\\${INJECT_LINES}" "$TMP_CONFIG/flake.nix"
-    
-    if grep -q "pkgs.${EXTRA_PKGS[0]}" "$TMP_CONFIG/flake.nix"; then
+        done
+        
+        # 在 systemPackages 列表的第一个元素前插入额外软件
+        # 匹配 "# 基础工具与终端" 注释作为锚点，确保插入位置正确
+        sed -i "/# 基础工具与终端/a\\${INJECT_LINES}" "$TMP_CONFIG/flake.nix"
+        
+        if grep -q "pkgs.${EXTRA_PKGS[0]}" "$TMP_CONFIG/flake.nix"; then
         ok "成功注入 ${#EXTRA_PKGS[@]} 个额外软件包"
-    else
+        else
         warn "软件包注入可能失败，请安装后检查 flake.nix"
-    fi
+        fi
 fi
 
 # ============================================

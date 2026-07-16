@@ -6,15 +6,15 @@
 { ... }:
 
 {
-  xdg.configFile."fcitx5/rime/default.custom.yaml" = {
-    force = true;
-    text = ''
-      patch:
+        xdg.configFile."fcitx5/rime/default.custom.yaml" = {
+        force = true;
+        text = ''
+        patch:
         schema_list:
-          - schema: double_pinyin_flypy
-          - schema: rime_ice
+        - schema: double_pinyin_flypy
+        - schema: rime_ice
         switcher/hotkeys:
-          - F4
-    '';
-  };
+        - F4
+        '';
+        };
 }

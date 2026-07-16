@@ -7,13 +7,13 @@
 
 ntest() {
 
-    cd /etc/nixos || return
+        cd /etc/nixos || return
 
-    echo "🧪 测试 NixOS 配置..."
+        echo "🧪 测试 NixOS 配置..."
 
-    sudo nixos-rebuild test
+        sudo nixos-rebuild test
 
-    cd - >/dev/null
+        cd - >/dev/null
 }
 
 
@@ -24,23 +24,23 @@ ntest() {
 
 rebuild() {
 
-    sudo -v || return 1
+        sudo -v || return 1
 
-    cd /etc/nixos || return
-
-
-    git add -A
+        cd /etc/nixos || return
 
 
-    local start_time
-    start_time=$(date +%s)
+        git add -A
 
 
-    echo "🔨 开始构建 NixOS..."
+        local start_time
+        start_time=$(date +%s)
+
+
+        echo "🔨 开始构建 NixOS..."
 
 
 
-    if sudo nixos-rebuild switch; then
+        if sudo nixos-rebuild switch; then
 
 
         local end_time
@@ -85,7 +85,7 @@ rebuild() {
 
 
 
-    else
+        else
 
         echo "❌ NixOS 构建失败"
 
@@ -93,10 +93,10 @@ rebuild() {
 
         return 1
 
-    fi
+        fi
 
 
-    cd - >/dev/null
+        cd - >/dev/null
 }
 
 
@@ -107,8 +107,8 @@ rebuild() {
 
 net(){
 
-    sudo systemctl restart NetworkManager &&
-    sudo nmtui
+        sudo systemctl restart NetworkManager &&
+        sudo nmtui
 
 }
 
@@ -120,8 +120,8 @@ net(){
 
 last10(){
 
-    nixos-rebuild list-generations |
-    head -n 11
+        nixos-rebuild list-generations |
+        head -n 11
 
 }
 
@@ -136,16 +136,16 @@ alias gens='last10'
 
 git_branch(){
 
-    local branch
+        local branch
 
-    branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+        branch=$(git symbolic-ref --short HEAD 2>/dev/null)
 
 
-    if [ -n "$branch" ]; then
+        if [ -n "$branch" ]; then
 
         echo "git:($branch)"
 
-    fi
+        fi
 
 }
 
