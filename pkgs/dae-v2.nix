@@ -1,22 +1,18 @@
-{ lib, stdenv, fetchurl, autoPatchelfHook }:
-
+{ lib, stdenv, fetchurl, unzip, autoPatchelfHook }:
 stdenv.mkDerivation rec {
   pname = "dae";
   version = "2.0.0";
-
   src = fetchurl {
-    url = "https://github.com/daeuniverse/dae/releases/download/v${version}/dae-linux-x86_64_v3_avx2.tar.xz";
-    sha256 = "c78f8296fea28a9597fb7396f35019929aca7cc20af8362b7e07074d14722ffb";
+    url = "https://github.com/daeuniverse/dae/releases/download/v${version}/dae-linux-x86_64_v3_avx2.zip";
+    sha256 = "3f6ece3edd3f452fb9974a3ca70692f5b52a23ee42b83477e01dd9aed43a2bf7";
   };
-
-  nativeBuildInputs = [ autoPatchelfHook ];
-
+  nativeBuildInputs = [ unzip autoPatchelfHook ];
   sourceRoot = ".";
-
-installPhase = ''
+  unpackCmd = "unzip $curSrc";
+  installPhase = ''
     runHook preInstall
     mkdir -p $out/bin
-    install -m755 usr/bin/dae $out/bin/dae
+    install -m755 dae-linux-x86_64_v3_avx2 $out/bin/dae
     runHook postInstall
   '';
   meta = with lib; {

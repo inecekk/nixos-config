@@ -4,6 +4,7 @@
   imports = [ inputs.daeuniverse.nixosModules.dae ];
   services.dae = {
     enable = true;
+    package = pkgs.callPackage ../pkgs/dae-v2.nix {};
     openFirewall = {
       enable = true;
       port = 12345;
