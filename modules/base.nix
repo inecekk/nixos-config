@@ -3,8 +3,8 @@
 # 系统基础设置：时区、状态版本、杂项开关
 # ==========================================
 { config, lib, pkgs, ... }:
-
 {
+        programs.fish.enable = true; # 启用fish 
         time.timeZone = "Asia/Shanghai";
         time.hardwareClockInLocalTime = false;
         system.stateVersion = "26.05";
