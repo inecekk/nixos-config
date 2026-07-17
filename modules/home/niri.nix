@@ -39,6 +39,13 @@ in
         default-column-width {
         proportion 0.5
         }
+	// Noctalia 状态栏关闭模糊，保留透明
+        layer-rule {
+        match namespace="^noctalia-(bar-[^\"]+)$"
+        background-effect {
+        blur false
+        }
+        }
         focus-ring {
         width 4
         active-color "#a0e8af20"

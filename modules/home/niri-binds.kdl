@@ -2,7 +2,7 @@ binds {
         // --- 1. 系统通用与截图 ---
         "Mod+Slash"             hotkey-overlay-title="快捷键帮助"         { show-hotkey-overlay; }
         "Mod+Shift+E"           hotkey-overlay-title="退出 Niri"          { quit; }
-        "Mod+S"                 hotkey-overlay-title="区域截图"           { spawn "noctalia" "msg" "screenshot-region"; }
+        "Mod+S"                 hotkey-overlay-title="区域截图"           { screenshot; }
 
         // --- 2. 应用启动 ---
         "Mod+Return"            hotkey-overlay-title="启动终端"           { spawn "foot"; }
@@ -12,8 +12,9 @@ binds {
         "Mod+Shift+C"           hotkey-overlay-title="VSCode"             { spawn "code"; }
         "Mod+Shift+M"           hotkey-overlay-title="Materialgram"       { spawn "materialgram"; }
         "Mod+Shift+Q"           hotkey-overlay-title="QQ"                 { spawn "sh" "-c" "qq --enable-features=UseOzonePlatform --ozone-platform=wayland"; }
-        "Mod+M"                 hotkey-overlay-title="Musicfox"           { spawn "foot" "-e" "musicfox"; }
-
+        "Mod+M" 		hotkey-overlay-title="Musicfox" {
+        spawn "sh" "-c" "if pgrep -x 'musicfox'; then pkill -x 'musicfox'; else foot -e musicfox; fi"
+    }
         // --- 3. Noctalia 面板交互 (Panel Control) ---
         "Mod+A"                 hotkey-overlay-title="控制面板"           { spawn "noctalia" "panel-open" "control-center"; }
         "Mod+N"                 hotkey-overlay-title="通知中心"           { spawn "noctalia" "panel-open" "notifications"; }
