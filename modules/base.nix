@@ -4,7 +4,7 @@
 # ==========================================
 { config, lib, pkgs, ... }:
 {
-        programs.fish.enable = true; # 启用fish 
+     #   programs.fish.enable = true; # 启用fish 
         time.timeZone = "Asia/Shanghai";
         time.hardwareClockInLocalTime = false;
         system.stateVersion = "26.05";
