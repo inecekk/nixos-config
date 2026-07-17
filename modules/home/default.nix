@@ -4,7 +4,7 @@
         imports = [
         ./niri.nix ./foot.nix ./fcitx5-rime.nix ./mpv-fastfetch.nix
         ./mako-mpd.nix ./rnote.nix ./noctalia.nix
-	./yambar.nix	
+        #./yambar.nix	
         ];
 
         home.stateVersion = "26.11";

@@ -8,8 +8,8 @@
         [main]
         # 字体与大小
         font=JetBrains Mono:size=12
-        # 内边距，4x4 像素，居中
-        pad=4x4 center
+        # 内边距，
+        pad=2x2 center
         # 选中文本后自动复制到系统剪贴板
         selection-target=clipboard
         horizontal-letter-offset=0
