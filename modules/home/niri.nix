@@ -31,7 +31,7 @@ in
 
         window-rule {
                 match app-id="code"                                // 匹配 VS Code 窗口
-                opacity 0.8                                        // 设为 80% 不透明度（半透明）
+                opacity 0.85                                        // 设为 85% 不透明度（半透明）
         }
 
         layout {

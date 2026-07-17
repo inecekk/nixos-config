@@ -2,6 +2,8 @@
 
 基于 NixOS Flakes 管理的个人系统配置，使用 [niri](https://github.com/YaLTeR/niri) 作为 Wayland 合成器，配合 home-manager 管理用户环境。
 
+> English version: [README.en.md](./README.en.md)
+
 ## 目录结构
 
 ```
@@ -41,7 +43,8 @@
 │   └── users.nix               # 用户账户定义
 ├── pkgs
 │   └── dae-v2.nix              # dae 代理软件的自定义 derivation
-├── README.md                   # 本文档
+├── README.md                   # 本文档（中文）
+├── README.en.md                # 英文文档
 └── result -> /nix/store/...    # nixos-rebuild build 产物软链（不纳入版本控制）
 ```
 
@@ -49,14 +52,11 @@
 
 ### 窗口管理：niri
 
-- 使用 [niri](https://github.com/YaLTeR/niri) 滚动平铺式 Wayland 合成器，配置在 `modules/home/niri.nix`，快捷键单独维护在 `modules/home/niri-binds.kdl`。
-- 已启用窗口圆角（`geometry-corner-radius`）、阴影、焦点边框，并通过 `layout.gaps` / `layout.struts` 分别控制窗口间距与屏幕四边的整体留白。
-- 通过 `layer-rule` 显式关闭了 Noctalia 状态栏/面板/dock/通知/OSD 的合成器背景模糊（`ext-background-effects`），需要 niri ≥ 26.04。
+使用 [niri](https://github.com/YaLTeR/niri) 滚动平铺式 Wayland 合成器，配置在 `modules/home/niri.nix`，快捷键单独维护在 `modules/home/niri-binds.kdl`。已启用窗口圆角（`geometry-corner-radius`）、阴影、焦点边框，并通过 `layout.gaps` / `layout.struts` 分别控制窗口间距与屏幕四边的整体留白。通过 `layer-rule` 显式关闭了 Noctalia 状态栏/面板/dock/通知/OSD 的合成器背景模糊（`ext-background-effects`），需要 niri ≥ 26.04。
 
 ### 状态栏：Noctalia（当前） / waybar、yambar（已弃用）
 
-- 当前使用 [Noctalia](https://docs.noctalia.dev/)（基于 quickshell 的 QML 桌面壳），配置见 `modules/home/noctalia.nix`。
-- 曾评估过 `waybar`（C++/GTK，功能丰富但内存占用偏高）和 `yambar`（C 语言、极致轻量，但上游已停止开发），相关配置保留为 `.bak` 后缀供后续参考，未接入 `default.nix` 的 `imports`。
+当前使用 [Noctalia](https://docs.noctalia.dev/)（基于 quickshell 的 QML 桌面壳），配置见 `modules/home/noctalia.nix`。曾评估过 `waybar`（C++/GTK，功能丰富但内存占用偏高）和 `yambar`（C 语言、极致轻量，但上游已停止开发），相关配置保留为 `.bak` 后缀供后续参考，未接入 `default.nix` 的 `imports`。
 
 ### 睡眠与电源管理
 
@@ -69,12 +69,11 @@
 
 ### 网络代理：dae
 
-- `modules/dae.nix` + `pkgs/dae-v2.nix` 提供基于 [dae](https://github.com/daeuniverse/dae) 的透明代理服务，通过 niri 的 `spawn-at-startup` 延迟启动，避免与其他开机项抢占资源。
+`modules/dae.nix` + `pkgs/dae-v2.nix` 提供基于 [dae](https://github.com/daeuniverse/dae) 的透明代理服务，通过 niri 的 `spawn-at-startup` 延迟启动，避免与其他开机项抢占资源。
 
 ### Shell：fish（登录 shell）
 
-- 系统级通过 `programs.fish.enable = true;`（`modules/base.nix`）启用，登录 shell 通过 `users.defaultUserShell = pkgs.fish;` 或 `users.users.lk.shell = pkgs.fish;`（`modules/users.nix`）指定。
-- 用户级配置（别名、代理开关函数、Starship 提示符、tty1 自动启动 niri 会话等）在 `modules/home/fish.nix`。
+系统级通过 `programs.fish.enable = true;`（`modules/base.nix`）启用，登录 shell 通过 `users.defaultUserShell = pkgs.fish;` 或 `users.users.lk.shell = pkgs.fish;`（`modules/users.nix`）指定。用户级配置（别名、代理开关函数、Starship 提示符、tty1 自动启动 niri 会话等）在 `modules/home/fish.nix`。
 
 ### 输入法与其他应用
 
@@ -86,7 +85,7 @@
 ## 常用命令
 
 ```bash
-# 语法/求值检查，不实际切换（别名 ntest，定义在 dot-bashrc 或 fish 别名中）
+# 语法/求值检查，不实际切换（别名 ntest）
 sudo nixos-rebuild dry-build --flake .
 
 # 正式应用配置
