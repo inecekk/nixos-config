@@ -1,9 +1,9 @@
-binds {
+        binds {
         // --- 1. 系统通用与截图 ---
         "Mod+Slash"             hotkey-overlay-title="快捷键帮助"         { show-hotkey-overlay; }
         "Mod+Shift+E"           hotkey-overlay-title="退出 Niri"          { quit; }
         "Mod+S"                 hotkey-overlay-title="区域截图"           { screenshot; }
-
+        
         // --- 2. 应用启动 ---
         "Mod+Return"            hotkey-overlay-title="启动终端"           { spawn "foot"; }
         "Mod+E"                 hotkey-overlay-title="文件管理器"         { spawn "yazi"; }
@@ -14,7 +14,7 @@ binds {
         "Mod+Shift+Q"           hotkey-overlay-title="QQ"                 { spawn "sh" "-c" "qq --enable-features=UseOzonePlatform --ozone-platform=wayland"; }
         "Mod+M" 		hotkey-overlay-title="Musicfox" {
         spawn "sh" "-c" "if pgrep -x 'musicfox'; then pkill -x 'musicfox'; else foot -e musicfox; fi"
-    }
+        }
         // --- 3. Noctalia 面板交互 (Panel Control) ---
         "Mod+A"                 hotkey-overlay-title="控制面板"           { spawn "noctalia" "panel-open" "control-center"; }
         "Mod+N"                 hotkey-overlay-title="通知中心"           { spawn "noctalia" "panel-open" "notifications"; }
@@ -22,9 +22,9 @@ binds {
         "Mod+X"                 hotkey-overlay-title="启动菜单"           { spawn "noctalia" "panel-open" "launcher"; }
         "Mod+Alt+Q"             hotkey-overlay-title="关机菜单"           { spawn "noctalia" "panel-open" "power-menu"; }
         "Mod+Shift+Return" hotkey-overlay-title="随机全铺满壁纸" { 
-    spawn "sh" "-c" "noctalia msg wallpaper-random && noctalia msg templates-apply"; 
-}
-	// --- 4. Noctalia 系统开关控制 (System Toggles) ---
+        spawn "sh" "-c" "noctalia msg wallpaper-random && noctalia msg templates-apply"; 
+        }
+        // --- 4. Noctalia 系统开关控制 (System Toggles) ---
         "Mod+I"                 hotkey-overlay-title="系统设置"           { spawn "noctalia" "msg" "settings-open"; }
         "Mod+L"                 hotkey-overlay-title="锁定屏幕"           { spawn "noctalia" "msg" "session" "lock"; }
         "Mod+Alt+B"             hotkey-overlay-title="蓝牙切换"           { spawn "noctalia" "msg" "bluetooth-toggle"; }
@@ -39,16 +39,16 @@ binds {
         "Mod+Ctrl+D"            hotkey-overlay-title="切换 Dock"          { spawn "noctalia" "msg" "dock-toggle"; }
         "Mod+Ctrl+W"            hotkey-overlay-title="切换小部件"         { spawn "noctalia" "msg" "desktop-widgets-toggle"; }
         "Mod+Ctrl+M"            hotkey-overlay-title="主题切换"           { spawn "noctalia" "msg" "theme-mode-toggle"; }
-
+        
         // --- 5. 窗口与布局控制 ---
         "Mod+Q"                 hotkey-overlay-title="关闭当前窗口"       { close-window; }
         "Mod+F"                 hotkey-overlay-title="最大化列"           { maximize-column; }
         "Mod+Shift+F"           hotkey-overlay-title="全屏/退出切换"      { spawn "sh" "-c" "niri msg action fullscreen-window && noctalia msg bar-toggle && if noctalia msg status | grep -q '\"dock_visible\":true'; then noctalia msg dock-hide; fi && noctalia msg desktop-widgets-toggle"; }
-	"Mod+V"                 hotkey-overlay-title="切换窗口浮动"       { toggle-window-floating; }
+        "Mod+V"                 hotkey-overlay-title="切换窗口浮动"       { toggle-window-floating; }
         "Mod+C"                 hotkey-overlay-title="居中列"             { center-column; }
         "Mod+0"                 hotkey-overlay-title="打开概览"           { open-overview; }
         "Mod+Tab"               hotkey-overlay-title="切换浮动/平铺焦点"  { switch-focus-between-floating-and-tiling; }
-
+        
         // --- 6. 焦点与工作区控制 ---
         "Mod+Left"              hotkey-overlay-title="左移焦点"           { focus-column-left; }
         "Mod+Right"             hotkey-overlay-title="右移焦点"           { focus-column-right; }
@@ -67,14 +67,14 @@ binds {
         "Mod+Ctrl+2"            hotkey-overlay-title="移动列到工作区 2"   { move-column-to-workspace 2; }
         "Mod+WheelScrollDown"   cooldown-ms=150 hotkey-overlay-title="下一工作区" { focus-workspace-down; }
         "Mod+WheelScrollUp"     cooldown-ms=150 hotkey-overlay-title="上一工作区" { focus-workspace-up; }
-
+        
         // --- 7. 列宽与吞入控制 ---
         "Mod+R"                 hotkey-overlay-title="切换列宽预设"       { switch-preset-column-width; }
         "Mod+Minus"             hotkey-overlay-title="缩小列宽"           { set-column-width "-10%"; }
         "Mod+Equal"             hotkey-overlay-title="增大列宽"           { set-column-width "+10%"; }
         "Mod+Alt+H"             hotkey-overlay-title="向左吞入/排出"      { consume-or-expel-window-left; }
         "Mod+Alt+L"             hotkey-overlay-title="向右吞入/排出"      { consume-or-expel-window-right; }
-
+        
         // --- 8. 媒体与硬件控制 ---
         "XF86AudioRaiseVolume"  allow-when-locked=true hotkey-overlay-title="音量增加" { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
         "XF86AudioLowerVolume"  allow-when-locked=true hotkey-overlay-title="音量降低" { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
@@ -85,4 +85,4 @@ binds {
         "Mod+Period"            hotkey-overlay-title="下一首"             { spawn "playerctl" "next"; }
         "Mod+Comma"             hotkey-overlay-title="上一首"             { spawn "playerctl" "previous"; }
         "Mod+Alt+Slash"         hotkey-overlay-title="资源监控"           { spawn "foot" "--geometry=100x40" "-e" "btop"; }
-}
+        }
