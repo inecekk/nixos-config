@@ -13,7 +13,14 @@
   time.timeZone = "Asia/Shanghai";
   time.hardwareClockInLocalTime = false;
   system.stateVersion = "26.05";
-
+  
+# 在系统环境初始化阶段执行的操作
+  environment.extraInit = ''
+    # 显式向 DBus 同步 Wayland 关键环境变量
+    # 替换过时的 --all 参数，消除 systemd 的弃用警告，
+    # 并确保所有在桌面会话中启动的应用都能正确获取显示服务器地址和会话类型。
+    dbus-update-activation-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP
+  '';
   # 日志过滤
   systemd.settings.Manager = {
     LogLevel = "err";
