@@ -21,7 +21,7 @@ in
 
     # 用户安装的软件包列表
     home.packages = with pkgs; [
-      git   wget foot bluetui btop  yazi 
+      git   wget foot bluetui btop  yazi tree 
        grim slurp wl-clipboard  libnotify
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
       qq materialgram rmpc go-musicfox vscode rnote opentabletdriver

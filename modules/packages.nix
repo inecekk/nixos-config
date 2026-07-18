@@ -8,7 +8,7 @@
 
     systemPackages = with pkgs; [
       # --- 系统维护与基础（vim 留在系统层，当救急编辑器） ---
-      neovim
+      vim
       procps
       psmisc
 
