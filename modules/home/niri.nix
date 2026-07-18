@@ -68,7 +68,7 @@ in
       }
       layer-rule {
         match namespace="^noctalia-wallpaper$"         // 匹配 Noctalia 壁纸图层
-        place-within-backdrop true         // 把壁纸放入 overview 的 backdrop
+        place-within-backdrop false         // 把壁纸放入 overview 的 backdrop
       }
       layer-rule {
         match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"         // 匹配 Noctalia 图层
