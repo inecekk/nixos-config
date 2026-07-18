@@ -3,6 +3,7 @@
 let
   homeDir = ./.;
 
+  # 自动扫描并导入当前目录下的所有 .nix 文件 (排除 default.nix)
   autoImports = builtins.map (name: homeDir + "/${name}") (
     builtins.attrNames (
       lib.filterAttrs (
@@ -14,38 +15,19 @@ in
 {
   home-manager.users.lk = { pkgs, ... }: {
 
-    imports = autoImports;
+    imports = autoImports; # 自动导入所有模块，包括刚才新建的 autostart.nix
 
-    home.stateVersion = "26.11";
+    home.stateVersion = "26.11"; # 设置 Home Manager 状态版本
 
+    # 用户安装的软件包列表
     home.packages = with pkgs; [
-      git
-      gnused
-      tree
-      wget
-      foot
-      bluetui
-      btop
-      fish
-      zsh
-      yazi
-      p7zip-rar
-      imagemagick
-      grim
-      slurp
-      wl-clipboard
-      wf-recorder
-      libnotify
-      inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-      qq
-      materialgram
-      rmpc
-      go-musicfox
-      vscode
-      rnote
-      opentabletdriver
+      git  tree wget foot bluetui btop  yazi 
+      p7zip-rar grim slurp wl-clipboard wf-recorder libnotify
+      (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
+      qq materialgram rmpc go-musicfox vscode rnote opentabletdriver
     ];
 
+    # 设置 Wayland 相关环境变量，确保所有 GUI 程序运行在 Wayland 后端
     home.sessionVariables = {
       XMODIFIERS = "@im=fcitx";
       INPUT_METHOD = "fcitx5";

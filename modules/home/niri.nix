@@ -92,24 +92,4 @@ in
       ${niriBinds} // 引入分离的快捷键配置文件
     '';
   };
-
-  # Systemd 服务定义部分（外部 Nix 代码）：继续使用 #
-  systemd.user.services.niri-delayed-apps = {
-    Unit = {
-      Description = "Niri Delayed Startup Apps"; # 服务描述
-      After = [ "graphical-session.target" "noctalia.service" ]; # 等待状态栏
-      PartOf = [ "graphical-session.target" ]; 
-    };
-
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
-    };
-
-    Service = {
-      Type = "oneshot";
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 15";
-      ExecStart = "${pkgs.bash}/bin/bash -c 'zen & qq &'";
-      RemainAfterExit = true;
-    };
-  };
 }
