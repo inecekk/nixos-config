@@ -66,10 +66,6 @@ in
         clip-to-geometry true         // 内容裁切到圆角边界内
       }
       layer-rule {
-        match namespace="^noctalia-wallpaper$"         // 匹配 Noctalia 壁纸图层
-        place-within-backdrop true         // 把壁纸放入 overview 的 backdrop
-      }
-      layer-rule {
         match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"         // 匹配 Noctalia 图层
         background-effect {
           xray false         // 关闭透视效果
