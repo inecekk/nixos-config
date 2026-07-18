@@ -1,8 +1,9 @@
+# modules/system-services.nix
 { config, pkgs, ... }:
 {
   # ==========================================
   # 1. 抢占式睡眠前置服务
-  # 解决睡眠前因音频设备未释放导致的“重播最后两字”问题
+  # 解决睡眠前因音频设备未释放导致的"重播最后两字"问题
   # ==========================================
   systemd.services.pre-suspend-mute = {
     description = "Stop MPD, suspend PipeWire node and mute audio before system freezing";
@@ -28,11 +29,12 @@
   powerManagement = {
     # --- 睡眠前置任务 ---
     powerDownCommands = ''
-      # 1. 业务切断：关闭网络与蓝牙，防止睡眠期间产生意外连接中断
+      # 1. 业务切断：关闭网络与蓝牙，防止睡眠期间产生意外连接、间接阻止设备完全进入低功耗状态
       ${pkgs.bluez}/bin/bluetoothctl power off
       ${pkgs.networkmanager}/bin/nmcli radio wifi off
 
       # 2. 唤醒源控制：仅允许键盘唤醒，禁用其他不必要的 ACPI 唤醒源
+      #    （原理：找到键盘所在的 PCI/USB 路径，保留其唤醒能力，其余全部关闭）
       KBD_PCI_SLOTS=""
       for input_dev in /sys/class/input/input*; do
       if [ -f "$input_dev/name" ] && grep -qiE "keyboard" "$input_dev/name" 2>/dev/null; then
@@ -73,8 +75,9 @@
       sleep 1.5
       /run/current-system/sw/bin/pkill -9 -u lk -x 'qq|chrome|zen|vscode' 2>/dev/null || true
 
-      # 5. 强制 DRM 清理：解绑 vtcon1，规避 s2idle 模式下常见的驱动挂起死机
-      echo "0" > /sys/class/vtconsole/vtcon1/bind 2>/dev/null || true
+      # 移除：echo "0" > /sys/class/vtconsole/vtcon1/bind
+      # 原因：解绑虚拟终端控制台会导致 DRM/KMS 驱动在唤醒时无法正确重新接管显示输出，
+      #       是此前"唤醒失败/黑屏卡死"的直接原因，已彻底移除，不再保留
     '';
 
     # --- 唤醒后置任务 ---
@@ -96,12 +99,18 @@
   };
 
   # ==========================================
-  # 3. 硬件补丁
-  # 强制 AMD GPU 运行时电源状态为 on，防止睡眠时因驱动错误导致电源管理异常
+  # 3. 硬件补丁（已移除）
+  # ------------------------------------------
+  # 原规则：
+  #   ACTION=="suspend", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{power/control}="on"
+  # 移除原因：
+  #   该规则在挂起时强制 AMD 独显/核显电源状态保持 "on"，
+  #   与 s0i3/s2idle 要求所有设备主动降至低功耗状态的机制直接冲突——
+  #   SMU 会一直等待 GPU 汇报"已降功耗"而收不到响应，
+  #   这正是日志中 "amd_pmc: SMU response timed out / suspend failed: -110"
+  #   的最可能成因。结合 boot.nix 中 amdgpu.runpm=0（禁止运行时电源管理抢占）
+  #   已经能起到防止驱动异常的作用，此 udev 规则予以移除。
   # ==========================================
-  services.udev.extraRules = ''
-    ACTION=="suspend", SUBSYSTEM=="pci", ATTR{vendor}=="0x1002", ATTR{power/control}="on"
-  '';
 
   # ==========================================
   # 4. 图形与基础服务
