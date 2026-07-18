@@ -13,6 +13,7 @@
     vertical-letter-offset=0
     resize-delay-ms=10  # 平铺式合成器(niri)下调整窗口更跟手,默认 100ms
     word-delimiters= ,│`|:"'()[]{}<>@%  # 扩展分词符,双击更容易选中完整路径/URL
+    bold-text-in-bright=yes  # 部分工具用加粗表示亮色,开启后配色更准确,这个选项在 [main] 下
 
     [scrollback]
     lines=10000  # 默认只有 1000 行,日志/编译输出很容易翻不到
@@ -25,7 +26,8 @@
     # blur=yes  # 毛玻璃
     foreground=e0e0e0
     background=000000
-    selection-background=010000  
+    cursor=000000 e0e0e0  # 光标前景
+    selection-background=000000  # 与背景色相同,靠反色文字提示选中范围
     selection-foreground=ffffff
     regular0=2e3436
     regular1=cc0000
@@ -51,10 +53,6 @@
     [cursor]
     style=beam
     blink=yes
-    color=000000 e0e0e0  # 光标背景 前景,半透明窗口下比默认反色更清晰可辨
-
-    [tweak]
-    bold-text-in-bright=yes  # 部分工具用加粗表示亮色,开启后配色更准确
 
     [mouse]
     hide-when-typing=yes

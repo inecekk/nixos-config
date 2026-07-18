@@ -4,7 +4,6 @@ let
   niriBinds = builtins.readFile ./niri-binds.kdl;
 in
 {
-  # Nix 层面的配置：使用 # 作为注释
   xdg.configFile."niri/config.kdl" = {
     force = true;
     text = ''
@@ -22,6 +21,7 @@ in
       }
       output "eDP-1" {
         scale 2.0         // 内置屏幕缩放 2 倍（高分屏）
+        mode "3200x2000@90"   
       }
       hotkey-overlay {
         skip-at-startup         // 跳过启动时的快捷键提示
@@ -58,11 +58,12 @@ in
           left 1
           right 1
           top 1
-          bottom 0
+          bottom 1         // 从 0 改为 1，避免窗口贴死在底部面板下
         }
       }
       window-rule {
-        geometry-corner-radius 12         // 全局窗口圆角半径 12px
+        match is-window-cast-target=false         // 排除投屏目标窗口，只对普通窗口生效
+        geometry-corner-radius 12         // 窗口圆角半径 12px
         clip-to-geometry true         // 内容裁切到圆角边界内
       }
       layer-rule {
@@ -72,7 +73,7 @@ in
           blur false         // 关闭背景模糊
         }
       }
-      spawn-at-startup "qs" "-c" "noctalia-shell"         // 开机启动 Noctalia 状态栏
+      spawn-at-startup "qs" "-c" "noctalia-shell"         // 开机启动 Noctalia 状态栏（已不用 waybar，无需额外启动项）
       ${niriBinds}         // 引入分离的快捷键配置文件
     '';
   };
