@@ -57,8 +57,8 @@ in
         struts {         // 应用边距
           left 1
           right 1
-          top 1
-          bottom 1         // 从 0 改为 1，避免窗口贴死在底部面板下
+          top 0
+          bottom 0         
         }
       }
       window-rule {
@@ -70,7 +70,7 @@ in
         match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"         // 匹配 Noctalia 图层
         background-effect {
           xray false         // 关闭透视效果
-          blur false         // 关闭背景模糊
+          blur true         // 开启背景模糊
         }
       }
       spawn-at-startup "qs" "-c" "noctalia-shell"         // 开机启动 Noctalia 状态栏（已不用 waybar，无需额外启动项）
