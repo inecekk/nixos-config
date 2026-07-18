@@ -76,9 +76,11 @@
   ];
 
   # 禁用不需要的服务
-  services.printing.enable = false;
-  services.avahi.enable = false;
-  programs.nano.enable = false;
+  # --- 禁用传统/冗余服务 ---
+   services.xserver.enable = false;    # 彻底禁用 X11 服务
+  services.printing.enable = false;   # 禁用打印
+  services.avahi.enable = false;      # 禁用网络发现
+  services.gnome.core-utilities.enable = false; # 禁用 GNOME 全家桶
   services.geoclue2.enable = false;
   services.packagekit.enable = false;
 }
