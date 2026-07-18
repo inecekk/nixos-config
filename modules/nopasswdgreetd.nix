@@ -1,18 +1,15 @@
-# modules/nopasswdgreetd.nix
-
-
 {
   services.greetd = {
     enable = true;
     settings = {
       default_session = {
-        command = "niri-session";
+        # 使用重定向隐藏启动时的所有日志输出
+        command = "niri-session > /dev/null 2>&1";
         user = "lk";
       };
     };
   };
 
-  # 防止 getty 和 greetd 抢占 TTY1
   systemd.services.greetd.serviceConfig = {
     Type = "idle";
     StandardInput = "tty";
@@ -23,4 +20,3 @@
     TTYVTDisallocate = true;
   };
 }
-
