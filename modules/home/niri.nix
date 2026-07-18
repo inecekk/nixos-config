@@ -37,7 +37,6 @@ in
           proportion 0.5         // 预设列宽 50%
           proportion 0.75         // 预设列宽 75%
         }
-        background-color "transparent"         // 壁纸不随工作区变化
         default-column-width {
           proportion 0.5         // 新窗口默认宽度 50%
         }
@@ -68,7 +67,7 @@ in
       }
       layer-rule {
         match namespace="^noctalia-wallpaper$"         // 匹配 Noctalia 壁纸图层
-        place-within-backdrop false         // 把壁纸放入 overview 的 backdrop
+        place-within-backdrop true         // 把壁纸放入 overview 的 backdrop
       }
       layer-rule {
         match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"         // 匹配 Noctalia 图层
