@@ -73,6 +73,15 @@ in
           blur true         // 开启背景模糊
         }
       }
+
+      // 合盖：统一走 Noctalia 的 lockAndSuspend，锁屏+睡眠合并为一次原子调用
+      // 避免"锁屏命令"和"logind 自动 suspend"两条逻辑并行竞态
+      switch-events {
+        lid-close {
+          spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "lockAndSuspend"
+        }
+      }
+
       spawn-at-startup "qs" "-c" "noctalia-shell"         // 开机启动 Noctalia 状态栏（已不用 waybar，无需额外启动项）
       ${niriBinds}         // 引入分离的快捷键配置文件
     '';
