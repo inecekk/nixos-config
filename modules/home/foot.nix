@@ -6,35 +6,27 @@
 {
   xdg.configFile."foot/foot.ini".text = ''
     [main]
-    # 字体与大小
     font=JetBrains Mono:size=12
-    # 内边距，
     pad=3x3 center
-    # 选中文本后自动复制到系统剪贴板
     selection-target=clipboard
     horizontal-letter-offset=0
     vertical-letter-offset=0
+    resize-delay-ms=10  # 平铺式合成器(niri)下调整窗口更跟手,默认 100ms
+    word-delimiters= ,│`|:"'()[]{}<>@%  # 扩展分词符,双击更容易选中完整路径/URL
+
+    [scrollback]
+    lines=10000  # 默认只有 1000 行,日志/编译输出很容易翻不到
 
     [csd]
-    # 关闭标题栏（额头），不显示窗口标题和最小化/最大化/关闭按钮
-    preferred=none
+    preferred=none  # 关闭标题栏
 
     [colors-dark]
-    # 整个终端窗口背景的透明度（0.0 全透明，1.0 不透明）
-    alpha=0.6
-    # 背景模糊（部分合成器/显卡支持才生效）
-    # blur=yes
-    # 前景色（正常文字颜色）
+    alpha=0.6  # 整个窗口背景透明度
+    # blur=yes  # 毛玻璃
     foreground=e0e0e0
-    # 背景色，foot 颜色字段必须是 6 位纯 RGB，不能带透明度后缀
     background=000000
-    # 因为整个窗口背景会跟随上面的 alpha 一起变透明，
-    # 选中区域颜色和背景色相同，视觉上就像"选中框透明"，
-    # 只靠文字变色来提示选中范围
-    selection-background=000000
-    # 选中时的文字颜色，改成醒目的颜色，避免选中后文字看不清
+    selection-background=010000  
     selection-foreground=ffffff
-
     regular0=2e3436
     regular1=cc0000
     regular2=4e9a06
@@ -59,6 +51,10 @@
     [cursor]
     style=beam
     blink=yes
+    color=000000 e0e0e0  # 光标背景 前景,半透明窗口下比默认反色更清晰可辨
+
+    [tweak]
+    bold-text-in-bright=yes  # 部分工具用加粗表示亮色,开启后配色更准确
 
     [mouse]
     hide-when-typing=yes
