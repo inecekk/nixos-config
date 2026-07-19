@@ -12,6 +12,12 @@ in
     supportedFilesystems = [ "ntfs" ];
     kernelModules = [ "tcp_bbr" ];
 
+    # RTL8852BE 网卡断线修复：关闭 ASPM + 关闭驱动内部省电模式
+    extraModprobeConfig = ''
+      options rtw89_pci disable_aspm=1
+      options rtw89_core disable_ps_mode=1
+    '';
+
     # 强制 S2idle 以避开 ACPI 深度睡眠 Bug，loglevel=3 减少日志噪音
     kernelParams = [
       "mem_sleep_default=s2idle"
