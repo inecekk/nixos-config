@@ -3,7 +3,10 @@
         "Mod+Slash"             hotkey-overlay-title="快捷键帮助"         { show-hotkey-overlay; }
         "Mod+Shift+E"           hotkey-overlay-title="退出 Niri"          { quit; }
         "Mod+S"                 hotkey-overlay-title="区域截图"           { screenshot; }
-        
+ 	// 蓝牙键盘多媒体
+    "XF86AudioPrev"    hotkey-overlay-title="打开foot"     { spawn "foot"; }
+    "XF86AudioPlay"    hotkey-overlay-title="播放/暂停"   { spawn "playerctl" "-p" "musicfox" "play-pause"; }
+    "XF86AudioNext"    hotkey-overlay-title="下一首"     { spawn "playerctl" "-p" "musicfox" "next"; }       
         // --- 2. 应用启动 ---
         "Mod+Return"            hotkey-overlay-title="启动终端"           { spawn "foot"; }
         "Super_R"               hotkey-overlay-title="启动终端"           { spawn "foot"; }
