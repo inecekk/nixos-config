@@ -6,6 +6,7 @@
         
         // --- 2. 应用启动 ---
         "Mod+Return"            hotkey-overlay-title="启动终端"           { spawn "foot"; }
+        "Super_R"               hotkey-overlay-title="启动终端"           { spawn "foot"; }
         "Mod+E"                 hotkey-overlay-title="文件管理器"         { spawn "yazi"; }
         "Mod+G"                 hotkey-overlay-title="Chrome 浏览器"      { spawn "google-chrome-stable"; }
         "Mod+Z"                 hotkey-overlay-title="Zen 浏览器"         { spawn "zen"; }
@@ -19,11 +20,10 @@
         "Mod+A"                 hotkey-overlay-title="控制面板"           { spawn "noctalia" "panel-open" "control-center"; }
         "Mod+N"                 hotkey-overlay-title="通知中心"           { spawn "noctalia" "panel-open" "notifications"; }
         "Mod+D"                 hotkey-overlay-title="搜索/启动器"        { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
+        "XF86search"            hotkey-overlay-title="搜索/启动器"        { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
         "Mod+X"                 hotkey-overlay-title="启动菜单"           { spawn "noctalia" "panel-open" "launcher"; }
         "Mod+Alt+Q"             hotkey-overlay-title="关机菜单"           { spawn "noctalia" "panel-open" "power-menu"; }
-        "Mod+Shift+Return" hotkey-overlay-title="随机全铺满壁纸" { 
-        spawn "sh" "-c" "noctalia msg wallpaper-random && noctalia msg templates-apply"; 
-        }
+        "Mod+Shift+Return"      hotkey-overlay-title="随机全铺满壁纸"     { spawn "sh" "-c" "noctalia msg wallpaper-random && noctalia msg templates-apply";}
         // --- 4. Noctalia 系统开关控制 (System Toggles) ---
         "Mod+I"                 hotkey-overlay-title="系统设置"           { spawn "noctalia" "msg" "settings-open"; }
         "Mod+L"                 hotkey-overlay-title="锁定屏幕"           { spawn "noctalia" "msg" "session" "lock"; }
@@ -39,7 +39,11 @@
         "Mod+Ctrl+D"            hotkey-overlay-title="切换 Dock"          { spawn "noctalia" "msg" "dock-toggle"; }
         "Mod+Ctrl+W"            hotkey-overlay-title="切换小部件"         { spawn "noctalia" "msg" "desktop-widgets-toggle"; }
         "Mod+Ctrl+M"            hotkey-overlay-title="主题切换"           { spawn "noctalia" "msg" "theme-mode-toggle"; }
-        
+
+    	// 蓝牙键盘的锁定键（Win 下是 Win+L），显式绑定为 Noctalia 锁屏+睡眠
+    	// niri 在 compositor 层截获这个按键，不再走 logind 的 HandlePowerKey 默认逻辑
+	XF86PowerOff		hotkey-overlay-title="noctalia锁屏加睡眠" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "lockAndSuspend"; }
+      
         // --- 5. 窗口与布局控制 ---
         "Mod+Q"                 hotkey-overlay-title="关闭当前窗口"       { close-window; }
         "Mod+F"                 hotkey-overlay-title="最大化列"           { maximize-column; }
