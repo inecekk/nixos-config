@@ -5,8 +5,8 @@
         "Mod+S"                 hotkey-overlay-title="区域截图"           { screenshot; }
  	// 蓝牙键盘多媒体
     "XF86AudioPrev"    hotkey-overlay-title="打开foot"     { spawn "foot"; }
-    "XF86AudioPlay"    hotkey-overlay-title="播放/暂停"   { spawn "playerctl" "-p" "musicfox" "play-pause"; }
-    "XF86AudioNext"    hotkey-overlay-title="下一首"     { spawn "playerctl" "-p" "musicfox" "next"; }       
+    "XF86AudioPlay"    hotkey-overlay-title=""   { spawn "playerctl" "-p" "musicfox" "play-pause"; }
+    "XF86AudioNext"    hotkey-overlay-title="关闭"     { close-window; }       
         // --- 2. 应用启动 ---
         "Mod+Return"            hotkey-overlay-title="启动终端"           { spawn "foot"; }
         "Super_R"               hotkey-overlay-title="启动终端"           { spawn "foot"; }
