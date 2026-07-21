@@ -15,11 +15,11 @@
   };
   services.resolved.enable = true;
 
-  # iwd 漫游策略调整：降低漫游敏感度，减少多 AP 环境下的频繁切换/断线
+  # iwd 漫游策略调整：进一步降低漫游敏感度，减少多 AP 环境下的主动切换/断线
   networking.wireless.iwd.settings = {
     General = {
-      RoamThreshold = "-70";
-      RoamThreshold5G = "-76";
+      RoamThreshold = "-80";
+      RoamThreshold5G = "-90";
     };
     Scan = {
       DisablePeriodicScan = true;
