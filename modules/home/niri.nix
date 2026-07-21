@@ -9,81 +9,85 @@ in
     text = ''
       input {
         keyboard {
-          numlock         // 开机自动开启数字锁定键
+          numlock
         }
         touchpad {
-          tap         // 触控板轻触即点击
-          natural-scroll         // 自然滚动方向
+          tap
+          natural-scroll
         }
       }
       cursor {
-        xcursor-size 24         // 光标大小
+        xcursor-size 24
       }
       output "eDP-1" {
-        scale 2.0         // 内置屏幕缩放 2 倍（高分屏）
-        mode "3200x2000@90"   
+        scale 2.0
+        mode "3200x2000@90"
       }
       hotkey-overlay {
-        skip-at-startup         // 跳过启动时的快捷键提示
+        skip-at-startup
+      }
+      overview {
+        zoom 0.5
       }
       window-rule {
-        match app-id="code"         // 匹配 VS Code 窗口
-        opacity 0.85         // 设为 85% 不透明度
+        match app-id="code"
+        opacity 0.85
+      }
+      layer-rule {
+        match namespace="^noctalia-wallpaper$"
+        place-within-backdrop true
       }
       layout {
-        gaps 16         // 窗口间距 16 像素
+        background-color "transparent"
+        gaps 16
         preset-column-widths {
-          proportion 0.25         // 预设列宽 25%
-          proportion 0.5         // 预设列宽 50%
-          proportion 0.75         // 预设列宽 75%
+          proportion 0.25
+          proportion 0.5
+          proportion 0.75
         }
         default-column-width {
-          proportion 0.5         // 新窗口默认宽度 50%
+          proportion 0.5
         }
         focus-ring {
-          width 4         // 焦点边框宽度 4px
-          active-color "#a0e8af20"         // 有焦点时颜色（浅绿半透明）
-          inactive-color "#50505020"         // 无焦点时颜色（灰色半透明）
+          width 4
+          active-color "#a0e8af20"
+          inactive-color "#50505020"
         }
         border {
-          off         // 关闭普通边框，只留 focus-ring
+          off
         }
         shadow {
-          softness 30         // 阴影柔和度
-          spread 5         // 阴影扩散范围
-          offset x=0 y=5         // 阴影偏移：向下 5px
-          color "#0007"         // 阴影颜色（黑色半透明）
+          softness 30
+          spread 5
+          offset x=0 y=5
+          color "#0007"
         }
-        struts {         // 应用边距
+        struts {
           left 1
           right 1
           top 0
-          bottom 0         
+          bottom 0
         }
       }
       window-rule {
-        match is-window-cast-target=false         // 排除投屏目标窗口，只对普通窗口生效
-        geometry-corner-radius 12         // 窗口圆角半径 12px
-        clip-to-geometry true         // 内容裁切到圆角边界内
+        match is-window-cast-target=false
+        geometry-corner-radius 12
+        clip-to-geometry true
       }
       layer-rule {
-        match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"         // 匹配 Noctalia 图层
+        match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
         background-effect {
-          xray false         // 关闭透视效果
-          blur true         // 开启背景模糊
+          xray false
+          blur true
         }
       }
-
-      // 合盖：统一走 Noctalia 的 lockAndSuspend，锁屏+睡眠合并为一次原子调用
-      // 避免"锁屏命令"和"logind 自动 suspend"两条逻辑并行竞态
       switch-events {
         lid-close {
           spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "lockAndSuspend"
         }
       }
-
-      spawn-at-startup "qs" "-c" "noctalia-shell"         // 开机启动 Noctalia 状态栏（已不用 waybar，无需额外启动项）
-      ${niriBinds}         // 引入分离的快捷键配置文件
+      spawn-at-startup "qs" "-c" "noctalia-shell"
+      ${niriBinds}
     '';
   };
 }
