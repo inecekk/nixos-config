@@ -12,12 +12,13 @@
   fonts = {
     enableDefaultPackages = false;
     packages = with pkgs; [
+      jetbrains-mono
       wqy_zenhei
       noto-fonts-color-emoji
     ];
     fontconfig = {
       defaultFonts = {
-        monospace = [ "WenQuanYi Zen Hei Mono" ];
+        monospace = [ "JetBrains Mono" "WenQuanYi Zen Hei Mono" ];
         emoji = [ "Noto Color Emoji" ];
       };
       antialias = true;
