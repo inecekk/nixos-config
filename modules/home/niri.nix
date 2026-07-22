@@ -70,9 +70,9 @@ in
         }
         struts { // 窗口到屏幕边的额外边距(outer)：0=贴边，想留缝改大；设负值(如 -6)可抵消 gaps 让 maximize-column 也贴边
           left 0
-          right 0
+          right -2
           top -5
-          bottom -6
+          bottom -7
         }
       }
       window-rule {
