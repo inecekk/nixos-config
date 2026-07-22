@@ -72,7 +72,7 @@ in
           left 0
           right 0
           top -5
-          bottom -5
+          bottom -6
         }
       }
       window-rule {
