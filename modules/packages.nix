@@ -3,25 +3,29 @@
   environment = {
     sessionVariables.TZ = "Asia/Shanghai";
     systemPackages = with pkgs; [
-      vim procps psmisc          # 系统维护
-      iw pciutils usbutils       # 硬件驱动
-      polkit libsecret           # 桌面底层
+      vim procps psmisc
+      iw pciutils usbutils
+      polkit libsecret
     ];
   };
 
   fonts = {
-    enableDefaultPackages = false;               # 关闭默认字体集
-    packages = with pkgs; [ source-han-sans ];    # 思源黑体（简体）
-    fontconfig.defaultFonts = {
-      serif = [ "Source Han Sans SC" ];
-      sansSerif = [ "Source Han Sans SC" ];
-      monospace = [ "Source Han Sans SC" ];
+    enableDefaultPackages = false;
+    packages = with pkgs; [
+      wqy_zenhei
+      noto-fonts-color-emoji
+    ];
+    fontconfig = {
+      defaultFonts = {
+        monospace = [ "WenQuanYi Zen Hei Mono" ];
+        emoji = [ "Noto Color Emoji" ];
+      };
+      antialias = true;
+      hinting.enable = false;
+      subpixel.rgba = "none";
     };
-    fontconfig.antialias = true;                  # 抗锯齿
-    fontconfig.hinting.enable = false;            # 高分屏关闭 hinting 更平滑
-    fontconfig.subpixel.rgba = "none";            # 高分屏无需子像素渲染
   };
 
-  services.upower.enable = true;   # Noctalia 电量显示依赖
+  services.upower.enable = true;
   programs.niri.enable = true;
 }
