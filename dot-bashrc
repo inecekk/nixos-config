@@ -1,165 +1,84 @@
 # ~/.bashrc - NixOS optimized
-
-
 # =========================
 # NixOS 测试配置
 # =========================
-
 ntest() {
-
         cd /etc/nixos || return
-
         echo "🧪 测试 NixOS 配置..."
-
         sudo nixos-rebuild test
-
         cd - >/dev/null
 }
-
-
-
 # =========================
 # NixOS 正式部署
 # =========================
-
 rebuild() {
-
         sudo -v || return 1
-
         cd /etc/nixos || return
-
-
         git add -A
-
-
         local start_time
         start_time=$(date +%s)
-
-
         echo "🔨 开始构建 NixOS..."
-
-
-
         if sudo nixos-rebuild switch; then
-
-
         local end_time
         end_time=$(date +%s)
-
-
         local elapsed
         elapsed=$((end_time-start_time))
-
-
         local gen
         gen=$(sudo nix-env \
         -p /nix/var/nix/profiles/system \
         --list-generations |
         tail -1 |
         awk '{print $1}')
-
-
-
         git commit \
         -m "gen-${gen}: $(date +%m-%d_%H:%M) (${elapsed}s)" \
         --allow-empty
-
-
-
         local tag
         tag="gen-${gen}-$(date +%Y%m%d-%H%M%S)"
-
-
         git tag "$tag"
-
-
         git push --follow-tags
-
-
-
         echo ""
         echo "✅ NixOS 更新完成"
         echo "📦 Generation: $gen"
         echo "⏱️ Time: ${elapsed}s"
         echo "🏷️ Tag: $tag"
-
-
-
         else
-
         echo "❌ NixOS 构建失败"
-
         cd - >/dev/null
-
         return 1
-
         fi
-
-
         cd - >/dev/null
 }
-
-
-
 # =========================
 # 网络管理
 # =========================
-
 net(){
-
         sudo systemctl restart NetworkManager &&
         sudo nmtui
-
 }
-
-
-
 # =========================
 # 系统世代
 # =========================
-
 last10(){
-
         nixos-rebuild list-generations |
         head -n 11
-
 }
-
-
 alias gens='last10'
-
-
-
 # =========================
 # Git 分支显示
 # =========================
-
 git_branch(){
-
         local branch
-
         branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-
-
         if [ -n "$branch" ]; then
-
         echo "git:($branch)"
-
         fi
-
 }
-
-
-
 # =========================
 # 终端提示符
 # =========================
-
 export PS1='\[\033[38;5;111m\]\u\[\033[38;5;81m\]@\[\033[38;5;114m\]\h \[\033[38;5;250m\]· \w \[\033[38;5;135m\]$(git_branch) \[\033[38;5;221m\]\t\[\033[0m\]\n'
-
 # =========================
 # 默认编辑器
 # =========================
-
 export EDITOR=vim
 export VISUAL=vim

@@ -6,7 +6,7 @@
 {
   xdg.configFile."foot/foot.ini".text = '' # 通过 XDG 将生成的 foot.ini 写入 ~/.config/foot/foot.ini
     [main] # 主配置段
-    font=JetBrains Mono:size=12 # 字体及字号
+    font=Noto Sans Mono CJK JP:size=12 # 字体及字号
     pad=3x1 center # 内容区上下左右
     selection-target=clipboard # 选中文本自动复制到系统剪贴板（而非仅 primary selection）
     horizontal-letter-offset=0 # 字符水平偏移 0px（微调字间距）
