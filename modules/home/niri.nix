@@ -1,12 +1,11 @@
 { pkgs, ... }: # 模块参数
 let
-  scripts = import ../scripts.nix { inherit pkgs; }; # 脚本模块（当前未引用，可删）
+  scripts = import ../scripts.nix { inherit pkgs; }; # 脚本模块
   niriBinds = builtins.readFile ./niri-binds.kdl; # 快捷键绑定（独立文件）
 in
 {
   xdg.configFile."niri/config.kdl" = {
     force = true; # 强制覆盖已有配置
-    # ↓ 以下为 niri 的 config.kdl（kdl 语法，注释用 //；本行行尾不可加注释，否则会被当成 kdl 文本）
     text = ''
       input { // 输入设备
         keyboard {
@@ -31,10 +30,11 @@ in
         zoom 0.5 // 概览缩放
       }
 
-      // 所有窗口默认“贴边最大化”打开：全屏无缝、仅留 bar（对应你之前的需求；不想要可删此块）
+      // 窗口默认“贴边最大化”打开
       window-rule {
-        open-maximized-to-edges true
+        open-maximized-to-edges flase
       }
+
       window-rule {
         match app-id="code"
         opacity 0.85 // VS Code 半透明
@@ -72,7 +72,7 @@ in
           left 0
           right 0
           top -5
-          bottom -3
+          bottom -7
         }
       }
       window-rule {
@@ -84,7 +84,7 @@ in
         match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
         background-effect { // noctalia 面板类背景特效
           xray false
-          blur true // 毛玻璃模糊
+          blur flase // 毛玻璃模糊
         }
       }
       switch-events {
@@ -94,6 +94,6 @@ in
       }
       spawn-at-startup "qs" "-c" "noctalia-shell" // 启动 noctalia shell（bar/dock/壁纸/通知）
       ${niriBinds} // 插入快捷键绑定
-    ''; # kdl 内容结束
+    ''; 
   };
 }
