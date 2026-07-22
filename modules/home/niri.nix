@@ -32,7 +32,7 @@ in
 
       // 窗口默认“贴边最大化”打开
       window-rule {
-        open-maximized-to-edges flase
+        open-maximized-to-edges false
       }
 
       window-rule {
@@ -84,7 +84,7 @@ in
         match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|attached-panel|osd)$"
         background-effect { // noctalia 面板类背景特效
           xray false
-          blur flase // 毛玻璃模糊
+          blur false // 毛玻璃模糊
         }
       }
       switch-events {
