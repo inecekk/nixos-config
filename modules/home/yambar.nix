@@ -1,230 +1,226 @@
 { pkgs, ... }:
 let
   # ============================================================
-  # 1. Niri 工作区模块
-  # 功能：调用 `niri msg -j workspaces` 获取当前所有工作区信息（JSON），
-  #       用 jq 按 idx 数字排序后拼接成一行文本；当前聚焦的工作区用方括号
-  #       包裹以示区分。随后监听 niri 的事件流（event-stream），一旦
-  #       工作区发生切换 / 增删等变化，就重新计算一次并输出给 yambar。
-  # 协议：yambar script 模块要求每次输出为 `变量名|类型|值`，
-  #       并且每一批更新后要跟一个空行表示"这一轮数据结束"。
+  # 工作区模块：读取 niri 工作区列表，按 idx 排序，聚焦项加方括号，监听事件流实时刷新
   # ============================================================
   niri-workspace = pkgs.writeShellScript "yambar-niri-workspace" ''
     update_ws() {
       ws=$(${pkgs.niri}/bin/niri msg -j workspaces | ${pkgs.jq}/bin/jq -r '
-        sort_by(.idx)
-        | map(if .is_focused then "[\(.name // .idx)]" else " \(.name // .idx) " end)
-        | join("")
+        sort_by(.idx) | map(if .is_focused then "[\(.name // .idx)]" else " \(.name // .idx) " end) | join("")
       ')
-      echo "ws|string|$ws"
-      echo ""   # 空行表示本次更新结束
+      echo "ws|string|$ws"; echo ""
     }
-    update_ws  # 启动时先输出一次当前状态，避免刚启动时状态栏空白
-    # 监听 niri 事件流，每来一行事件就刷新一次工作区显示
-    ${pkgs.niri}/bin/niri msg --json event-stream | while read -r line; do
-      update_ws
-    done
+    update_ws
+    ${pkgs.niri}/bin/niri msg --json event-stream | while read -r line; do update_ws; done
   '';
 
   # ============================================================
-  # 2. CPU 占用监控
-  # 功能：读取 /proc/stat 第一行（全局 CPU 累计时间），间隔 1 秒采样两次，
-  #       用差值计算这 1 秒内的平均占用率。
-  #       字段含义（按顺序）：user nice system idle iowait irq softirq steal
+  # CPU 占用模块：采样 /proc/stat 前后差值算 1 秒平均占用率
   # ============================================================
   cpu-script = pkgs.writeShellScript "yambar-cpu" ''
-    get_stat() {
-      # $2~$8 相加为总时间片，$5 为 idle（空闲）时间片
-      head -n1 /proc/stat | awk '{print $2+$3+$4+$5+$6+$7+$8, $5}'
-    }
+    get_stat() { head -n1 /proc/stat | awk '{print $2+$3+$4+$5+$6+$7+$8, $5}'; }
     while true; do
-      read total1 idle1 <<< "$(get_stat)"
-      sleep 1
-      read total2 idle2 <<< "$(get_stat)"
-      dtotal=$(( total2 - total1 ))   # 总时间片增量
-      didle=$(( idle2 - idle1 ))      # 空闲时间片增量
-      if [ "$dtotal" -gt 0 ]; then
-        pct=$(( (100 * (dtotal - didle)) / dtotal ))  # 占用率 = 1 - 空闲占比
-      else
-        pct=0
-      fi
-      echo "cpu|string|󰻠 ''${pct}%"
-      echo ""
+      read total1 idle1 <<< "$(get_stat)"; sleep 1; read total2 idle2 <<< "$(get_stat)"
+      dtotal=$(( total2 - total1 )); didle=$(( idle2 - idle1 ))
+      pct=0; [ "$dtotal" -gt 0 ] && pct=$(( (100 * (dtotal - didle)) / dtotal ))
+      echo "cpu|string|󰻠 ''${pct}%"; echo ""
     done
   '';
 
   # ============================================================
-  # 3. 内存占用监控
-  # 功能：读取 /proc/meminfo 的 MemTotal（总内存）与 MemAvailable
-  #       （真实可用内存，已扣除可回收缓存），计算已用内存百分比。
-  #       每 3 秒刷新一次，内存变化没有 CPU 那么剧烈，不需要 1 秒级刷新。
+  # 内存占用模块：MemTotal - MemAvailable 得已用内存，显示 GiB 数值
   # ============================================================
   mem-script = pkgs.writeShellScript "yambar-mem" ''
     while true; do
       total=$(awk '/^MemTotal:/{print $2}' /proc/meminfo)
       avail=$(awk '/^MemAvailable:/{print $2}' /proc/meminfo)
-      used=$(( total - avail ))
-      pct=$(( (100 * used) / total ))
-      echo "mem|string|󰍛 ''${pct}%"
-      echo ""
+      used_gib=$(awk -v t="$total" -v a="$avail" 'BEGIN{printf "%.1f", (t-a)/1024/1024}')
+      echo "mem|string|󰍛 ''${used_gib}GiB"; echo ""
       sleep 3
     done
   '';
 
   # ============================================================
-  # 4. 网速监控
-  # 功能：找到默认路由使用的网卡（通常是 wifi 或有线网卡），
-  #       读取 /proc/net/dev 中该网卡的收发字节数（第 2 列接收 + 第 10 列发送），
-  #       间隔 1 秒采样两次算出差值，即为每秒网速（KB/s）。
-  #       图标使用 WiFi 符号 󰤨。
-  # 注意：''${speed} 使用双美元符号转义，防止 Nix 把 ${...} 当作自己的字符串
-  #       插值语法来解析，这里我们要的是纯 Bash 变量引用。
+  # 磁盘占用模块：读取根分区（/）已用百分比，每 60 秒刷新一次
   # ============================================================
-  network-speed = pkgs.writeShellScript "yambar-net-speed" ''
-    get_bytes() {
-      iface=$(ip route get 8.8.8.8 | awk '{print $5}')  # 取默认路由的出口网卡名
-      cat /proc/net/dev | grep "$iface" | awk '{print $2+$10}'
-    }
+  disk-script = pkgs.writeShellScript "yambar-disk" ''
     while true; do
-      b1=$(get_bytes)
-      sleep 1
-      b2=$(get_bytes)
-      speed=$(( (b2 - b1) / 1024 ))  # 字节差 / 1024 = KB/s
-      echo "net|string|󰤨 ''${speed}KB/s"
-      echo ""
+      pct=$(df --output=pcent / | tail -n1 | tr -d ' %')
+      echo "disk|string|󰋊 ''${pct}%"; echo ""
+      sleep 60
     done
   '';
 
   # ============================================================
-  # 5. 电池模块（横向电池图标版本）
-  # 功能：读取 BAT0 的电量百分比与充放电状态。
-  #       图标改用 Font Awesome 风格的"横向胶囊"电池图标（而非竖版），
-  #       并按电量档位（满/75%/50%/25%/低电量）切换图标；
-  #       充电时额外叠加一个闪电符号 󰂄 提示正在充电。
+  # CPU 温度模块：读取第一个 thermal_zone 的温度（原始单位为毫摄氏度），每 5 秒刷新
+  # ============================================================
+  temp-script = pkgs.writeShellScript "yambar-temp" ''
+    while true; do
+      raw=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null || echo 0)
+      temp=$(( raw / 1000 ))
+      echo "temp|string|󰔏 ''${temp}°C"; echo ""
+      sleep 5
+    done
+  '';
+
+  # ============================================================
+  # 网速模块：默认路由网卡收发字节差值算 KB/s，WiFi 图标
+  # ============================================================
+  network-speed = pkgs.writeShellScript "yambar-net-speed" ''
+    get_bytes() {
+      iface=$(ip route get 8.8.8.8 | awk '{print $5}')
+      cat /proc/net/dev | grep "$iface" | awk '{print $2+$10}'
+    }
+    while true; do
+      b1=$(get_bytes); sleep 1; b2=$(get_bytes)
+      speed=$(( (b2 - b1) / 1024 ))
+      echo "net|string|󰤨 ''${speed}KB/s"; echo ""
+    done
+  '';
+
+  # ============================================================
+  # 电池模块：横向图标按电量分档，充电/未充满时加闪电前缀
   # ============================================================
   battery-script = pkgs.writeShellScript "yambar-battery" ''
     while true; do
       if [ -e /sys/class/power_supply/BAT0/capacity ]; then
         CAP=$(cat /sys/class/power_supply/BAT0/capacity)
         STATUS=$(cat /sys/class/power_supply/BAT0/status)
-
-        # 根据电量百分比选择横向电池图标（满/75/50/25/空）
-        if   [ "$CAP" -ge 90 ]; then ICON=""   # 横向满电
-        elif [ "$CAP" -ge 65 ]; then ICON=""   # 横向 75%
-        elif [ "$CAP" -ge 35 ]; then ICON=""   # 横向 50%
-        elif [ "$CAP" -ge 10 ]; then ICON=""   # 横向 25%
-        else                        ICON=""   # 横向低电量
+        if   [ "$CAP" -ge 90 ]; then ICON=""
+        elif [ "$CAP" -ge 65 ]; then ICON=""
+        elif [ "$CAP" -ge 35 ]; then ICON=""
+        elif [ "$CAP" -ge 10 ]; then ICON=""
+        else                        ICON=""
         fi
-
-        # 充电中额外加一个闪电符号前缀，与图标区分状态
-        if [ "$STATUS" = "Charging" ]; then
-          PREFIX="󰂄 "
-        else
-          PREFIX=""
-        fi
-
+        PREFIX=""
+        case "$STATUS" in
+          Charging|"Not charging") PREFIX="󰂄 " ;;
+        esac
         echo "bat|string|''${PREFIX}$ICON ''${CAP}%"
       else
-        echo "bat|string|󰂑 AC"   # 没有电池（台式机/外接电源）
+        echo "bat|string|󰂑 AC"
       fi
-      echo ""
-      sleep 30
+      echo ""; sleep 30
     done
   '';
 
   # ============================================================
-  # 6. 音量模块
-  # 功能：用 wpctl（wireplumber 自带工具）读取默认输出设备的音量，
-  #       根据是否静音 / 音量高低切换不同图标。
+  # 音量模块：wpctl 读音量，按静音/高/低音量切换图标
   # ============================================================
   volume-script = pkgs.writeShellScript "yambar-volume" ''
-    get_vol() {
-      ${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@
-    }
     update_vol() {
-      raw=$(get_vol)  # 形如 "Volume: 0.45" 或 "Volume: 0.45 [MUTED]"
+      raw=$(${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@)
       vol=$(echo "$raw" | awk '{print $2}')
       pct=$(echo "$vol * 100" | ${pkgs.bc}/bin/bc | cut -d'.' -f1)
-      if echo "$raw" | grep -q MUTED; then
-        ICON="󰝟"   # 静音
-      elif [ "$pct" -ge 60 ]; then
-        ICON="󰕾"   # 高音量
-      elif [ "$pct" -ge 1 ]; then
-        ICON="󰖀"   # 低音量
-      else
-        ICON="󰸈"   # 音量为 0
-      fi
-      echo "vol|string|$ICON ''${pct}%"
-      echo ""
+      if echo "$raw" | grep -q MUTED; then ICON="󰝟"
+      elif [ "$pct" -ge 60 ]; then ICON="󰕾"
+      elif [ "$pct" -ge 1 ]; then ICON="󰖀"
+      else ICON="󰸈"; fi
+      echo "vol|string|$ICON ''${pct}%"; echo ""
     }
     update_vol
+    while true; do sleep 2; update_vol; done
+  '';
+
+  # ============================================================
+  # MPD 音乐信息模块：用 mpc idle 阻塞监听，有变化才刷新，避免轮询浪费
+  # ============================================================
+  mpd-script = pkgs.writeShellScript "yambar-mpd" ''
+    update_song() {
+      status=$(${pkgs.mpc}/bin/mpc status 2>/dev/null | sed -n '2p' | awk '{print $1}')
+      song=$(${pkgs.mpc}/bin/mpc current 2>/dev/null)
+      if [ -z "$song" ]; then
+        echo "mpd|string|"
+      elif [ "$status" = "[playing]" ]; then
+        echo "mpd|string|󰐊 ''${song}"
+      else
+        echo "mpd|string|󰏤 ''${song}"
+      fi
+      echo ""
+    }
+    update_song
     while true; do
+      ${pkgs.mpc}/bin/mpc idle player > /dev/null 2>&1
+      update_song
+    done
+  '';
+
+  # ============================================================
+  # fcitx5 输入法状态模块：轮询当前输入法名称，每 3 秒刷新
+  # ============================================================
+  fcitx-script = pkgs.writeShellScript "yambar-fcitx" ''
+    while true; do
+      im=$(${pkgs.fcitx5}/bin/fcitx5-remote -n 3>/dev/null)
+      case "$im" in
+        *pinyin*|*rime*) label="zh" ;;
+        *keyboard-us*)   label="en" ;;
+        *)               label="''${im}" ;;
+      esac
+      echo "fcitx|string|󰌌 ''${label}"; echo ""
       sleep 2
-      update_vol
     done
   '';
 in
 {
-  # 依赖包：yambar 本体、wireplumber（音量控制）、bc（音量计算需要浮点运算）
-  home.packages = [ pkgs.yambar pkgs.wireplumber pkgs.bc ];
+  # 依赖包：yambar 本体、wireplumber（音量）、bc（浮点计算）、mpc-cli（MPD 客户端）、fcitx5（输入法状态查询）
+  home.packages = [ pkgs.yambar pkgs.wireplumber pkgs.bc pkgs.mpc pkgs.fcitx5 ];
 
-  # 将生成的 config.yml 写入 ~/.config/yambar/config.yml
   xdg.configFile."yambar/config.yml" = {
-    force = true;  # 覆盖已有文件，确保每次 rebuild 都用最新配置
+    force = true;
     text = ''
       # ===================== yambar 状态栏总配置 =====================
       bar:
         height: 50
         location: top
-        background: 1e1e2ecc          # 深紫黑半透明背景（Dracula 风格）
-        margin: 8                     # 状态栏整体上下边距（离屏幕边缘）
-        left-spacing: 16              # 左侧区域整体左边距
-        right-spacing: 16             # 右侧区域整体右边距
+        background: 1e1e2ecc     # 深紫黑半透明背景
+        margin: 3                # 整体上下边距
+        left-spacing: 0          # 左区离屏幕左边缘的距离（留出空隙）
+        right-spacing: 0         # 右区离屏幕右边缘的距离（留出空隙）
+        spacing: 2                # 同区域内相邻模块之间的间距
         font: JetBrainsMono Nerd Font:size=26
 
-        # ---------- 左侧区域：工作区 + CPU + 内存 ----------
+        # ---------- 左侧区域：工作区 + CPU + 内存 + 磁盘 + 温度 ----------
         left:
-          - script: # 工作区（去掉了前面的电脑图标，直接显示数字/名称）
+          - script:
               path: ${niri-workspace}
-              content: { string: { text: "{ws}", foreground: cba6f7ff, margin: 10 } } # 淡紫色，间距收窄
-
-          - script: # CPU 占用
+              content: { string: { text: "{ws}", foreground: cba6f7ff, left-margin: 5, right-margin: 5 } } # 淡紫
+          - script:
               path: ${cpu-script}
-              content: { string: { text: "{cpu}", foreground: fab387ff, margin: 10 } } # 淡橙色
-
-          - script: # 内存占用
+              content: { string: { text: "{cpu}", foreground: fab387ff, left-margin: 4, right-margin: 4 } } # 淡橙
+          - script:
               path: ${mem-script}
-              content: { string: { text: "{mem}", foreground: 94e2d5ff, margin: 10 } } # 淡青色
+              content: { string: { text: "{mem}", foreground: 94e2d5ff, left-margin: 4, right-margin: 4 } } # 淡青
+          - script:
+              path: ${disk-script}
+              content: { string: { text: "{disk}", foreground: 89dcebff, left-margin: 4, right-margin: 4 } } # 淡天蓝
+          - script:
+              path: ${temp-script}
+              content: { string: { text: "{temp}", foreground: eba0acff, left-margin: 4, right-margin: 4 } } # 淡珊瑚色
 
         # ---------- 中间区域：时钟 ----------
         center:
           - clock:
               date-format: "%y/%m/%d"
               time-format: "%P %I:%M:%S %a"
-              content: [ string: { text: "{date} {time}", foreground: f9e2afff, margin: 10 } ] # 米黄色
+              content: [ string: { text: "{date} {time}", foreground: f9e2afff, left-margin: 6, right-margin: 6 } ] # 米黄
 
-        # ---------- 右侧区域：音量 / 网速 / 电池 ----------
+        # ---------- 右侧区域：音乐 / 输入法 / 音量 / 网速 / 电池 ----------
         right:
-          - script: # 音量
+          - script:
+              path: ${mpd-script}
+              content: { string: { text: "{mpd}", foreground: f5c2e7ff, left-margin: 4, right-margin: 4 } } # 淡粉
+          - script:
+              path: ${fcitx-script}
+              content: { string: { text: "{fcitx}", foreground: cdd6f4ff, left-margin: 4, right-margin: 4 } } # 淡灰白
+          - script:
               path: ${volume-script}
-              content: { string: { text: "{vol}", foreground: a6e3a1ff, margin: 10 } } # 淡绿色
-
-          - script: # 网速（WiFi 图标）
+              content: { string: { text: "{vol}", foreground: a6e3a1ff, left-margin: 4, right-margin: 4 } } # 淡绿
+          - script:
               path: ${network-speed}
-              content: { string: { text: "{net}", foreground: 89b4faff, margin: 10 } } # 淡蓝色
-
-          - script: # 电池状态（横向图标）
+              content: { string: { text: "{net}", foreground: 89b4faff, left-margin: 4, right-margin: 4 } } # 淡蓝
+          - script:
               path: ${battery-script}
-              content: { string: { text: "{bat}", foreground: f38ba8ff, margin: 10 } } # 淡红色
-	bar:
-	   height: 50
-  	location: top
-  	background: 1e1e2ecc
-  	margin: 8
-  	left-spacing: 16
-	right-spacing: 16
-  	spacing: 5          # 新增：模块与模块之间的间距
-  	font: JetBrainsMono Nerd Font:size=26
+              content: { string: { text: "{bat}", foreground: f38ba8ff, left-margin: 0, right-margin: 0 } } # 淡红
     '';
   };
 }

@@ -49,7 +49,8 @@
       
         // --- 5. 窗口与布局控制 ---
         "Mod+Q"                 hotkey-overlay-title="关闭当前窗口"       { close-window; }
-        "Mod+F"                 hotkey-overlay-title="最大化列"           { maximize-column; }
+	"Mod+F"                 hotkey-overlay-title="最大化列"           { maximize-window-to-edges; }
+	//"Mod+F"                 hotkey-overlay-title="最大化列"           { maximize-column; }
         "Mod+Shift+F"           hotkey-overlay-title="全屏/退出切换"      { spawn "sh" "-c" "niri msg action fullscreen-window && noctalia msg bar-toggle && if noctalia msg status | grep -q '\"dock_visible\":true'; then noctalia msg dock-hide; fi && noctalia msg desktop-widgets-toggle"; }
         "Mod+V"                 hotkey-overlay-title="切换窗口浮动"       { toggle-window-floating; }
         "Mod+C"                 hotkey-overlay-title="居中列"             { center-column; }

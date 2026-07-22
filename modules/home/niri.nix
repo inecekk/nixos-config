@@ -29,7 +29,9 @@ in
       overview {
         zoom 0.5
       }
-      window-rule {
+
+	window-rule {
+        // open-maximized-to-edges true
         match app-id="code"
         opacity 0.85
       }
