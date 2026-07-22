@@ -17,16 +17,15 @@
     scripts = [ pkgs.mpvScripts.mpris ];
   };
 
-  # NixOS 渐变字母 logo，$1~$6 对应下面 logo.color 里的六级颜色，
-  # 每一行用一个占位符，从紫色过渡到青色
+  # 6 行精密 ASCII Logo ($1~$6)
   xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
-    $1 _   _ _       ____   _____ 
-    $2| \ | (_)     / __ \ / ____|
-    $3|  \| |___  _| |  | | (___  
-    $4| . ` | \ \/ / |  | |\___ \ 
-    $5| |\  | |>  <| |__| |____) |
-    $6|_| \_|_/_/\_\\____/|_____/ 
-  '';
+$1 _   _  ___  _  _   ____   ____
+$2| \ | ||_ || |/ /  / __ \ / ___|
+$3|  \| | | || ' /  | |  | |\___ \
+$4| . ` | | ||  <   | |  | | ___) |
+$5| |\  |_| || . \  | |__| ||____/
+$6|_| \_||___||_|\_\  \____/|_____/
+'';
 
   programs.fastfetch = {
     enable = true;
@@ -34,97 +33,89 @@
       logo = {
         type = "file";
         source = "~/.config/fastfetch/nixos-gradient.txt";
-        # 对应 ascii 文件里的 $1~$6，每行一个颜色，做出渐变效果
+        # 6 级渐变色
         color = {
           "1" = "38;5;99";
-          "2" = "38;5;93";
-          "3" = "38;5;92";
+          "2" = "38;5;98";
+          "3" = "38;5;97";
           "4" = "38;5;68";
-          "5" = "38;5;44";
+          "5" = "38;5;45";
           "6" = "38;5;43";
         };
         padding = {
-          # top 数值越大，logo 整体往下移动得越多
-          top = 4;
-          # logo 和右侧信息栏之间的间距
-          right = 5;
+          top = 3;       # 上下垂直居中
+          right = 4;     # Logo 与右侧文字之间的间距
         };
       };
       display = {
-        # 图标和文字之间的间隔符
-        separator = " ";
-        # 让所有模块的值从同一列开始，不受图标宽度不一致的影响
+        separator = "  "; # 增加分隔符空格数
         key = {
-          width = 3;
+          width = 4;      # 宽容度更高，专门对齐 Emoji
         };
       };
+      # 所有 Key 后面显式附带空格，彻底解决 Emoji 贴字问题
       modules = [
         {
           type = "os";
-          key = "󱄅 ";
+          key = "❄️ ";
           keyColor = "magenta";
         }
         {
           type = "kernel";
-          key = "󰒋 ";
+          key = "🐧 ";
           keyColor = "blue";
         }
         {
           type = "uptime";
-          key = "󰅐 ";
+          key = "⏱️ ";
           keyColor = "green";
         }
         {
           type = "packages";
-          key = "󰏖 ";
+          key = "📦 ";
           keyColor = "yellow";
         }
         {
           type = "wm";
-          key = "󰖯 ";
+          key = "🪟 ";
           keyColor = "magenta";
         }
         {
           type = "shell";
-          key = "$ ";
+          key = "🐚 ";
           keyColor = "cyan";
         }
         {
           type = "terminal";
-          key = ">_ ";
+          key = "💻 ";
           keyColor = "blue";
         }
         "break"
         {
           type = "cpu";
-          key = "󰻠 ";
+          key = "⚡ ";
           keyColor = "green";
         }
         {
-          type = "gpu";
-          key = "󰢮 ";
-          keyColor = "cyan";
-        }
-        {
           type = "memory";
-          key = "󰍛 ";
+          key = "📊 ";
           keyColor = "yellow";
         }
         "break"
         {
           type = "disk";
-          key = "󰋊 ";
+          key = "💾 ";
           folders = [ "/" ];
           keyColor = "blue";
         }
         {
           type = "display";
-          key = "󰍹 ";
+          key = "📺 ";
           keyColor = "magenta";
         }
         {
           type = "localip";
-          key = "󰩟 ";
+          key = "🌐 ";
           keyColor = "cyan";
           showIpv4 = true;
         }
