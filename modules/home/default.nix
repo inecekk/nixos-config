@@ -15,7 +15,7 @@ in
 {
   home-manager.users.lk = { pkgs, ... }: {
 
-    imports = autoImports; # 自动导入所有模块，包括刚才新建的 autostart.nix
+    imports = autoImports; # 自动导入所有模块
     home.stateVersion = "26.11"; # 设置 Home Manager 状态版本
 
     # 用户安装的软件包列表
@@ -23,7 +23,7 @@ in
       git   wget foot bluetui btop  yazi tree 
        grim slurp wl-clipboard  libnotify
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
-      qq materialgram rmpc go-musicfox vscode rnote opentabletdriver yambar
+      qq materialgram rmpc go-musicfox vscode rnote opentabletdriver 
     ];
 
     # 设置 Wayland 相关环境变量，确保所有 GUI 程序运行在 Wayland 后端

@@ -4,9 +4,9 @@
         "Mod+Shift+E"           hotkey-overlay-title="退出 Niri"          { quit; }
         "Mod+S"                 hotkey-overlay-title="区域截图"           { screenshot; }
  	// 蓝牙键盘多媒体
-    "XF86AudioPrev"    hotkey-overlay-title="打开foot"     { spawn "foot"; }
-    "XF86AudioPlay"    hotkey-overlay-title=""   { spawn "playerctl" "-p" "musicfox" "play-pause"; }
-    "XF86AudioNext"    hotkey-overlay-title="关闭"     { close-window; }       
+        "XF86AudioPrev"    hotkey-overlay-title="打开foot"     { spawn "foot"; }
+    	"XF86AudioPlay"    hotkey-overlay-title=""   { spawn "playerctl" "-p" "musicfox" "play-pause"; }
+    	"XF86AudioNext"    hotkey-overlay-title="关闭"     { close-window; }       
         // --- 2. 应用启动 ---
         "Mod+Return"            hotkey-overlay-title="启动终端"           { spawn "foot"; }
         "Super_R"               hotkey-overlay-title="启动终端"           { spawn "foot"; }
@@ -43,14 +43,12 @@
         "Mod+Ctrl+W"            hotkey-overlay-title="切换小部件"         { spawn "noctalia" "msg" "desktop-widgets-toggle"; }
         "Mod+Ctrl+M"            hotkey-overlay-title="主题切换"           { spawn "noctalia" "msg" "theme-mode-toggle"; }
 
-    	// 蓝牙键盘的锁定键（Win 下是 Win+L），显式绑定为 Noctalia 锁屏+睡眠
-    	// niri 在 compositor 层截获这个按键，不再走 logind 的 HandlePowerKey 默认逻辑
+    	// 蓝牙键盘的锁定键（Win 下是 Win+L），Noctalia 锁屏+睡眠
 	XF86PowerOff		hotkey-overlay-title="noctalia锁屏加睡眠" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "lockAndSuspend"; }
       
         // --- 5. 窗口与布局控制 ---
         "Mod+Q"                 hotkey-overlay-title="关闭当前窗口"       { close-window; }
-	"Mod+F"                 hotkey-overlay-title="最大化列"           { maximize-window-to-edges; }
-	//"Mod+F"                 hotkey-overlay-title="最大化列"           { maximize-column; }
+	"Mod+F"                 hotkey-overlay-title="最大化列"           { maximize-column; }
         "Mod+Shift+F"           hotkey-overlay-title="全屏/退出切换"      { spawn "sh" "-c" "niri msg action fullscreen-window && noctalia msg bar-toggle && if noctalia msg status | grep -q '\"dock_visible\":true'; then noctalia msg dock-hide; fi && noctalia msg desktop-widgets-toggle"; }
         "Mod+V"                 hotkey-overlay-title="切换窗口浮动"       { toggle-window-floating; }
         "Mod+C"                 hotkey-overlay-title="居中列"             { center-column; }
@@ -76,7 +74,7 @@
         "Mod+WheelScrollDown"   cooldown-ms=150 hotkey-overlay-title="下一工作区" { focus-workspace-down; }
         "Mod+WheelScrollUp"     cooldown-ms=150 hotkey-overlay-title="上一工作区" { focus-workspace-up; }
         
-        // --- 7. 列宽与吞入控制 ---
+        // --- 7. 列宽控制 ---
         "Mod+R"                 hotkey-overlay-title="切换列宽预设"       { switch-preset-column-width; }
         "Mod+Minus"             hotkey-overlay-title="缩小列宽"           { set-column-width "-10%"; }
         "Mod+Equal"             hotkey-overlay-title="增大列宽"           { set-column-width "+10%"; }
