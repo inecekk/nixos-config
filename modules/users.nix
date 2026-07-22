@@ -19,6 +19,9 @@
     ];
     #shell = pkgs.fish;
   };
-  #users.defaultUserShell = pkgs.fish;
 
+  system.userActivationScripts.userDirsInit.text = ''
+    mkdir -p ~/C ~/D ~/Pictures/Screenshots ~/Music ~/D/Music ~/D/Pictures/Wallpaper/WallhavenDesktop
+    chown -R lk:users ~/C ~/D ~/Pictures ~/Music ~/D/Music ~/D/Pictures
+  '';
 }

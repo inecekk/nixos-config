@@ -45,7 +45,7 @@ in
       }
       layout {
         background-color "transparent" // 背景透明，透出壁纸
-        gaps 6 // 窗口间距，同时也是窗口到屏幕边的外边距（niri 的 inner=outer 共用此值）
+        gaps 7 // 窗口间距，同时也是窗口到屏幕边的外边距（niri 的 inner=outer 共用此值）
 	preset-column-widths { // Mod+R 循环切换的预设列宽
           proportion 0.25
           proportion 0.5
@@ -70,7 +70,7 @@ in
         }
         struts { // 窗口到屏幕边的额外边距(outer)：0=贴边，想留缝改大；设负值(如 -6)可抵消 gaps 让 maximize-column 也贴边
           left 0
-          right -2
+          right 0
           top -5
           bottom -7
         }
