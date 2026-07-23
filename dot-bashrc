@@ -1,84 +1,94 @@
 # ~/.bashrc - NixOS optimized
-# =========================
+# ==============================================================================
+# 环境变量设置 (Environment Variables)
+# ==============================================================================
+export EDITOR="vim"
+export VISUAL="vim"
+
+# ==============================================================================
+# NixOS 配置管理 (Rebuild & Test)
+# ==============================================================================
+
 # NixOS 测试配置
-# =========================
 ntest() {
-        cd /etc/nixos || return
-        echo "🧪 测试 NixOS 配置..."
-        sudo nixos-rebuild test
-        cd - >/dev/null
+    cd /etc/nixos || return 1
+    echo "[TEST] 测试 NixOS 配置..."
+    sudo nixos-rebuild test
+    cd - >/dev/null || return
 }
-# =========================
-# NixOS 正式部署
-# =========================
+
+# NixOS 正式部署与 Git 联动
 rebuild() {
-        sudo -v || return 1
-        cd /etc/nixos || return
-        git add -A
-        local start_time
-        start_time=$(date +%s)
-        echo "🔨 开始构建 NixOS..."
-        if sudo nixos-rebuild switch; then
-        local end_time
+    sudo -v || return 1
+    cd /etc/nixos || return 1
+
+    git add -A
+    local start_time
+    start_time=$(date +%s)
+
+    echo "[BUILD] 开始构建 NixOS..."
+    if sudo nixos-rebuild switch; then
+        local end_time elapsed gen tag
         end_time=$(date +%s)
-        local elapsed
-        elapsed=$((end_time-start_time))
-        local gen
-        gen=$(sudo nix-env \
-        -p /nix/var/nix/profiles/system \
-        --list-generations |
-        tail -1 |
-        awk '{print $1}')
-        git commit \
-        -m "gen-${gen}: $(date +%m-%d_%H:%M) (${elapsed}s)" \
-        --allow-empty
-        local tag
+        elapsed=$((end_time - start_time))
+
+        gen=$(sudo nix-env -p /nix/var/nix/profiles/system --list-generations | tail -1 | awk '{print $1}')
+        
+        git commit -m "gen-${gen}: $(date +%m-%d_%H:%M) (${elapsed}s)" --allow-empty
         tag="gen-${gen}-$(date +%Y%m%d-%H%M%S)"
         git tag "$tag"
         git push --follow-tags
+
         echo ""
-        echo "✅ NixOS 更新完成"
-        echo "📦 Generation: $gen"
-        echo "⏱️ Time: ${elapsed}s"
-        echo "🏷️ Tag: $tag"
-        else
-        echo "❌ NixOS 构建失败"
-        cd - >/dev/null
+        echo "[OK] NixOS 更新完成"
+        echo "Generation: $gen"
+        echo "Time: ${elapsed}s"
+        echo "Tag: $tag"
+    else
+        echo "[FAIL] NixOS 构建失败"
+        cd - >/dev/null || return 1
         return 1
-        fi
-        cd - >/dev/null
+    fi
+
+    cd - >/dev/null || return
 }
-# =========================
-# 网络管理
-# =========================
-net(){
-        sudo systemctl restart NetworkManager &&
-        sudo nmtui
-}
-# =========================
-# 系统世代
-# =========================
-last10(){
-        nixos-rebuild list-generations |
-        head -n 11
+
+# ==============================================================================
+# NixOS 世代与清理 (Generations & Clean)
+# ==============================================================================
+
+# 查看世代列表
+last10() {
+    nixos-rebuild list-generations | head -n 11
 }
 alias gens='last10'
-# =========================
-# Git 分支显示
-# =========================
-git_branch(){
-        local branch
-        branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-        if [ -n "$branch" ]; then
-        echo "git:($branch)"
-        fi
+
+# 彻底清理所有旧世代，只保留当前世代并释放磁盘空间
+alias nixclean="sudo nix-env --profile /nix/var/nix/profiles/system --delete-generations old && sudo nix-collect-garbage -d && sudo nixos-rebuild switch"
+
+# 安全清理：仅删除 3 天前的世代
+alias nixclean-3d="sudo nix-collect-garbage --delete-older-than 3d && sudo nixos-rebuild switch"
+
+# ==============================================================================
+# 网络与系统工具 (Network & Utilities)
+# ==============================================================================
+
+# 重启网络并进入 nmtui 界面
+net() {
+    sudo systemctl restart NetworkManager && sudo nmtui
 }
-# =========================
-# 终端提示符
-# =========================
+
+# ==============================================================================
+# 终端提示符与 Git 状态 (Prompt Settings)
+# ==============================================================================
+
+git_branch() {
+    local branch
+    branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+    if [ -n "$branch" ]; then
+        echo "git:($branch)"
+    fi
+}
+
+# 自定义终端 PS1 提示符
 export PS1='\[\033[38;5;111m\]\u\[\033[38;5;81m\]@\[\033[38;5;114m\]\h \[\033[38;5;250m\]· \w \[\033[38;5;135m\]$(git_branch) \[\033[38;5;221m\]\t\[\033[0m\]\n'
-# =========================
-# 默认编辑器
-# =========================
-export EDITOR=vim
-export VISUAL=vim
