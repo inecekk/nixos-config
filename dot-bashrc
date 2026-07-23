@@ -70,6 +70,21 @@ alias nixclean="sudo nix-env --profile /nix/var/nix/profiles/system --delete-gen
 alias nixclean-3d="sudo nix-collect-garbage --delete-older-than 3d && sudo nixos-rebuild switch"
 
 # ==============================================================================
+# 音乐播放与波形 (MusicFox & Cava)
+# ==============================================================================
+
+unalias music 2>/dev/null
+function music() {
+    tmux kill-session -t music 2>/dev/null
+    tmux new-session -d -s music
+    tmux split-window -h -t music
+    tmux send-keys -t music:0.0 'musicfox' C-m
+    tmux send-keys -t music:0.1 'cava' C-m
+    tmux select-pane -t music:0.0
+    tmux attach-session -t music
+}
+
+# ==============================================================================
 # 网络与系统工具 (Network & Utilities)
 # ==============================================================================
 

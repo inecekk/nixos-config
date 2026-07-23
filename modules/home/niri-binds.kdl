@@ -17,7 +17,7 @@
         "Mod+Shift+M"           hotkey-overlay-title="Materialgram"       { spawn "materialgram"; }
         "Mod+Shift+Q"           hotkey-overlay-title="QQ"                 { spawn "sh" "-c" "qq --enable-features=UseOzonePlatform --ozone-platform=wayland"; }
         "Mod+M" 		hotkey-overlay-title="Musicfox" {
-        spawn "sh" "-c" "if pgrep -x 'musicfox'; then pkill -x 'musicfox'; else foot -e musicfox; fi"
+        spawn "music"
         }
         // --- 3. Noctalia 面板交互 (Panel Control) ---
         "Mod+A"                 hotkey-overlay-title="控制面板"           { spawn "noctalia" "panel-open" "control-center"; }

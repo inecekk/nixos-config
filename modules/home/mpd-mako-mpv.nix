@@ -1,9 +1,11 @@
-# modules/home/media-notify.nix
+# modules/home/mpd-mako-mpv.nix
 # ==========================================
-# 通知与媒体：mako + mpd/rmpc + mpv + fastfetch
+# 通知与媒体：mako + mpd/rmpc + mpv + fastfetch + cava + bash
 # ==========================================
 { pkgs, ... }:
+
 {
+
   # ---------- mako 通知 ----------
   services.mako = {
     settings = {
@@ -60,16 +62,14 @@
   };
 
   # ---------- fastfetch ----------
-
-# ---------- fastfetch ----------
-xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
-  $1☆_   __ ✸   _☾  __  __✹   ___ ✼✳   ____ ✽
-  $2☆| \ | |✷ | |❀ \ \/ / ✹ / _ \ ✼✳ / ___| ✾
-  $3❄|  \| |✸ | |❀  \  / ✶ | | | |✼✳ \___ \ ✾
-  $4☆| . ` |✿ | |❀  /  \ ✺ | | | |✼✳  ___) |✾
-  $5☆| |\  |✸ | |❀ / /\ \✹ | |_| |✼✳ |____/ ✾
-  $6✦|_| \_|✸ |_| /_/  \_\✶ \___/ ✳ |_____/ ❃
-'';
+  xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
+    $1☆ _   _ ✸ _ ☾ __  __✹   __    ____  ✽
+    $2☆| \ | |✷| |❀\ \/ / ✹ / _ \  / ___| ✾
+    $3❄|  \| |✸| |❀ \  / ✶ | | | | \___ \ ✾
+    $4☆| . ` |✿| |❀ /  \ ✺ | | | |  ___) |✾
+    $5☆| |\  |✸| |❀/ /\ \✹ | |_| | |____/ ✾
+    $6✦|_| \_|✸|_|/_/  \_\  \___/  |_____/❃
+  '';
 
   programs.fastfetch = {
     enable = true;
@@ -112,4 +112,23 @@ xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
       ];
     };
   };
+
+# ---------- Cava 霓虹彩虹渐变 ----------
+  programs.cava = {
+    enable = true;
+    settings = {
+      color = {
+        gradient = 1;
+        gradient_count = 8;
+        gradient_color_1 = "'#50fa7b'"; # 底部：鲜绿
+        gradient_color_2 = "'#8be9fd'"; # 青色
+        gradient_color_3 = "'#bd93f9'"; # 浅紫
+        gradient_color_4 = "'#ff79c6'"; # 粉紫
+        gradient_color_5 = "'#ffb86c'"; # 橙黄
+        gradient_color_6 = "'#ff5555'"; # 红色
+        gradient_color_7 = "'#f1fa8c'"; # 明黄
+        gradient_color_8 = "'#ff79c6'"; # 顶部：霓虹粉
+      };
+    };
+};  
 }
