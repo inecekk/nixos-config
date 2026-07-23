@@ -1,7 +1,7 @@
 # modules/home/fcitx5-rime.nix
 # ==========================================
 # fcitx5 + Rime 中文输入法自定义方案
-# 使用双拼·小鹤音形（double_pinyin_flypy）+ rime-ice 词库
+# 启用 rime-ice 雾凇词库，并开启双拼·小鹤音形
 # ==========================================
 { ... }:
 
@@ -10,11 +10,12 @@
     force = true;
     text = ''
       patch:
-      schema_list:
-      - schema: double_pinyin_flypy
-      - schema: rime_ice
-      switcher/hotkeys:
-      - F4
+        __include: rime_ice_suggestion:/
+        schema_list:
+          - schema: rime_ice
+          - schema: double_pinyin_flypy
+        switcher/hotkeys:
+          - F4
     '';
   };
 }

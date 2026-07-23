@@ -30,7 +30,22 @@
     dns = "systemd-resolved";
   };
   services.resolved.enable = true;
-
+i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+    fcitx5 = {
+      waylandFrontend = true;
+      addons = with pkgs; [
+        #qt6Packages.fcitx5-configtool
+        qt6Packages.fcitx5-chinese-addons
+        (fcitx5-rime.override {
+          rimeDataPkgs = [
+            rime-ice
+          ];
+        })
+      ];
+    };
+  };
   # iwd 漫游策略调整：进一步降低漫游敏感度，减少多 AP 环境下的主动切换/断线
   networking.wireless.iwd.settings = {
     General = {
