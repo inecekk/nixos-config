@@ -1,28 +1,69 @@
 # modules/hardware.nix
 # ==========================================
-# 硬件驱动、图形、蓝牙与安全策略模块
+# 硬件驱动、文件系统挂载、图形、蓝牙与安全策略模块
 # ==========================================
 { pkgs, ... }:
 
 {
-  # --- 1. 数位板驱动与规则 ---
-  # 通过 udev 规则加载驱动，确保即插即用且无需服务模块支持
+  # --- 1. 文件系统挂载 (原 filesystems.nix) ---
+  boot.supportedFilesystems = [ "ntfs" "btrfs" ];
+
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/2a2a478e-b03b-4e18-b1be-a37190168ca2";
+      fsType = "btrfs";
+      options = [ "compress=zstd:5" ];
+    };
+
+    "/boot" = {
+      device = "/dev/disk/by-uuid/7CB8-A11A";
+      fsType = "vfat";
+    };
+
+    "/home/lk/C" = {
+      device = "/dev/disk/by-uuid/752A6785456870B8";
+      fsType = "ntfs3";
+      options = [
+        "rw"
+        "uid=1000"
+        "gid=1000"
+        "dmask=022"
+        "fmask=022"
+        "nofail"
+        "x-systemd.device-timeout=3"
+      ];
+    };
+
+    "/home/lk/D" = {
+      device = "/dev/disk/by-uuid/4A9ED0D09ED0B5A3";
+      fsType = "ntfs3";
+      options = [
+        "rw"
+        "uid=1000"
+        "gid=1000"
+        "dmask=0000"
+        "fmask=0000"
+        "force"
+        "nofail"
+        "x-systemd.device-timeout=3"
+      ];
+    };
+  };
+
+  # --- 2. 数位板驱动与规则 ---
   environment.systemPackages = [ pkgs.opentabletdriver ];
   services.udev.packages = [ pkgs.opentabletdriver ];
 
-  # --- 2. 密钥管理服务 ---
-  # 启用 gnome-keyring，由 system-services.nix 中的 PAM 规则负责解锁
+  # --- 3. 密钥管理服务 ---
   services.gnome.gnome-keyring.enable = true;
 
-  # --- 3. 硬件基础设置 ---
+  # --- 4. 硬件基础设置 (图形与蓝牙) ---
   hardware = {
-    # 图形驱动配置
     graphics = {
       enable = true;
-      enable32Bit = true; # 支持 32 位图形库 (Steam/WINE 等)
+      enable32Bit = true;
     };
 
-    # 蓝牙控制器配置
     bluetooth = {
       enable = true;
       powerOnBoot = true;
@@ -37,17 +78,16 @@
     };
   };
 
-  # --- 4. 辅助程序配置 ---
+  # --- 5. 辅助程序配置 ---
   programs = {
-    dconf.enable = true; # GNOME 配置数据库，许多应用依赖
-    niri.enable = true; # 启用 Niri 窗口管理器
+    dconf.enable = true;
+    niri.enable = true;
   };
 
-  # --- 5. 安全与认证策略 ---
+  # --- 6. 安全与认证策略 (Polkit & PAM) ---
   security = {
-    polkit.enable = true; # 必须：系统权限授权管理
+    polkit.enable = true;
 
-    # 登录时通过 PAM 自动解锁 gnome-keyring
     pam.services.greetd.text = ''
       auth requisite pam_nologin.so
       auth include login
