@@ -9,7 +9,7 @@ in
     text = ''
       input { // 输入设备
         keyboard {
-          numlock // 默认开启数字小键盘
+        //  numlock // 默认开启数字小键盘
         }
         touchpad {
           tap // 轻触=点击
@@ -21,7 +21,7 @@ in
       }
       output "eDP-1" { // 内屏
         scale 2.0 // 200% 缩放
-        mode "3200x2000@90" // 分辨率@刷新率
+       // mode "3200x2000@90" // 分辨率@刷新率
       }
       hotkey-overlay {
         skip-at-startup // 启动时不弹快捷键提示
@@ -77,7 +77,7 @@ in
       }
       window-rule {
         match is-window-cast-target=false
-        draw-border-with-background false       # 移除背景框
+        draw-border-with-background false       // 移除背景框
         geometry-corner-radius 12 // 窗口圆角
         clip-to-geometry true // 内容裁剪到圆角
       }
