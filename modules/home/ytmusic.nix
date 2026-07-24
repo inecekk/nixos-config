@@ -79,7 +79,7 @@ fi
 
 
 if [ -z "$query" ]; then
-    query="YouTube Music Trending Songs"
+query="YouTube Music Top Hits"
 fi
 
 
@@ -95,15 +95,12 @@ mkdir -p "$CACHE"
 result=$(
 ${pkgs.yt-dlp}/bin/yt-dlp \
     --cookies-from-browser "$COOKIE" \
-	--flat-playlist \
-	--ignore-errors \
---cache-dir "$CACHE" \
---extractor-args "youtube:player_client=tv" \
---print "%(title)s|https://www.youtube.com/watch?v=%(id)s" \
-"ytsearch10:$query"
+    --ignore-errors \
+    --cache-dir "$CACHE" \
+    --extractor-args "youtube:player_client=web" \
+	--print "%(title)s---https://www.youtube.com/watch?v=%(id)s"    
+	"ytsearch5:$query" 2>/dev/null
 )
-
-
 
 if [ -z "$result" ]; then
 
@@ -146,8 +143,7 @@ fi
 
 
 
-url=$(echo "$song" | cut -d "|" -f2)
-
+url=$(echo "$song" | awk -F '---' '{print $2}')
 
 
 # ==========================================
@@ -157,7 +153,7 @@ url=$(echo "$song" | cut -d "|" -f2)
 
 ${pkgs.mpv}/bin/mpv \
     --title="🎵 ytmusic" \
-    --ytdl-format=bestaudio/best \
+    --ytdl-format="best[ext=m4a]/best"
     --ytdl-raw-options="cookies-from-browser=firefox:/home/lk/.config/zen/tso70vj4.Default Profile" \
     --volume=80 \
     "$url"
