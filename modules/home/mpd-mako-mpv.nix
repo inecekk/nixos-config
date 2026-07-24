@@ -46,7 +46,6 @@
 
   # ---------- mpv ----------
   programs.mpv = {
-    enable = true;
     config = {
       hwdec = "auto-safe";
       vo = "gpu-next";
@@ -133,5 +132,14 @@
         gradient_color_8 = "'#ff79c6'"; # 顶部：霓虹粉
       };
     };
-};  
+};
+
+
+
+ xdg.configFile."ytfzf/conf.sh".text = ''
+    YTFZF_PLAYER="mpv"
+    YTFZF_EXT="youtube"
+    YTFZF_YTDLP_ARGS="--cookies-from-browser firefox:/home/lk/.config/zen/tso70vj4.Default\ Profile"
+  '';
+  
 }
