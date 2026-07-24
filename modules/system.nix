@@ -12,7 +12,7 @@
   nixpkgs.config.allowUnfree = true;
   programs.fuse.userAllowOther = true;
 
-  # 文档瘦身（完全不生成本地文档）
+  # 文档瘦身
   documentation = {
     enable = false;
     nixos.enable = false;
