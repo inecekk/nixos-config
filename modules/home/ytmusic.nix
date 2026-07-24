@@ -18,7 +18,6 @@ let
 
 
 COOKIE="firefox:/home/lk/.config/zen/tso70vj4.Default Profile"
-
 CACHE="/home/lk/.cache/yt-dlp"
 
 
@@ -158,7 +157,7 @@ url=$(echo "$song" | cut -d "|" -f2)
 
 ${pkgs.mpv}/bin/mpv \
     --title="🎵 ytmusic" \
-    --ytdl-format=bestaudio \
+    --ytdl-format=bestaudio/best \
     --ytdl-raw-options="cookies-from-browser=firefox:/home/lk/.config/zen/tso70vj4.Default Profile" \
     --volume=80 \
     "$url"
