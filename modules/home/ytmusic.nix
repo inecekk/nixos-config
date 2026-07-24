@@ -7,16 +7,15 @@ let
 
 # ==========================================
 # 🎵 ytmusic
-# 终端 YouTube Music 播放器
+# Terminal YouTube Music Player
 #
 # yt-dlp  搜索解析
 # fzf     交互选择
-# mpv     音频播放
+# mpv     播放
 # ==========================================
 
 
 COOKIE="firefox:/home/lk/.config/zen/tso70vj4.Default Profile"
-
 
 CACHE="/home/lk/.cache/yt-dlp"
 
@@ -24,25 +23,30 @@ CACHE="/home/lk/.cache/yt-dlp"
 help_text()
 {
 cat <<'EOF'
+
 🎵 ytmusic 使用帮助
 
-🔍 /
-进入搜索
+搜索:
 
-❔ ?
-打开帮助
+ytmusic 歌曲名
 
-⬆️⬇️
+
+快捷键:
+
+↑ ↓
 选择歌曲
 
-⏎
-播放歌曲
-
-ESC
-退出程序
+Enter
+播放
 
 
-播放控制:
+命令:
+
+ytmusic ?
+打开帮助
+
+
+播放器:
 
 空格
 暂停 / 播放
@@ -52,15 +56,26 @@ ESC
 
 ← →
 快进
+
+
+ESC
+退出
+
 EOF
 }
 
 
-# ------------------------------------------
+# ==========================================
 # 参数
-# ------------------------------------------
+# ==========================================
 
-query="$*"
+query="$@"
+
+
+if [ "$query" = "?" ]; then
+    help_text
+    exit 0
+fi
 
 
 if [ -z "$query" ]; then
@@ -71,9 +86,11 @@ fi
 mkdir -p "$CACHE"
 
 
-# ------------------------------------------
-# 搜索
-# ------------------------------------------
+
+# ==========================================
+# 搜索 YouTube
+# ==========================================
+
 
 result=$(
 ${pkgs.yt-dlp}/bin/yt-dlp \
@@ -84,8 +101,9 @@ ${pkgs.yt-dlp}/bin/yt-dlp \
     --cache-dir "$CACHE" \
     --extractor-args "youtube:player_client=tv" \
     --print "%(title)s|%(url)s" \
-    "ytsearch8:$query" \
+    "ytsearch10:$query" 2>/dev/null
 )
+
 
 
 if [ -z "$result" ]; then
@@ -94,12 +112,15 @@ if [ -z "$result" ]; then
 fi
 
 
-# ------------------------------------------
+
+# ==========================================
 # fzf选择
-# ------------------------------------------
+# ==========================================
+
 
 song=$(
 echo "$result" |
+
 ${pkgs.fzf}/bin/fzf \
     --height=70% \
     --layout=reverse \
@@ -109,8 +130,9 @@ ${pkgs.fzf}/bin/fzf \
     --prompt="🎵 音乐 > " \
     --delimiter="|" \
     --with-nth=1 \
-    --bind "?":preview\(echo\ \"$(printf '%q' "$(help_text)")\"\)
+    --info=inline
 )
+
 
 
 if [ -z "$song" ]; then
@@ -118,12 +140,15 @@ if [ -z "$song" ]; then
 fi
 
 
+
 url=$(echo "$song" | cut -d "|" -f2)
 
 
-# ------------------------------------------
-# 播放
-# ------------------------------------------
+
+# ==========================================
+# mpv播放
+# ==========================================
+
 
 ${pkgs.mpv}/bin/mpv \
     --title="🎵 ytmusic" \
@@ -131,24 +156,37 @@ ${pkgs.mpv}/bin/mpv \
     --volume=80 \
     "$url"
 
+'';
+
+
+
+  yt = pkgs.writeShellScriptBin "yt" ''
+    exec ytmusic "$@"
   '';
+
+
 
 in
 {
 
-home.packages = with pkgs; [
+  home.packages = with pkgs; [
+
     yt-dlp
     fzf
     mpv
+
     ytmusic
-];
+    yt
+
+  ];
 
 
-# ==========================================
-# yt-dlp 全局配置
-# ==========================================
 
-xdg.configFile."yt-dlp/config".text = ''
+  # ==========================================
+  # yt-dlp 配置
+  # ==========================================
+
+  xdg.configFile."yt-dlp/config".text = ''
 --cache-dir /home/lk/.cache/yt-dlp
 --extractor-args youtube:player_client=tv
 --no-warnings
