@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783554392,
-        "narHash": "sha256-vcDlADBXH1+aZqVh3Qh7msMcncY0OD34TwLcBo/eqMI=",
+        "lastModified": 1784274386,
+        "narHash": "sha256-xTya+X7BvERG2+N4PR8nG/PhS66S6cOb5Ybt3+6xKWc=",
         "owner": "daeuniverse",
         "repo": "flake.nix",
-        "rev": "5673fe8b5638fcc198c62b424d737f517ff554c1",
+        "rev": "4a12b5ec401076194b6aaa170d95f5e3683c22c7",
         "type": "github"
       },
       "original": {
@@ -46,11 +46,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783550008,
-        "narHash": "sha256-qbbZUk9IG9dLNwCPwdPBs6I5clxwugRpP+1YU+GPK20=",
+        "lastModified": 1784789275,
+        "narHash": "sha256-cgRTWuG+u1tBPhm01JrId2k0Bni09phVJ1Q0BZlRd7M=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "f4d01c1d87c7c2ec909549165d5a8338f1bd3315",
+        "rev": "3b0e6bbd65869af1beadf5963a99befc179d209f",
         "type": "github"
       },
       "original": {
@@ -97,11 +97,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783760391,
-        "narHash": "sha256-UlM3IQXwfBbLem5LmBkeCEuW327PW5o1Knnj/0z51BA=",
+        "lastModified": 1784864377,
+        "narHash": "sha256-ljbvforMhs7Fx6Gr+IHwqv+MSkAV5G6XzGMddrdJsHs=",
         "owner": "noctalia-dev",
         "repo": "noctalia-shell",
-        "rev": "b6d8447e346d01c5fc3e8fd49a0bccaf29a41edd",
+        "rev": "7b649fc8453009a3c1fe45b9e8aee9b08b99cb2e",
         "type": "github"
       },
       "original": {
@@ -126,11 +126,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1783063092,
-        "narHash": "sha256-H6lM+h8+ZT25uWJwmYkER5yj5RJ9DP2++n5um/XH3J0=",
+        "lastModified": 1784354557,
+        "narHash": "sha256-z2XthIV/68GNghbqmaPVrShPIfMPwpZKTA47REKC5bA=",
         "owner": "youwen5",
         "repo": "zen-browser-flake",
-        "rev": "36b24209358c82e0ea5404ba003ae8dc37334c86",
+        "rev": "239dc504b56eabcfc1dce945e7e22ca99694be89",
         "type": "github"
       },
       "original": {

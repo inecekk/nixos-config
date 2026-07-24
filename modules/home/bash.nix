@@ -67,7 +67,7 @@
 
         echo "🔨 开始构建 NixOS..."
 
-        if sudo nixos-rebuild switch --flake .#lk; then
+        if sudo nixos-rebuild switch --flake .#nixos; then
           end_time=$(date +%s)
           elapsed=$((end_time-start_time))
           gen=$(sudo nix-env -p /nix/var/nix/profiles/system --list-generations | tail -1 | awk '{print $1}')
@@ -106,7 +106,7 @@
 
         echo "🚀 开始升级 NixOS..."
 
-        if sudo nixos-rebuild switch --flake .#lk; then
+        if sudo nixos-rebuild switch --flake .#nixos; then
           end_time=$(date +%s)
           elapsed=$((end_time-start_time))
           gen=$(sudo nix-env -p /nix/var/nix/profiles/system --list-generations | tail -1 | awk '{print $1}')
@@ -138,7 +138,7 @@
       ntest() {
         cd /etc/nixos || return 1
         echo "🧪 测试配置..."
-        sudo nixos-rebuild test --flake .#lk
+        sudo nixos-rebuild test --flake .#nixos
         cd - >/dev/null
       }
 
