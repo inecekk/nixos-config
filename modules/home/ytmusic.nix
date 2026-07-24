@@ -2,17 +2,19 @@
 
 let
 
-  ytmusic = pkgs.writeShellScriptBin "ytmusic" ''
-#!/usr/bin/env bash
+  # ==========================================
+  # 🎵 ytmusic
+  # 终端 YouTube Music 播放器
+  #
+  # yt-dlp : 搜索/解析
+  # fzf    : 终端选择
+  # mpv    : 播放
+  # ==========================================
 
-# ==========================================
-# 🎵 ytmusic
-# Terminal YouTube Music Player
-#
-# yt-dlp  搜索解析
-# fzf     交互选择
-# mpv     播放
-# ==========================================
+
+  ytmusic = pkgs.writeShellScriptBin "ytmusic" ''
+
+#!/usr/bin/env bash
 
 
 COOKIE="firefox:/home/lk/.config/zen/tso70vj4.Default Profile"
@@ -40,22 +42,19 @@ Enter
 播放
 
 
-命令:
-
-ytmusic ?
-打开帮助
-
-
 播放器:
 
 空格
 暂停 / 播放
 
-↑ ↓
-音量
+x
+后退 10 秒
+
+v
+快进 10 秒
 
 ← →
-快进
+快退 / 快进
 
 
 ESC
@@ -65,9 +64,11 @@ EOF
 }
 
 
+
 # ==========================================
 # 参数
 # ==========================================
+
 
 query="$@"
 
@@ -88,7 +89,7 @@ mkdir -p "$CACHE"
 
 
 # ==========================================
-# 搜索 YouTube
+# 搜索
 # ==========================================
 
 
@@ -96,7 +97,6 @@ result=$(
 ${pkgs.yt-dlp}/bin/yt-dlp \
     --cookies-from-browser "$COOKIE" \
     --flat-playlist \
-    --no-playlist \
     --ignore-errors \
     --cache-dir "$CACHE" \
     --extractor-args "youtube:player_client=tv" \
@@ -107,8 +107,11 @@ ${pkgs.yt-dlp}/bin/yt-dlp \
 
 
 if [ -z "$result" ]; then
+
     echo "❌ 没有找到歌曲"
+
     exit 1
+
 fi
 
 
@@ -131,12 +134,15 @@ ${pkgs.fzf}/bin/fzf \
     --delimiter="|" \
     --with-nth=1 \
     --info=inline
+
 )
 
 
 
 if [ -z "$song" ]; then
+
     exit 0
+
 fi
 
 
@@ -153,12 +159,18 @@ url=$(echo "$song" | cut -d "|" -f2)
 ${pkgs.mpv}/bin/mpv \
     --title="🎵 ytmusic" \
     --ytdl-format=bestaudio \
+    --ytdl-raw-options="cookies-from-browser=firefox:/home/lk/.config/zen/tso70vj4.Default Profile" \
     --volume=80 \
     "$url"
+
 
 '';
 
 
+
+  # ==========================================
+  # yt 快捷命令
+  # ==========================================
 
   yt = pkgs.writeShellScriptBin "yt" ''
     exec ytmusic "$@"
@@ -168,6 +180,10 @@ ${pkgs.mpv}/bin/mpv \
 
 in
 {
+
+  # ==========================================
+  # 安装软件
+  # ==========================================
 
   home.packages = with pkgs; [
 
@@ -183,13 +199,57 @@ in
 
 
   # ==========================================
-  # yt-dlp 配置
+  # yt-dlp配置
   # ==========================================
 
   xdg.configFile."yt-dlp/config".text = ''
+
 --cache-dir /home/lk/.cache/yt-dlp
+
 --extractor-args youtube:player_client=tv
+
 --no-warnings
+
+'';
+
+
+
+  # ==========================================
+  # mpv快捷键
+  # ==========================================
+
+  xdg.configFile."mpv/input.conf".text = ''
+
+# 🎵 播放控制
+
+SPACE cycle pause
+
+
+# 快进快退
+
+x seek -10
+
+v seek 10
+
+
+# 方向键
+
+LEFT seek -5
+
+RIGHT seek 5
+
+
+# 音量
+
+UP add volume 5
+
+DOWN add volume -5
+
+
+# 退出
+
+ESC quit
+
 '';
 
 
