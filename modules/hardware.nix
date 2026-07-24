@@ -35,19 +35,23 @@
     };
 
     "/home/lk/D" = {
-      device = "/dev/disk/by-uuid/4A9ED0D09ED0B5A3";
-      fsType = "ntfs3";
-      options = [
-        "rw"
-        "uid=1000"
-        "gid=1000"
-        "dmask=0000"
-        "fmask=0000"
-        "force"
-        "nofail"
-        "x-systemd.device-timeout=3"
-      ];
-    };
+  device = "/dev/disk/by-uuid/4A9ED0D09ED0B5A3";
+  fsType = "ntfs3";
+
+  options = [
+    "rw"
+    "uid=1000"
+    "gid=1000"
+    "umask=000"
+    "dmask=0000"
+    "fmask=0000"
+    "force"
+    "nofail"
+    "x-systemd.device-timeout=3"
+  ];
+};
+
+
   };
 
   # --- 2. 数位板驱动与规则 ---
