@@ -85,23 +85,4 @@
     dconf.enable = true;
     niri.enable = true;
   };
-/*
-  # --- 5. 密钥管理服务 ---
-  services.gnome.gnome-keyring.enable = true;
-  # --- 6. 安全与认证策略 (Polkit & PAM) ---
-  security = {
-    polkit.enable = true;
-
-    pam.services.greetd.text = ''
-      auth requisite pam_nologin.so
-      auth include login
-      auth optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so
-      account include login
-      password include login
-      password optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so use_authtok
-      session include login
-      session optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
-    '';
-  };
-*/
 }

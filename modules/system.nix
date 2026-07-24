@@ -133,16 +133,7 @@
     }
   ];
 
-  # ---------------------------------------------------------------------------
-  # 7. 禁用冗余/传统服务（Pure Wayland / 纯净环境）
-  # ---------------------------------------------------------------------------
-  services.xserver.enable = false; # 彻底禁用 X11
-  services.printing.enable = false; # 禁用打印
-  services.avahi.enable = false; # 禁用网络发现
-  services.gnome.core-utilities.enable = false;
-  services.geoclue2.enable = false;
-  services.packagekit.enable = false;
-#8 网络流量统计
+#7. 网络流量统计
 services.vnstat.enable = true;
 
 environment.systemPackages = with pkgs; [
