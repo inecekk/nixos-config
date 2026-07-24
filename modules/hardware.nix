@@ -54,10 +54,8 @@
   environment.systemPackages = [ pkgs.opentabletdriver ];
   services.udev.packages = [ pkgs.opentabletdriver ];
 
-  # --- 3. 密钥管理服务 ---
-  services.gnome.gnome-keyring.enable = true;
 
-  # --- 4. 硬件基础设置 (图形与蓝牙) ---
+  # --- 3. 硬件基础设置 (图形与蓝牙) ---
   hardware = {
     graphics = {
       enable = true;
@@ -78,12 +76,14 @@
     };
   };
 
-  # --- 5. 辅助程序配置 ---
+  # --- 4. 辅助程序配置 ---
   programs = {
     dconf.enable = true;
     niri.enable = true;
   };
-
+/*
+  # --- 5. 密钥管理服务 ---
+  services.gnome.gnome-keyring.enable = true;
   # --- 6. 安全与认证策略 (Polkit & PAM) ---
   security = {
     polkit.enable = true;
@@ -99,4 +99,5 @@
       session optional ${pkgs.gnome-keyring}/lib/security/pam_gnome_keyring.so auto_start
     '';
   };
+*/
 }

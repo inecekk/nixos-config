@@ -63,8 +63,6 @@
 
   # ---------- fastfetch ----------
   xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
-
-
     $1☆ _   _  _  __  __   __    _____   
     $2☆| \ | || |❀\ \/ /✹ / _ \ / ____| ✾
     $3❄|  \| || |❀ \  / ✶ | | | |\___ \ ✾
