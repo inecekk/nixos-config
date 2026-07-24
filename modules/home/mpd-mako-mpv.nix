@@ -133,13 +133,4 @@
       };
     };
 };
-
-
-
- xdg.configFile."ytfzf/conf.sh".text = ''
-    YTFZF_PLAYER="mpv"
-    YTFZF_EXT="youtube"
-    YTFZF_YTDLP_ARGS="--cookies-from-browser firefox:/home/lk/.config/zen/tso70vj4.Default\ Profile"
-  '';
-  
 }
