@@ -1,6 +1,6 @@
-# modules/home/terminal-input.nix
+# modules/home/shell-tools.nix
 # ==========================================
-# 终端与输入法:foot + fcitx5
+# 终端与输入法：foot + fcitx5
 # ==========================================
 { pkgs, ... }:
 {
@@ -52,14 +52,16 @@
     [mouse]
     hide-when-typing=yes
   '';
-  # ---------- fcitx5 输入法(rime-ice + 小鹤双拼)----------
+  # ---------- fcitx5 输入法 ----------
   i18n.inputMethod = {
     enabled = "fcitx5";
     fcitx5 = {
       waylandFrontend = true;
       addons = with pkgs; [
-   #     qt6Packages.fcitx5-chinese-addons
-        (fcitx5-rime.override { rimeDataPkgs = [ rime-ice ]; })
+        qt6Packages.fcitx5-chinese-addons
+        (fcitx5-rime.override {
+          rimeDataPkgs = [ rime-ice ];
+        })
       ];
     };
   };
@@ -69,17 +71,18 @@
       patch:
         __include: rime_ice_suggestion:/
         schema_list:
+          - schema: rime_ice
           - schema: double_pinyin_flypy
         switcher/hotkeys:
           - F4
-        menu/page_size: 5
     '';
   };
-  # ---------- 关闭日志,减少 I/O 开销 ----------
   home.sessionVariables = {
     QT_IM_MODULE = "fcitx";
     GLOG_minloglevel = "3";
     GLOG_logtostderr = "0";
     GLOG_log_dir = "/dev/null";
   };
+
+
 }
