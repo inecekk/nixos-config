@@ -142,4 +142,11 @@
   services.gnome.core-utilities.enable = false;
   services.geoclue2.enable = false;
   services.packagekit.enable = false;
+#8 网络流量统计
+services.vnstat.enable = true;
+
+environment.systemPackages = with pkgs; [
+  vnstat
+];
+
 }
