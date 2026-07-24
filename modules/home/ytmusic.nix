@@ -96,12 +96,12 @@ mkdir -p "$CACHE"
 result=$(
 ${pkgs.yt-dlp}/bin/yt-dlp \
     --cookies-from-browser "$COOKIE" \
-    --flat-playlist \
-    --ignore-errors \
-    --cache-dir "$CACHE" \
-    --extractor-args "youtube:player_client=tv" \
-    --print "%(title)s|%(url)s" \
-    "ytsearch10:$query" 2>/dev/null
+	--flat-playlist \
+	--ignore-errors \
+--cache-dir "$CACHE" \
+--extractor-args "youtube:player_client=tv" \
+--print "%(title)s|https://www.youtube.com/watch?v=%(id)s" \
+"ytsearch10:$query"
 )
 
 
