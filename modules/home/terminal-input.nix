@@ -52,13 +52,14 @@
     [mouse]
     hide-when-typing=yes
   '';
+
   # ---------- fcitx5 输入法 ----------
   i18n.inputMethod = {
     enabled = "fcitx5";
     fcitx5 = {
       waylandFrontend = true;
       addons = with pkgs; [
-  #      qt6Packages.fcitx5-chinese-addons
+        qt6Packages.fcitx5-chinese-addons
         (fcitx5-rime.override {
           rimeDataPkgs = [ rime-ice ];
         })
@@ -77,12 +78,4 @@
           - F4
     '';
   };
-  home.sessionVariables = {
-    QT_IM_MODULE = "fcitx";
-    GLOG_minloglevel = "3";
-    GLOG_logtostderr = "0";
-    GLOG_log_dir = "/dev/null";
-  };
-
-
 }
