@@ -1,6 +1,6 @@
-# modules/home/shell-tools.nix
+# modules/home/terminal-input.nix
 # ==========================================
-# 终端与输入法：foot + fcitx5
+# 终端与输入法:foot + fcitx5-rime(小鹤双拼,轻量配置)
 # ==========================================
 { pkgs, ... }:
 {
@@ -53,29 +53,53 @@
     hide-when-typing=yes
   '';
 
-  # ---------- fcitx5 输入法 ----------
+  # ---------- fcitx5 + rime(小鹤双拼,轻量词库)----------
   i18n.inputMethod = {
     enabled = "fcitx5";
     fcitx5 = {
       waylandFrontend = true;
       addons = with pkgs; [
-        qt6Packages.fcitx5-chinese-addons
-        (fcitx5-rime.override {
-          rimeDataPkgs = [ rime-ice ];
-        })
+        fcitx5-rime  
       ];
     };
   };
+
+  # rime 主配置:切换到小鹤双拼方案
   xdg.configFile."fcitx5/rime/default.custom.yaml" = {
     force = true;
     text = ''
       patch:
-        __include: rime_ice_suggestion:/
         schema_list:
-          - schema: rime_ice
           - schema: double_pinyin_flypy
         switcher/hotkeys:
           - F4
+        menu/page_size: 5
     '';
+  };
+
+  # 小鹤双拼方案定义
+  xdg.configFile."fcitx5/rime/double_pinyin_flypy.schema.yaml" = {
+    force = true;
+    text = ''
+      __include: double_pinyin:/
+      schema:
+        schema_id: double_pinyin_flypy
+        name: 小鹤双拼
+      switches:
+        - name: ascii_mode
+          reset: 0
+        - name: full_shape
+          reset: 0
+      speller:
+        algebra:
+          __include: algebra:/double_pinyin_flypy
+    '';
+  };
+
+  # ---------- 关闭 rime 日志,减少 I/O 和磁盘写入 ----------
+  home.sessionVariables = {
+    GLOG_minloglevel = "3";     # 只保留 FATAL 级别日志
+    GLOG_logtostderr = "0";     # 不输出到 stderr
+    GLOG_log_dir = "/dev/null"; 
   };
 }

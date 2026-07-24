@@ -37,7 +37,7 @@ in
 
       window-rule {
         match app-id="code"
-        opacity 0.85 // VS Code 半透明
+        opacity 0.9 // VS Code 半透明
       }
       layer-rule {
         match namespace="^noctalia-wallpaper$"
@@ -68,7 +68,7 @@ in
           offset x=0 y=5
           color "#0007"
         }
-        struts { // 窗口到屏幕边的额外边距(outer)：0=贴边，想留缝改大；设负值(如 -6)可抵消 gaps 让 maximize-column 也贴边
+        struts { // 窗口到屏幕边的额外边距(outer)
           left 0
           right 0
           top -5
@@ -77,6 +77,7 @@ in
       }
       window-rule {
         match is-window-cast-target=false
+        draw-border-with-background false       # 移除背景框
         geometry-corner-radius 12 // 窗口圆角
         clip-to-geometry true // 内容裁剪到圆角
       }
