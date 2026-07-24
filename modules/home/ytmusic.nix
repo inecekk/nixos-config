@@ -5,6 +5,7 @@ let
     query="$*"
 
     ${pkgs.yt-dlp}/bin/yt-dlp \
+      --cookies-from-browser "firefox:/home/lk/.config/zen/tso70vj4.Default Profile" \
       --print "%(title)s|%(webpage_url)s" \
       "ytsearch10:$query" |
     ${pkgs.fzf}/bin/fzf \
@@ -22,9 +23,5 @@ in
     yt-dlp
     fzf
     ytmusic
-  ];
-
-  home.sessionPath = [
-    "$HOME/.local/bin"
   ];
 }
