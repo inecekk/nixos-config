@@ -1,7 +1,4 @@
 # modules/home/terminal-input.nix
-# ==========================================
-# 终端与输入法:foot + fcitx5
-# ==========================================
 { pkgs, ... }:
 {
   # ---------- foot 终端 ----------
@@ -59,7 +56,6 @@
     fcitx5 = {
       waylandFrontend = true;
       addons = with pkgs; [
-        qt6Packages.fcitx5-chinese-addons
         (fcitx5-rime.override { rimeDataPkgs = [ rime-ice ]; })
       ];
     };
@@ -75,10 +71,12 @@
         switcher/hotkeys:
           - F4
         menu/page_size: 5
+        "translator/enable_correction": false
+        "translator/enable_sentence": false
     '';
   };
 
-  # ---------- 关闭日志,减少 I/O 开销 ----------
+  # ---------- 关闭日志与调试开销 ----------
   home.sessionVariables = {
     QT_IM_MODULE = "fcitx";
     GLOG_minloglevel = "3";
