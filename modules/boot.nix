@@ -16,6 +16,9 @@ in {
     # 强制 S2idle 以避开 ACPI 深度睡眠 Bug，loglevel=3 减少日志噪音
     kernelParams = [
       "mem_sleep_default=s2idle"
+	"amd_pstate"       # AMD CPU调频优化 
+	"quiet"            # 减少启动输出      
+	"mitigations=auto" # 安全/性能平衡
       "loglevel=3"
       "acpi_enforce_resources=lax"
       "systemd.default_timeout_stop_sec=9s"

@@ -1,29 +1,18 @@
 # modules/system.nix
-# ==========================================
-# 系统核心基础（Locale、网络、电源、日志/清理与系统服务设置）
-# ==========================================
-{ pkgs, ... }:
-
-{
-  # ---------------------------------------------------------------------------
-  # 1. 系统版本与基础开关
-  # ---------------------------------------------------------------------------
-  system.stateVersion = "26.05";
+# 系统核心基础配置
+{ pkgs, lib, ... }:
+{  system.stateVersion = "26.05";
   nixpkgs.config.allowUnfree = true;
   programs.fuse.userAllowOther = true;
 
-  # 文档瘦身
   documentation = {
     enable = false;
     nixos.enable = false;
     info.enable = false;
     doc.enable = false;
     man.enable = false;
-  };
+  }; # 关闭系统文档减少占用
 
-  # ---------------------------------------------------------------------------
-  # 2. 语言、时区与区域设置
-  # ---------------------------------------------------------------------------
   time.timeZone = "Asia/Shanghai";
   time.hardwareClockInLocalTime = false;
 
@@ -42,17 +31,14 @@
     LC_PAPER = "zh_CN.UTF-8";
     LC_TELEPHONE = "zh_CN.UTF-8";
     LC_TIME = "zh_CN.UTF-8";
-  };
+  }; # 中文区域设置
 
-  # ---------------------------------------------------------------------------
-  # 3. 网络与无线管理 (NetworkManager + iwd)
-    
-networking.wireless.iwd.enable = true;
-networking.useNetworkd = true;
+  networking.wireless.iwd.enable = true;
+  networking.useNetworkd = true;
   systemd.network.enable = true;
-  services.resolved.enable = true;
+  systemd.network.wait-online.enable = false;
+  services.resolved.enable = true; # 网络配置
 
-  # iwd 漫游与扫描策略调整
   networking.wireless.iwd.settings = {
     General = {
       RoamThreshold = "-80";
@@ -61,56 +47,40 @@ networking.useNetworkd = true;
     Scan = {
       DisablePeriodicScan = true;
     };
-  };
+  }; # iwd无线优化
 
-  # ---------------------------------------------------------------------------
-  # 4. 电源、合盖与会话初始化
-  # ---------------------------------------------------------------------------
-  # 合盖、电源键全部交给 Wayland 合成器（niri/Noctalia）处理
   services.logind.settings.Login = {
     HandleLidSwitch = "ignore";
     HandleLidSwitchExternalPower = "ignore";
     HandleLidSwitchDocked = "ignore";
     HandlePowerKey = "ignore";
-  };
+  }; # 交给Wayland桌面处理电源事件
 
-  # DBus 环境激活配置（确保 Wayland 环境变量正确传递给全局会话）
   environment.extraInit = ''
     dbus-update-activation-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE XDG_SESSION_DESKTOP
-  '';
+  ''; # 更新Wayland环境变量
 
-  # ---------------------------------------------------------------------------
-  # 5. 系统日志、缓存自动清理与 Coredump 限制
-  # ---------------------------------------------------------------------------
-  # 日志过滤只留错误
   systemd.settings.Manager.LogLevel = "err";
   systemd.user.settings.Manager.LogLevel = "err";
 
-  # 限制 Journald 日志体积
   services.journald.extraConfig = ''
     SystemMaxUse=100M
     SystemKeepFree=1G
     MaxRetentionSec=1week
     RateLimitIntervalSec=30s
     RateLimitBurst=1000
-  '';
+  ''; # 限制日志大小
 
-  # 限制 Coredump 转储文件大小
-  systemd.coredump.settings.Coredump.MaxUse = "100M";
+  systemd.coredump.settings.Coredump.MaxUse = "100M"; # 限制崩溃日志
 
-  # 用户缓存自动清理（7天）
   systemd.tmpfiles.rules = [
     "e ~lk/.cache - - - 7d"
     "e ~lk/.config/materialgram/Cache - - - 7d"
     "e ~lk/.config/google-chrome/Default/Cache - - - 7d"
     "e ~lk/.config/Code/Cache - - - 7d"
     "e ~lk/.config/QQ/*/Cache - - - 7d"
-  ];
+  ]; # 自动清理缓存
 
-  # ---------------------------------------------------------------------------
-  # 6. 安全权限与特权配置
-  # ---------------------------------------------------------------------------
-  # 用户免密挂载/卸载磁盘
   security.sudo.extraRules = [
     {
       users = [ "lk" ];
@@ -125,13 +95,16 @@ networking.useNetworkd = true;
         }
       ];
     }
+  ]; # 磁盘挂载免密
+
+  services.vnstat.enable = true; # 网络流量统计
+
+  environment.systemPackages = with pkgs; [
+    vnstat
   ];
 
-#7. 网络流量统计
-services.vnstat.enable = true;
-
-environment.systemPackages = with pkgs; [
-  vnstat
-];
-
+  zramSwap = {
+    enable = true;
+    memoryPercent = 50;
+  }; # 使用内存压缩，防止浏览器占满内存
 }
