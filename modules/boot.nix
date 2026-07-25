@@ -17,7 +17,7 @@ in {
     kernelParams = [
       "mem_sleep_default=s2idle"
 	"amd_pstate"       # AMD CPU调频优化 
-	"quiet"            # 减少启动输出      
+#	"quiet"            # 减少启动输出      
 	"mitigations=auto" # 安全/性能平衡
       "loglevel=3"
       "acpi_enforce_resources=lax"
