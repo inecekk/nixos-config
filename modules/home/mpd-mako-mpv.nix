@@ -36,6 +36,7 @@
       default-timeout=1500
     '';
   };
+
   # ---------- MPD音乐服务 ----------
   services.mpd = {
     enable = true;
@@ -53,25 +54,29 @@
     '';
   };
 
-  # MPD依赖D盘挂载，并在关机前正常停止
+  # MPD关机/重启快速释放D盘
   systemd.user.services.mpd = {
     Unit = {
       After = [
         "home-lk-D.mount"
       ];
+
       Requires = [
         "home-lk-D.mount"
       ];
+
       Before = [
+        "shutdown.target"
+        "reboot.target"
         "umount.target"
       ];
     };
 
     Service = {
-      ExecStop = "${pkgs.systemd}/bin/systemctl --user stop mpd.service";
+      KillMode = "mixed";
+      TimeoutStopSec = "1s";
     };
   };
-
   # ---------- mpv播放器 ----------
   programs.mpv = {
     config = {
