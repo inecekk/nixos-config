@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   # GRUB 启动主题构建
   wutheringGrubTheme = pkgs.stdenv.mkDerivation {
     pname = "wuthering-grub-theme";
@@ -10,7 +9,7 @@
       rev = "ed3f8bc";
       sha256 = "sha256-q9TLZTZI/giwKu8sCTluxvkBG5tyan7nFOqn4iGLnkA=";
     };
-    nativeBuildInputs = [ pkgs.imagemagickBig ];
+    nativeBuildInputs = [pkgs.imagemagickBig];
     buildPhase = ''
       D="$out/grub/themes/changli"; mkdir -p "$D/icons"
       cp common/*.pf2 "$D/" 2>/dev/null || true

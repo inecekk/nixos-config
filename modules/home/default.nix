@@ -1,6 +1,8 @@
-{ inputs, lib, ... }:
-
-let
+{
+  inputs,
+  lib,
+  ...
+}: let
   homeDir = ./.;
 
   # 自动扫描并导入当前目录下的所有 .nix 文件 (排除 default.nix)
@@ -11,20 +13,36 @@ let
       ) (builtins.readDir homeDir)
     )
   );
-in
-{
-  home-manager.users.lk = { pkgs, ... }: {
-
+in {
+  home-manager.users.lk = {pkgs, ...}: {
     imports = autoImports; # 自动导入所有模块
     home.stateVersion = "26.11"; # 设置 Home Manager 状态版本
 
     # 用户安装的软件包列表
     home.packages = with pkgs; [
-      git   wget foot bluetui btop  yazi tree 
-  grim slurp wl-clipboard  libnotify    
-    mpv
+      git
+      impala
+      wget
+      foot
+      bluetui
+      btop
+      yazi
+      tree
+      grim
+      slurp
+      wl-clipboard
+      libnotify
+      mpv
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
-      qq materialgram rmpc go-musicfox  tmux cava  vscode rnote opentabletdriver 
+      qq
+      materialgram
+      rmpc
+      go-musicfox
+      tmux
+      cava
+      vscode
+      rnote
+      opentabletdriver
     ];
 
     # 设置 Wayland 相关环境变量，确保所有 GUI 程序运行在 Wayland 后端
@@ -37,6 +55,5 @@ in
       GDK_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
     };
-
   };
 }

@@ -46,16 +46,10 @@
 
   # ---------------------------------------------------------------------------
   # 3. 网络与无线管理 (NetworkManager + iwd)
-  # ---------------------------------------------------------------------------
-  networking.networkmanager = {
-    enable = true;
-    dns = "systemd-resolved";
-    wifi = {
-      backend = "iwd";
-      powersave = false; # 关闭 WiFi 省电模式
-      macAddress = "stable"; # 固定随机 MAC
-    };
-  };
+    
+networking.wireless.iwd.enable = true;
+networking.useNetworkd = true;
+  systemd.network.enable = true;
   services.resolved.enable = true;
 
   # iwd 漫游与扫描策略调整

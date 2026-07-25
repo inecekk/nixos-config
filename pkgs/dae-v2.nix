@@ -28,6 +28,6 @@ stdenv.mkDerivation rec {
     description = "eBPF-based Linux high-performance transparent proxy solution";
     homepage = "https://github.com/daeuniverse/dae";
     license = licenses.agpl3Only;
-    platforms = [ "x86_64-linux" ];
+    platforms = ["x86_64-linux"];
   };
 }

@@ -39,10 +39,7 @@
 #   软件升级 → upgrade
 #
 # ═══════════════════════════════
-
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   programs.bash = {
     enable = true;
 
@@ -166,8 +163,8 @@
       # 网络工具
       # ═══════════════════════════════
       net() {
-        sudo systemctl restart NetworkManager &&
-        sudo nmtui
+        sudo systemctl restart iwd &&
+        iwctl
       }
 
       # ═══════════════════════════════

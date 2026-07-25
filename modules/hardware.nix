@@ -2,17 +2,15 @@
 # ==========================================
 # 硬件驱动、文件系统挂载、图形、蓝牙与安全策略模块
 # ==========================================
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   # --- 1. 文件系统挂载 (原 filesystems.nix) ---
-  boot.supportedFilesystems = [ "ntfs" "btrfs" ];
+  boot.supportedFilesystems = ["ntfs" "btrfs"];
 
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-uuid/2a2a478e-b03b-4e18-b1be-a37190168ca2";
       fsType = "btrfs";
-      options = [ "compress=zstd:5" ];
+      options = ["compress=zstd:5"];
     };
 
     "/boot" = {
@@ -35,31 +33,30 @@
     };
 
     "/home/lk/D" = {
-  device = "/dev/disk/by-uuid/4A9ED0D09ED0B5A3";
-  fsType = "ntfs3";
+      device = "/dev/disk/by-uuid/4A9ED0D09ED0B5A3";
+      fsType = "ntfs3";
 
-  options = [
-    "rw"
-    "uid=1000"
-    "gid=1000"
-    "umask=000"
-    "dmask=0000"
-    "fmask=0000"
-    "force"
-    "nofail"
-    "x-systemd.device-timeout=3"
-  ];
-};
-
-
+      options = [
+        "rw"
+        "uid=1000"
+        "gid=1000"
+        "umask=000"
+        "dmask=0000"
+        "fmask=0000"
+        "force"
+        "nofail"
+        "x-systemd.device-timeout=3"
+      ];
+    };
   };
 
   # --- 2. 数位板驱动与规则 ---
-  environment.systemPackages = [ pkgs.opentabletdriver ];
-  services.udev.packages = [ pkgs.opentabletdriver ];
-
-
-  # --- 3. 硬件基础设置 (图形与蓝牙) ---
+  environment.systemPackages = [pkgs.opentabletdriver];
+  services.udev.packages = [pkgs.opentabletdriver];
+services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="net", KERNEL=="wlan0", RUN+="${pkgs.iw}/bin/iw dev wlan0 set power_save off"
+  '';  
+# --- 3. 硬件基础设置 (图形与蓝牙) ---
   hardware = {
     graphics = {
       enable = true;

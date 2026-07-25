@@ -2,10 +2,7 @@
 # ==========================================
 # 通知与媒体：mako + mpd/rmpc + mpv + fastfetch + cava + bash
 # ==========================================
-{ pkgs, ... }:
-
-{
-
+{pkgs, ...}: {
   # ---------- mako 通知 ----------
   services.mako = {
     settings = {
@@ -57,13 +54,13 @@
       "WHEEL_UP" = "add volume 5";
       "WHEEL_DOWN" = "add volume -5";
     };
-    scripts = [ pkgs.mpvScripts.mpris ];
+    scripts = [pkgs.mpvScripts.mpris];
   };
 
   # ---------- fastfetch ----------
   xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
 
-    $1☆ _   _  _  __  __     ___     _______  
+    $1☆ _   _  _  __  __     ___     _______
     $2☆| \ | || | \ \/ /  ✹ /  _  \ /  _____|✾
     $3❄|  \| || |  \  /     | | | | | \_____ ✾
     $4☆| . ` || |  /  \     | | | | \_____  |✾
@@ -98,25 +95,75 @@
         key.width = 4;
       };
       modules = [
-        { type = "os"; key = "❄️ "; keyColor = "magenta"; }
-        { type = "kernel"; key = "🐧 "; keyColor = "blue"; }
-        { type = "uptime"; key = "⏱️ "; keyColor = "green"; }
-        { type = "packages"; key = "📦 "; keyColor = "yellow"; }
-        { type = "wm"; key = "🪟 "; keyColor = "magenta"; }
-        { type = "shell"; key = "🐚 "; keyColor = "cyan"; }
-        { type = "terminal"; key = "💻 "; keyColor = "blue"; }
+        {
+          type = "os";
+          key = "❄️ ";
+          keyColor = "magenta";
+        }
+        {
+          type = "kernel";
+          key = "🐧 ";
+          keyColor = "blue";
+        }
+        {
+          type = "uptime";
+          key = "⏱️ ";
+          keyColor = "green";
+        }
+        {
+          type = "packages";
+          key = "📦 ";
+          keyColor = "yellow";
+        }
+        {
+          type = "wm";
+          key = "🪟 ";
+          keyColor = "magenta";
+        }
+        {
+          type = "shell";
+          key = "🐚 ";
+          keyColor = "cyan";
+        }
+        {
+          type = "terminal";
+          key = "💻 ";
+          keyColor = "blue";
+        }
         "break"
-        { type = "cpu"; key = "⚡ "; keyColor = "green"; }
-        { type = "memory"; key = "📊 "; keyColor = "yellow"; }
+        {
+          type = "cpu";
+          key = "⚡ ";
+          keyColor = "green";
+        }
+        {
+          type = "memory";
+          key = "📊 ";
+          keyColor = "yellow";
+        }
         "break"
-        { type = "disk"; key = "💾 "; folders = [ "/" ]; keyColor = "blue"; }
-        { type = "display"; key = "📺 "; keyColor = "magenta"; }
-        { type = "localip"; key = "🌐 "; keyColor = "cyan"; showIpv4 = true; }
+        {
+          type = "disk";
+          key = "💾 ";
+          folders = ["/"];
+          keyColor = "blue";
+        }
+        {
+          type = "display";
+          key = "📺 ";
+          keyColor = "magenta";
+        }
+        {
+          type = "localip";
+          key = "🌐 ";
+          keyColor = "cyan";
+          showIpv4 = true;
+        }
       ];
     };
   };
 
-# ---------- Cava 霓虹彩虹渐变 ----------
+  # ---------- Cava 霓虹彩虹渐变 ----------
   programs.cava = {
     enable = true;
     settings = {
@@ -133,5 +180,5 @@
         gradient_color_8 = "'#ff79c6'"; # 顶部：霓虹粉
       };
     };
-};
+  };
 }

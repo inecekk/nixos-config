@@ -1,16 +1,18 @@
-{ config, pkgs, lib, ... }:
-
-let
-  scripts = import ./scripts.nix { inherit pkgs; };
-in
 {
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
+  scripts = import ./scripts.nix {inherit pkgs;};
+in {
   # ==========================================
   # 1. 引导与内核配置
   # ==========================================
   boot = {
     kernelPackages = pkgs.linuxPackages;
-    supportedFilesystems = [ "ntfs" ];
-    kernelModules = [ "tcp_bbr" ];
+    supportedFilesystems = ["ntfs"];
+    kernelModules = ["tcp_bbr"];
     # 强制 S2idle 以避开 ACPI 深度睡眠 Bug，loglevel=3 减少日志噪音
     kernelParams = [
       "mem_sleep_default=s2idle"
@@ -45,8 +47,8 @@ in
   # ==========================================
   systemd.services.pre-suspend-tasks = {
     description = "睡眠前清理任务";
-    before = [ "sleep.target" ];
-    wantedBy = [ "sleep.target" ];
+    before = ["sleep.target"];
+    wantedBy = ["sleep.target"];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = ''

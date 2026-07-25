@@ -25,50 +25,44 @@
     };
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      home-manager,
-      ...
-    }@inputs:
-    let
-      system = "x86_64-linux"; # 当前架构
-      lib = nixpkgs.lib;
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux"; # 当前架构
+    lib = nixpkgs.lib;
 
-      collectModules =
-        dir:
-        let
-          entries = builtins.readDir dir;
-        in
-        lib.flatten (
-          lib.mapAttrsToList (
-            name: type:
-            let
-              path = dir + "/${name}";
-            in
-            if path == ./modules/home then
-              [ ]
-            else if type == "directory" then
-              collectModules path
-            else if lib.hasSuffix ".nix" name && name != "scripts.nix" && !(lib.hasSuffix ".nix.bak" name) then
-              [ path ]
-            else
-              [ ]
-          ) entries
-        );
-      autoModules = collectModules ./modules;
+    collectModules = dir: let
+      entries = builtins.readDir dir;
     in
-    {
-      nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-        inherit system;
+      lib.flatten (
+        lib.mapAttrsToList (
+          name: type: let
+            path = dir + "/${name}";
+          in
+            if path == ./modules/home
+            then []
+            else if type == "directory"
+            then collectModules path
+            else if lib.hasSuffix ".nix" name && name != "scripts.nix" && !(lib.hasSuffix ".nix.bak" name)
+            then [path]
+            else []
+        )
+        entries
+      );
+    autoModules = collectModules ./modules;
+  in {
+    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      inherit system;
 
-        specialArgs = {
-          inherit inputs; # 传递flake输入
-        };
+      specialArgs = {
+        inherit inputs; # 传递flake输入
+      };
 
-        modules = [
-
+      modules =
+        [
           ./hardware-configuration.nix # 硬件配置
 
           home-manager.nixosModules.home-manager # Home Manager模块
@@ -85,6 +79,6 @@
         ++ [
           ./modules/home/default.nix
         ];
-      };
     };
+  };
 }

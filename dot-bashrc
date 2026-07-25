@@ -90,7 +90,7 @@ function music() {
 
 # 重启网络并进入 nmtui 界面
 net() {
-    sudo systemctl restart NetworkManager && sudo nmtui
+    sudo systemctl restart iwd && iwctl
 }
 
 # ==============================================================================

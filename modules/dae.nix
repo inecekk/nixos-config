@@ -4,9 +4,7 @@
   inputs,
   lib,
   ...
-}:
-
-{
+}: {
   imports = [
     inputs.daeuniverse.nixosModules.dae
   ];
@@ -14,7 +12,7 @@
   services.dae = {
     enable = true;
 
-    package = pkgs.callPackage ../pkgs/dae-v2.nix { };
+    package = pkgs.callPackage ../pkgs/dae-v2.nix {};
 
     openFirewall = {
       enable = true;
@@ -31,10 +29,10 @@
 
   # 禁止 dae 随 multi-user.target 立即启动
   systemd.services.dae = {
-    wantedBy = lib.mkForce [ ];
+    wantedBy = lib.mkForce [];
 
     after = [
-      "NetworkManager.service"
+      "iwd.service"
       "network-online.target"
     ];
 
@@ -45,13 +43,11 @@
 
   # 开机延迟启动 dae
   systemd.timers.dae-delayed = {
-
     wantedBy = [
       "timers.target"
     ];
 
     timerConfig = {
-
       # 开机 9 秒后启动
       OnBootSec = "9s";
 
