@@ -20,7 +20,7 @@ in {
 
     # 用户安装的软件包列表
     home.packages = with pkgs; [
-      git
+      git  nnn 
       impala
       wget
       foot

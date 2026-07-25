@@ -36,7 +36,8 @@
       ];
     };
 
-    # Windows C盘（去除 automount，改为常规挂载）
+/* 
+   # Windows C盘（去除 automount）
     "/home/lk/C" = {
       device = "/dev/disk/by-uuid/752A6785456870B8";
       fsType = "ntfs3";
@@ -51,6 +52,7 @@
         "x-systemd.mount-timeout=2s"  # 挂载/卸载动作超时限制
       ];
     };
+*/
 
     # Windows D盘
     "/home/lk/D" = {
