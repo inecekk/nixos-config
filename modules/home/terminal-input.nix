@@ -78,4 +78,10 @@
           - F4
     '';
   };
+  home.sessionVariables = {
+    QT_IM_MODULE = "fcitx";
+    GLOG_minloglevel = "3";
+    GLOG_logtostderr = "0";
+    GLOG_log_dir = "/dev/null";
+  };
 }
