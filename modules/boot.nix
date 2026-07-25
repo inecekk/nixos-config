@@ -45,24 +45,23 @@ in {
     };
   };
 
-  # ==========================================
+
   # 2. 睡眠前置清理任务 (防报错处理)
-  # ==========================================
-  systemd.services.pre-suspend-tasks = {
-    description = "睡眠前清理任务";
-    before = ["sleep.target"];
-    wantedBy = ["sleep.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = ''
-        ${pkgs.bash}/bin/bash -c "
-          systemctl stop mpd --no-block 2>/dev/null || true
-          ${pkgs.wireplumber}/bin/wpctl suspend @DEFAULT_AUDIO_SINK@ 2>/dev/null || true
-          ${pkgs.alsa-utils}/bin/amixer -c 0 set Master mute 2>/dev/null || true
-        "
-      '';
-    };
+systemd.services.pre-suspend-tasks = {
+  description = "睡眠前清理任务";
+  wantedBy = [ "sleep.target" ];
+  before = [ "sleep.target" ];
+  
+  script = ''
+    systemctl stop mpd --no-block 2>/dev/null || true
+    ${pkgs.wireplumber}/bin/wpctl suspend-node @DEFAULT_AUDIO_SINK@ 2>/dev/null || true
+    ${pkgs.alsa-utils}/bin/amixer -c 0 sset Master mute 2>/dev/null || true
+  '';
+
+  serviceConfig = {
+    Type = "oneshot";
   };
+};
 
   # ==========================================
   # 3. 电源管理执行逻辑
