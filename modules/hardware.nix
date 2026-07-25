@@ -47,14 +47,15 @@
         "gid=1000"
         "dmask=022"
         "fmask=022"
-        "nofail" # 分区不存在也继续启动
-        "x-systemd.automount" # 访问时自动挂载
+        "nofail"                    # 分区不存在也继续启动
+        "x-systemd.automount"       # 访问时自动挂载
         "x-systemd.idle-timeout=60" # 空闲60秒自动卸载
-        "x-systemd.device-timeout=3s" # 等待设备最多3秒
+        "x-systemd.device-timeout=3s"
       ];
     };
 
-    # Windows D盘，音乐库所在盘
+    # Windows D盘
+    # MPD音乐目录使用此分区，因此关闭automount避免关机卸载失败
     "/home/lk/D" = {
       device = "/dev/disk/by-uuid/4A9ED0D09ED0B5A3";
       fsType = "ntfs3";
@@ -63,10 +64,9 @@
         "uid=1000"
         "gid=1000"
         "umask=000"
-        "nofail" # D盘异常不阻塞启动
-        "x-systemd.automount" # 使用时挂载
-        "x-systemd.idle-timeout=60"
+        "nofail"                     # 分区不存在也继续启动
         "x-systemd.device-timeout=3s"
+        "x-systemd.mount-timeout=10s"
       ];
     };
   };

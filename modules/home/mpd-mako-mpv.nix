@@ -36,12 +36,10 @@
       default-timeout=1500
     '';
   };
-
   # ---------- MPD音乐服务 ----------
   services.mpd = {
     enable = true;
 
-    # 音乐目录在Windows D盘
     musicDirectory = "/home/lk/D/Music";
 
     extraConfig = ''
@@ -49,22 +47,30 @@
         type "pipewire"
         name "PipeWire Sound Server"
       }
+
+      auto_update "yes"
+      restore_paused "yes"
     '';
   };
 
-  # MPD客户端
-  programs.rmpc = {
-    enable = true;
-    config = ''
-      (
-        address: "127.0.0.1:6600",
-      )
-    '';
-  };
+  # MPD依赖D盘挂载，并在关机前正常停止
+  systemd.user.services.mpd = {
+    Unit = {
+      After = [
+        "home-lk-D.mount"
+      ];
+      Requires = [
+        "home-lk-D.mount"
+      ];
+      Before = [
+        "umount.target"
+      ];
+    };
 
-  # 关机前停止MPD，释放D盘，避免ntfs卸载失败
-  systemd.user.services.mpd.Service.ExecStop =
-    "${pkgs.coreutils}/bin/killall mpd || true";
+    Service = {
+      ExecStop = "${pkgs.systemd}/bin/systemctl --user stop mpd.service";
+    };
+  };
 
   # ---------- mpv播放器 ----------
   programs.mpv = {
