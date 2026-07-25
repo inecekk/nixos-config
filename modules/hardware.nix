@@ -47,7 +47,7 @@
         "dmask=022"
         "fmask=022"
         "nofail"                      # 分区不存在也继续启动
-        "x-systemd.device-timeout=5s" # 设备找不到时快速跳过
+        "x-systemd.device-timeout=3s" # 设备找不到时快速跳过
         "x-systemd.mount-timeout=2s"  # 挂载/卸载动作超时限制
       ];
     };
@@ -62,7 +62,7 @@
         "gid=1000"
         "umask=000"
         "nofail"                      # 分区不存在也继续启动
-        "x-systemd.device-timeout=5s" # 设备找不到快速跳过
+        "x-systemd.device-timeout=3s" # 设备找不到快速跳过
         "x-systemd.mount-timeout=2s"  # 挂载/卸载动作超时限制
       ];
     };
