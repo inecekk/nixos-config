@@ -1,33 +1,33 @@
 # modules/hardware.nix
 # ==========================================
-# 硬件驱动、文件系统挂载、图形、蓝牙与安全策略模块
+# 硬件驱动、磁盘挂载、GPU、蓝牙、电源优化
 # ==========================================
 
 { pkgs, ... }:
 
 {
-  # CPU 调频
+  # CPU动态调频，笔记本功耗和性能平衡
   powerManagement.cpuFreqGovernor = "schedutil";
 
-  # 支持文件系统
+  # 支持的文件系统
   boot.supportedFilesystems = [
     "ntfs"
     "btrfs"
   ];
 
-
   # 文件系统挂载
   fileSystems = {
 
+    # NixOS根分区
     "/" = {
       device = "/dev/disk/by-uuid/2a2a478e-b03b-4e18-b1be-a37190168ca2";
       fsType = "btrfs";
       options = [
-        "compress=zstd:5"
+        "compress=zstd:5" # Btrfs透明压缩，节省空间
       ];
     };
 
-
+    # EFI启动分区
     "/boot" = {
       device = "/dev/disk/by-uuid/7CB8-A11A";
       fsType = "vfat";
@@ -37,42 +37,39 @@
       ];
     };
 
-
     # Windows C盘
     "/home/lk/C" = {
       device = "/dev/disk/by-uuid/752A6785456870B8";
       fsType = "ntfs3";
-
       options = [
         "rw"
         "uid=1000"
         "gid=1000"
         "dmask=022"
         "fmask=022"
-        "nofail"
-        "x-systemd.automount"
-        "x-systemd.idle-timeout=60"
+        "nofail" # 分区不存在也继续启动
+        "x-systemd.automount" # 访问时自动挂载
+        "x-systemd.idle-timeout=60" # 空闲60秒自动卸载
+        "x-systemd.device-timeout=3s" # 等待设备最多3秒
       ];
     };
 
-
-    # Windows D盘
+    # Windows D盘，音乐库所在盘
     "/home/lk/D" = {
       device = "/dev/disk/by-uuid/4A9ED0D09ED0B5A3";
       fsType = "ntfs3";
-
       options = [
         "rw"
         "uid=1000"
         "gid=1000"
         "umask=000"
-        "nofail"
-        "x-systemd.automount"
+        "nofail" # D盘异常不阻塞启动
+        "x-systemd.automount" # 使用时挂载
         "x-systemd.idle-timeout=60"
+        "x-systemd.device-timeout=3s"
       ];
     };
   };
-
 
   # 数位板驱动
   environment.systemPackages = [
@@ -83,22 +80,21 @@
     pkgs.opentabletdriver
   ];
 
-
-  # WiFi关闭省电
+  # WiFi关闭省电，减少延迟和断流
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="net", KERNEL=="wlan0", RUN+="${pkgs.iw}/bin/iw dev wlan0 set power_save off"
   '';
 
-
-  # 图形与蓝牙
+  # AMD显卡、蓝牙
   hardware = {
 
+    # Mesa Vulkan/OpenGL图形支持
     graphics = {
       enable = true;
       enable32Bit = true;
     };
 
-
+    # 蓝牙支持
     bluetooth = {
       enable = true;
       powerOnBoot = true;
@@ -114,8 +110,7 @@
     };
   };
 
-
-  # 程序支持
+  # 桌面程序支持
   programs = {
     dconf.enable = true;
     niri.enable = true;
