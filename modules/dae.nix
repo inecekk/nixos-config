@@ -55,4 +55,9 @@
       Unit = "dae.service";
     };
   };
+  systemd.services.dae.serviceConfig = {
+    MemoryMax = "70M";       # 内存硬上限,超出会被 cgroup kill 掉
+    MemoryHigh = "90M";      # 软上限,超过后内核会尝试回收/限流,给个缓冲比直接硬杀更平滑
+  };
+
 }
