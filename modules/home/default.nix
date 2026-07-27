@@ -42,6 +42,7 @@ in {
       cava
       vscode
       rnote
+wiliwili awww
       opentabletdriver
     ];
 

@@ -1,6 +1,5 @@
 {
   description = "lk 的 NixOS + Niri + DankMaterialShell 配置";
-
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
