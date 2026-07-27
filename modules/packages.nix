@@ -47,5 +47,22 @@
   };
   # 4. 其他服务与程序配置
   services.upower.enable = true; # Noctalia 电量显示依赖
-  programs.niri.enable = true;
+
+  programs.niri = {
+  enable = true;
+  package = pkgs.niri.override {
+    libdisplay-info = pkgs.libdisplay-info.overrideAttrs (old: rec {
+      version = "0.3.0";
+      src = pkgs.fetchFromGitLab {
+        domain = "gitlab.freedesktop.org";
+        owner = "emersion";
+        repo = "libdisplay-info";
+        rev = version;
+        hash = "sha256-nXf2KGovNKvcchlHlzKBkAOeySMJXgxMpbi5z9gLrdc=";
+      };
+    });
+  };
+};
+
+
 }

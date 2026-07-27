@@ -41,8 +41,7 @@ in {
       tmux
       cava
       vscode
-      rnote
-wiliwili awww
+      rnote piliplus awww
       opentabletdriver
     ];
 
