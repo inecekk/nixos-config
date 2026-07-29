@@ -53,7 +53,6 @@ systemd.services.pre-suspend-tasks = {
   before = [ "sleep.target" ];
   
   script = ''
-    systemctl stop mpd --no-block 2>/dev/null || true
     ${pkgs.wireplumber}/bin/wpctl suspend-node @DEFAULT_AUDIO_SINK@ 2>/dev/null || true
     ${pkgs.alsa-utils}/bin/amixer -c 0 sset Master mute 2>/dev/null || true
   '';
@@ -76,9 +75,13 @@ systemd.services.pre-suspend-tasks = {
     resumeCommands = ''
       sleep 2
       # 仅在服务存在时尝试启动，使用 --no-block 避免挂起
-      if systemctl list-unit-files mpd.service | grep -q 'mpd.service'; then
+  /*  
+         if systemctl list-unit-files mpd.service | grep -q 'mpd.service'; then
         systemctl start mpd --no-block
       fi
+
+*/
+
       ${pkgs.bluez}/bin/bluetoothctl power on 2>/dev/null || true
       ${pkgs.networkmanager}/bin/nmcli radio wifi on 2>/dev/null || true
       ${pkgs.alsa-utils}/bin/amixer -c 0 set Master unmute 2>/dev/null || true

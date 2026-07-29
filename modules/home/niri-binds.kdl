@@ -43,7 +43,7 @@
         "Mod+Ctrl+M"            hotkey-overlay-title="主题切换"           { spawn "noctalia" "msg" "theme-mode-toggle"; }
 
     	// 蓝牙键盘的锁定键（Win 下是 Win+L），Noctalia 锁屏+睡眠
-	XF86PowerOff		hotkey-overlay-title="noctalia锁屏加睡眠" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "lockAndSuspend"; }
+	"XF86PowerOff"		hotkey-overlay-title="noctalia锁屏加睡眠" { spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "lockAndSuspend"; }
       
         // --- 5. 窗口与布局控制 ---
         "Mod+Q"                 hotkey-overlay-title="关闭当前窗口"       { close-window; }

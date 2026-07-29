@@ -115,7 +115,6 @@
 
           echo "🧹 清理旧 generation..."
           sudo nix-env -p /nix/var/nix/profiles/system --delete-generations +20
-          sudo nix-collect-garbage -d
 
           echo "✅ 升级完成"
           echo "📦 Generation: $gen"

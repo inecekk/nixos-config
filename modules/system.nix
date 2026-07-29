@@ -36,13 +36,15 @@
   networking.wireless.iwd.enable = true;
   networking.useNetworkd = true;
   systemd.network.enable = true;
+
+  systemd.oomd.enable = false;
   systemd.network.wait-online.enable = false;
   services.resolved.enable = true; # 网络配置
 
   networking.wireless.iwd.settings = {
     General = {
-      RoamThreshold = "-80";
-      RoamThreshold5G = "-90";
+      RoamThreshold = "-60";
+      RoamThreshold5G = "-70";
     };
     Scan = {
       DisablePeriodicScan = true;
