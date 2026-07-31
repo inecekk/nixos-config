@@ -207,11 +207,11 @@ in {
         }
       }
     spawn-at-startup = [
-      # 5 秒后启动状态栏
+      //5 秒后启动状态栏
       { 
         command = ["sh" "-c" "sleep 5 && noctalia msg bar-show"]; 
       }
-      # 10 秒后启动壁纸
+      //10 秒后启动壁纸
       { 
         command = ["sh" "-c" "sleep 10 && noctalia msg wallpaper-set"]; 
       }
