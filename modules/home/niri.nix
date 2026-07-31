@@ -206,16 +206,7 @@ in {
           spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "lockAndSuspend" // 锁屏并挂起
         }
       }
-    spawn-at-startup = [
-      //5 秒后启动状态栏
-      { 
-        command = ["sh" "-c" "sleep 5 && noctalia msg bar-show"]; 
-      }
-      //10 秒后启动壁纸
-      { 
-        command = ["sh" "-c" "sleep 10 && noctalia msg wallpaper-set"]; 
-      }
-    ];
+     spawn-at-startup "sh" "-c" "sleep 8 && noctalia"      //8 秒后启动 Noctalia
       ${niriBinds} // 插入快捷键绑定
     '';
   };
