@@ -27,7 +27,6 @@
       height = 60
     '';
   };
-
   # ---------- noctalia ----------
   programs.noctalia = {
     enable = true;

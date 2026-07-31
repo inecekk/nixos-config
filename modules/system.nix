@@ -44,7 +44,7 @@
   systemd.oomd.enable = false;
   systemd.network.wait-online.enable = false;
   services.resolved.enable = true; # 网络配置
-
+  systemd.user.services.xdg-desktop-portal-gnome.enable = false;
   networking.wireless.iwd.settings = {
     General = {
       RoamThreshold = "-60";
