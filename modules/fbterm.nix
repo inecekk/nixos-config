@@ -8,6 +8,8 @@
   # 不自动登录，用户名+密码都手动输入
   services.getty.autologinUser = lib.mkForce null;
 
+  # 完全自动登录 lk，无需输入用户名和密码
+  #services.getty.autologinUser = "lk";
   # ========== 2. 登录 TTY1 后自动进入 niri ==========
   programs.bash.loginShellInit = ''
     if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
