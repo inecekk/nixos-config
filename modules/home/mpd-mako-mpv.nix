@@ -69,7 +69,8 @@
     Install.WantedBy = [ "sleep.target" ];
   };
 */
-# ==========================================================================
+
+  # ==========================================================================
   #                              MPV 播放器配置
   # ==========================================================================
   programs.mpv = {
@@ -79,36 +80,38 @@
     config = {
       # 硬解与渲染引擎
       hwdec = "auto-safe";
-      vo = "gpu-next";
+      vo = "gpu-next";             # uosc 启用高斯模糊效果所必需的高级渲染器
       keep-open = "yes";
       volume-max = "150";
-      sub-auto = "fuzzy";         # 自动加载同名的外挂 .lrc 歌词或字幕文件
+      sub-auto = "fuzzy";          # 自动匹配加载同名的外挂 .lrc 歌词文件
 
-      # --- 歌词 / 字幕自动显示设置 ---
-      slang = "zh,chi,cn,sc,en";  # 优先加载中文歌词/字幕轨道
-      demuxer-mkv-subtitle-preroll = "yes"; # 确保内嵌歌词预加载
+      # --- 歌词 / 字幕控制（默认自动显示内嵌/外挂歌词）---
+      sid = "1";                   # 核心：默认开启第 1 个字幕/歌词轨道
+      slang = "zh,chi,cn,sc,en";  # 优先加载中文歌词/字幕
+      demuxer-mkv-subtitle-preroll = "yes";
 
-      # 画面与布局调整
-      autofit-larger = "50%x50%"; # 启动最大尺寸限制为屏幕 1/4，不强制拉伸变形
-      keepaspect-window = "yes";  # 保持视频/图片的原始高宽比
+      # --- 窗口与封面比例优化 ---
+      autofit = "71%x71%";         # 窗口永远以 1/2 屏幕大小（长宽各 71%）启动
+      keepaspect = "yes";          # 保持视频/封面的原始高宽比，绝对不拉伸变形
+      keepaspect-window = "yes";   # 允许窗口自由缩放，但内部画面始终保持原比例居中显示
 
       # uosc 界面兼容设置
-      osc = "no";                 # 关闭 mpv 自带原生控制条
-      border = "no";              # 关闭系统默认边框，交给 uosc 渲染
+      osc = "no";
+      border = "no";
       osd-font = "sans-serif";
-      sub-font = "sans-serif";    # 歌词显示字体
-      sub-font-size = "36";       # 歌词字体大小（可自行微调）
+      sub-font = "sans-serif";
+      sub-font-size = "36";
     };
 
     # 2. 快捷键与交互控制
     bindings = {
       # --- 左右方向键：切歌/切集 ---
-      "LEFT"  = "playlist-prev";      # 左箭头：上一曲
-      "RIGHT" = "playlist-next";      # 右箭头：下一曲
+      "LEFT"  = "playlist-prev";
+      "RIGHT" = "playlist-next";
 
       # --- Shift + 左右方向键：快进/快退 ---
-      "Shift+LEFT"  = "seek -5";      # Shift + 左箭头：快退 5 秒
-      "Shift+RIGHT" = "seek 5";       # Shift + 右箭头：快进 5 秒
+      "Shift+LEFT"  = "seek -5";
+      "Shift+RIGHT" = "seek 5";
 
       # --- 键盘调节：音量与亮度 ---
       "UP"         = "add volume 5";
@@ -116,19 +119,19 @@
       "Shift+UP"   = "add brightness 5";
       "Shift+DOWN" = "add brightness -5";
 
-      # --- 歌词显示控制快捷键 ---
-      "v"          = "cycle sub-visibility"; # 按键盘 'v' 键快速开启/隐藏歌词
+      # --- 歌词显示与菜单快捷键 ---
+      "v"          = "cycle sub-visibility";
+      "MBTN_RIGHT" = "script-binding uosc/menu";
 
-      # --- 鼠标手势与控制 ---
+      # --- 鼠标手势 ---
       "WHEEL_UP"   = "add volume 5";
       "WHEEL_DOWN" = "add volume -5";
-      "MBTN_RIGHT" = "script-binding uosc/menu"; # 鼠标右键：调出 uosc 菜单
     };
 
     # 3. 扩展插件
     scripts = with pkgs.mpvScripts; [
-      mpris # 系统媒体控制集成
-      uosc  # 现代化 UI 交互界面
+      mpris
+      uosc
     ];
   };
 
@@ -136,21 +139,36 @@
   #                              UOSC 界面配置
   # ==========================================================================
   xdg.configFile."mpv/script-opts/uosc.conf".text = ''
+    # 语言设置
     languages=zh-hans,zh,en
-    controls=menu,gap,prev,play-pause,next,gap,subtitles,audio,video,playlist,chapters,editions,space,speed,space,shuffle,fullscreen
+
+    # 底部控制栏布局：按钮居中显示
+    controls=space,menu,prev,play-pause,next,subtitles,audio,video,playlist,chapters,editions,speed,shuffle,fullscreen,space
+
+    # --- 进度条细节调整 ---
+    timeline_style=line          # 将粗线条进度栏改为极细单线模式
+    timeline_line_width=2        # 默认细线宽度为 2 像素
+    timeline_line_width_minimized=0 # 平时隐藏或仅显示极细像素，鼠标靠近时展开
+    timeline_size_min=2          # 未聚焦时进度条厚度
+    timeline_size_max=12         # 悬浮时进度条展开最大厚度
+
+    # --- 高斯模糊与透明度风格 ---
+    blur=yes                     # 开启菜单、播放列表及控制背景的高斯模糊效果
+    opacity=menu=0.8,submenu=0.8,title=0.8,border=0.8,timeline=0.6,controls=0.8
+
+    # 点击阈值与交互
     click_threshold=200
-    timeline_style=bar
   '';
 
   # ---------- fastfetch ----------
   xdg.configFile."fastfetch/nixos-gradient.txt".text = ''
-    $1☆ _    _  _ __    __   ___     ________
+    $1☆ _    _  _ __    __    ___     ________
     $2☆| \  | ||_|\ \  / /  / _ \  /  ______|✾
     $2☆|  \ | | _  \ \/ / ✹| | | |/  /_____  ✾
     $3❄|   \| || |  \  /   | | | ||_______ \ ✾
     $4☆| |\   || |  /  \   | | | |    \__ \ \✾
     $5☆| | \  || | / /\ \ ✹| |_| | _____/_/ /✾
-    $6✦|_|  \_||_|/_/  \_\ \____/ |________/ ❃
+    $6✦|_|  \_||_|\_/  \_\ \____/ |________/ ❃
   '';
 
   programs.fastfetch = {

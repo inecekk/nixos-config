@@ -21,7 +21,8 @@
     [csd]
     preferred=none
     [colors-dark]
-    alpha=0.65
+    alpha=0.7
+    blur=yes #启用模糊
     foreground=e0e0e0
     background=000000
     cursor=000000 e0e0e0

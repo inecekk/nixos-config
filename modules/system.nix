@@ -36,7 +36,11 @@
   networking.wireless.iwd.enable = true;
   networking.useNetworkd = true;
   systemd.network.enable = true;
+  # 禁用 CUPS 打印服务 (Cupsd & Cups.path)
+  services.printing.enable = false;
 
+  # 禁用 SANE 扫描仪服务
+  hardware.sane.enable = false;
   systemd.oomd.enable = false;
   systemd.network.wait-online.enable = false;
   services.resolved.enable = true; # 网络配置
