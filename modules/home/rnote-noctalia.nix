@@ -31,7 +31,7 @@
   # ---------- noctalia ----------
   programs.noctalia = {
     enable = true;
-    systemd.enable = false;
+    systemd.enable = true;
     settings = {
       theme = {
         mode = "dark";
