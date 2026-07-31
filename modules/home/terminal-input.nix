@@ -7,7 +7,6 @@
   # ---------- foot 终端 ----------
   xdg.configFile."foot/foot.ini".text = ''
     [main]
-    blur=yes #启用背景模糊 
     font=JetBrains Mono:size=10, WenQuanYi Micro Hei:size=10
     dpi-aware=yes
     pad=3x1 center
@@ -56,7 +55,8 @@
 
   # ---------- fcitx5 输入法 ----------
   i18n.inputMethod = {
-    enabled = "fcitx5";
+    enable = true;
+    type= "fcitx5";
     fcitx5 = {
       waylandFrontend = true;
       addons = with pkgs; [

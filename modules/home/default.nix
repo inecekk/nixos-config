@@ -20,29 +20,11 @@ in {
 
     # 用户安装的软件包列表
     home.packages = with pkgs; [
-      git  nnn 
-      impala
-      wget
-      foot
-      bluetui
-      btop
-      yazi
-      tree
-      grim
-      slurp
-      wl-clipboard
-      libnotify
-      mpv
+      git  nnn impala wget foot bluetui  btop yazi tree grim
+      slurp wl-clipboard libnotify mpv
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
-      qq
-      materialgram
-      rmpc
-      go-musicfox
-      tmux
-      cava
-      vscode
-      rnote piliplus awww
-      opentabletdriver
+      qq materialgram rmpc go-musicfox
+      tmux cava vscode rnote opentabletdriver
     ];
 
     # 设置 Wayland 相关环境变量，确保所有 GUI 程序运行在 Wayland 后端
