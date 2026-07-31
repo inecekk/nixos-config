@@ -1,10 +1,11 @@
+{ pkgs, ... }:
 {
   services.greetd = {
     enable = true;
     settings = {
+      # ✅ 禁用自动登录，启用 agreety 进行密码认证
       default_session = {
-        # 使用重定向隐藏启动时的所有日志输出
-        command = "niri-session > /dev/null 2>&1";
+        command = "${pkgs.greetd}/bin/agreety --cmd '${pkgs.niri}/bin/niri-session'";
         user = "lk";
       };
     };
