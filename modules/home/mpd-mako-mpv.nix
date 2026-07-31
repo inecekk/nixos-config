@@ -33,7 +33,7 @@
     '';
   };
 
-  # ---------- MPD 音乐服务 ----------
+/*  # ---------- MPD 音乐服务 ----------
   services.mpd = {
     enable = true;
     musicDirectory = "/home/lk/D/Music";
@@ -68,7 +68,7 @@
     };
     Install.WantedBy = [ "sleep.target" ];
   };
-
+*/
   # ---------- mpv 播放器 ----------
   programs.mpv = {
     config = {

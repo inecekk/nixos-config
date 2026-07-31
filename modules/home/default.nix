@@ -23,7 +23,7 @@ in {
       git  nnn impala wget foot bluetui  btop yazi tree grim
       slurp wl-clipboard libnotify mpv
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
-      qq materialgram rmpc go-musicfox
+      qq materialgram go-musicfox
       tmux cava vscode rnote opentabletdriver
     ];
 
