@@ -4,7 +4,7 @@
   services.greetd.enable = false;
   services.displayManager.sddm.enable = false;
   # 注意：不要设置 services.displayManager.ly.enable，避免触发有 bug 的模块逻辑
-
+  security.pam.services.lk={};
   # ========== 2. 手动创建 ly.service ==========
   systemd.services.ly = {
     description = "Ly Display Manager";
@@ -47,7 +47,7 @@
     fg=#cdd6f4
     border_fg=#89b4fa
     animate=false
-    
+   session=niri
     [banner]
     text=\x1b[38;2;137;180;250m██╗   ██╗\x1b[0m\n\x1b[38;2;166;227;236m██║   ██║\x1b[0m\n\x1b[38;2;198;208;245m██║   ██║\x1b[0m\n\x1b[38;2;243;139;168m██╗ ██╔╝\x1b[0m\n\x1b[38;2;249;226;175m ╚████╝\x1b[0m\n\x1b[38;2;137;180;250m  ╚═══╝ \x1b[0m
   '';
