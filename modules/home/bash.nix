@@ -49,6 +49,8 @@
       # ═══════════════════════════════
       export EDITOR="vim"
       export VISUAL="vim"
+      export LANG="zh_CN.UTF-8"
+      export LC_ALL="zh_CN.UTF-8"
 
       # ═══════════════════════════════
       # NixOS 日常构建
@@ -144,6 +146,10 @@
       gens() {
         sudo nix-env -p /nix/var/nix/profiles/system --list-generations
       }
+
+	alias mc='nohup mpv /home/lk/D/Music/ >/dev/null 2>&1 &'
+
+
 
       # ═══════════════════════════════
       # MusicFox + Cava

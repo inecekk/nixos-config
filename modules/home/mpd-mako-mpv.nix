@@ -69,21 +69,78 @@
     Install.WantedBy = [ "sleep.target" ];
   };
 */
-  # ---------- mpv 播放器 ----------
+# ==========================================================================
+  #                              MPV 播放器配置
+  # ==========================================================================
   programs.mpv = {
+    enable = true;
+
+    # 1. 核心与渲染参数
     config = {
+      # 硬解与渲染引擎
       hwdec = "auto-safe";
       vo = "gpu-next";
       keep-open = "yes";
       volume-max = "150";
-      sub-auto = "fuzzy";
+      sub-auto = "fuzzy";         # 自动加载同名的外挂 .lrc 歌词或字幕文件
+
+      # --- 歌词 / 字幕自动显示设置 ---
+      slang = "zh,chi,cn,sc,en";  # 优先加载中文歌词/字幕轨道
+      demuxer-mkv-subtitle-preroll = "yes"; # 确保内嵌歌词预加载
+
+      # 画面与布局调整
+      autofit-larger = "50%x50%"; # 启动最大尺寸限制为屏幕 1/4，不强制拉伸变形
+      keepaspect-window = "yes";  # 保持视频/图片的原始高宽比
+
+      # uosc 界面兼容设置
+      osc = "no";                 # 关闭 mpv 自带原生控制条
+      border = "no";              # 关闭系统默认边框，交给 uosc 渲染
+      osd-font = "sans-serif";
+      sub-font = "sans-serif";    # 歌词显示字体
+      sub-font-size = "36";       # 歌词字体大小（可自行微调）
     };
+
+    # 2. 快捷键与交互控制
     bindings = {
-      "WHEEL_UP" = "add volume 5";
+      # --- 左右方向键：切歌/切集 ---
+      "LEFT"  = "playlist-prev";      # 左箭头：上一曲
+      "RIGHT" = "playlist-next";      # 右箭头：下一曲
+
+      # --- Shift + 左右方向键：快进/快退 ---
+      "Shift+LEFT"  = "seek -5";      # Shift + 左箭头：快退 5 秒
+      "Shift+RIGHT" = "seek 5";       # Shift + 右箭头：快进 5 秒
+
+      # --- 键盘调节：音量与亮度 ---
+      "UP"         = "add volume 5";
+      "DOWN"       = "add volume -5";
+      "Shift+UP"   = "add brightness 5";
+      "Shift+DOWN" = "add brightness -5";
+
+      # --- 歌词显示控制快捷键 ---
+      "v"          = "cycle sub-visibility"; # 按键盘 'v' 键快速开启/隐藏歌词
+
+      # --- 鼠标手势与控制 ---
+      "WHEEL_UP"   = "add volume 5";
       "WHEEL_DOWN" = "add volume -5";
+      "MBTN_RIGHT" = "script-binding uosc/menu"; # 鼠标右键：调出 uosc 菜单
     };
-    scripts = [ pkgs.mpvScripts.mpris ]; # MPRIS 媒体控制支持 Noctalia
+
+    # 3. 扩展插件
+    scripts = with pkgs.mpvScripts; [
+      mpris # 系统媒体控制集成
+      uosc  # 现代化 UI 交互界面
+    ];
   };
+
+  # ==========================================================================
+  #                              UOSC 界面配置
+  # ==========================================================================
+  xdg.configFile."mpv/script-opts/uosc.conf".text = ''
+    languages=zh-hans,zh,en
+    controls=menu,gap,prev,play-pause,next,gap,subtitles,audio,video,playlist,chapters,editions,space,speed,space,shuffle,fullscreen
+    click_threshold=200
+    timeline_style=bar
+  '';
 
   # ---------- fastfetch ----------
   xdg.configFile."fastfetch/nixos-gradient.txt".text = ''

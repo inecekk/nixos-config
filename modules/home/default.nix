@@ -21,7 +21,7 @@ in {
     # 用户安装的软件包列表
     home.packages = with pkgs; [
       git  nnn impala wget foot bluetui  btop yazi tree grim
-      slurp wl-clipboard libnotify mpv
+      slurp wl-clipboard libnotify
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
       qq materialgram go-musicfox
       tmux cava vscode rnote opentabletdriver
