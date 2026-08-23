@@ -109,8 +109,4 @@
     vnstat
   ];
 
-  zramSwap = {
-    enable = true;
-    memoryPercent = 50;
-  }; # 使用内存压缩，防止浏览器占满内存
 }

@@ -15,18 +15,31 @@ in {
     kernelModules = ["tcp_bbr"];
     # 强制 S2idle 以避开 ACPI 深度睡眠 Bug，loglevel=3 减少日志噪音
     kernelParams = [
-      "mem_sleep_default=s2idle"
-	"amd_pstate"       # AMD CPU调频优化 
-	"quiet"            # 减少启动输出      
-	"mitigations=auto" # 安全/性能平衡
-      "loglevel=3"
-      "acpi_enforce_resources=lax"
-      "systemd.default_timeout_stop_sec=9s"
-      "amd_pmc.enable_stb=0"
-      "amdgpu.runpm=0"
-      "nvme_core.default_ps_max_latency_us=0"
-    ];
+  # --- 电源管理与睡眠优化 ---
+  "mem_sleep_default=deep"          # 深度睡眠（S3，比 s2idle 更省电稳定）
+  "amd_pstate=guided"               # AMD CPU 协同调频优化
+  "amd_pmc.enable_stb=0"            # 关闭 AMD PMC 的 Telemetry Buffer 降低功耗/唤醒延迟
+  "amdgpu.runpm=0"                  # 独显/核显运行时电源管理调整
+  
+  # --- IOMMU 与硬件直通/PCIe 优化 ---
+  "amd_iommu=on"
+  "iommu=pt"
+  "pcie_aspm=force"                 # 强制启用 PCIe 省电状态
+  
+  # --- 存储与延迟优化 ---
+  "nvme_core.default_ps_max_latency_us=0" # 消除 NVMe 固态硬盘休眠延迟
+  
+  # --- 看门狗与错误处理（彻底解决关机 watchdog 报错） ---
+  "nowatchdog"
+  "nmi_watchdog=0"
 
+  # --- 系统杂项与 ACPI ---
+  "acpi_enforce_resources=lax"
+  "quiet"
+  "loglevel=3"
+  "mitigations=auto"
+  "systemd.default_timeout_stop_sec=9s"
+];
     loader = {
       timeout = 3;
       efi.canTouchEfiVariables = false;

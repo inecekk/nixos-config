@@ -22,10 +22,26 @@ in {
     home.packages = with pkgs; [
       git  impala wget foot bluetui  btop yazi tree grim
       slurp wl-clipboard libnotify
-      (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
-      qq materialgram go-musicfox
-      tmux cava vscode rnote opentabletdriver
-    ];
+  pcmanfm      (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
+       materialgram go-musicfox
+       vscode rnote opentabletdriver
+(rustPlatform.buildRustPackage rec {
+      pname = "miyu";
+      version = "latest";
+
+      src = fetchFromGitHub {
+        owner = "SHORiN-KiWATA";
+        repo = "Miyu";
+        rev = "main";
+	sha256 = "sha256-hOzwiRRGA9NKp7mBEIQ6fR7tUchvbypFIgO7djhAsiI=";
+      };
+	cargoHash = "sha256-SBl+JcmKEonUmmFt1Zpf+2TeAhFlvRktd2IJxKHraU4=";
+
+      nativeBuildInputs = [ pkg-config ];
+      buildInputs = [ alsa-lib openssl ];
+    })    
+
+];
 
     # 设置 Wayland 相关环境变量，确保所有 GUI 程序运行在 Wayland 后端
     home.sessionVariables = {

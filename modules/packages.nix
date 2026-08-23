@@ -14,9 +14,8 @@
       usbutils # 硬件驱动
       polkit
       libsecret # 桌面底层
-    ];
+];
   };
-
   # 1. 禁用语音合成服务
   services.speechd.enable = false;
 
