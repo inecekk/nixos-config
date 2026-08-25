@@ -19,7 +19,7 @@ let
 
   miyu = pkgs.rustPlatform.buildRustPackage rec {
     pname = "miyu";
-    version = "latest";
+    version = "0.4.5";
     doCheck = false ;
     src = pkgs.fetchFromGitHub {
       owner = "SHORiN-KiWATA";
