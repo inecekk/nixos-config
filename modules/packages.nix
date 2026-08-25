@@ -44,11 +44,4 @@
       };
     };
   };
-  # 4. 其他服务与程序配置
-  services.upower.enable = true; # Noctalia 电量显示依赖
-
-  programs.niri = {
-  enable = true;
-  package = pkgs.niri;
-};
 }

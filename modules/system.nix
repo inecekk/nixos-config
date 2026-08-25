@@ -47,9 +47,14 @@
   systemd.user.services.xdg-desktop-portal-gnome.enable = false;
   networking.wireless.iwd.settings = {
     General = {
+      EnableNetworkConfiguration=true; 
       RoamThreshold = "-60";
+
       RoamThreshold5G = "-70";
-    };
+     };
+     Network = {
+     EnableIPv6 = true;
+};
     Scan = {
       DisablePeriodicScan = true;
     };
