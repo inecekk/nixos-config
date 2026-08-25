@@ -65,8 +65,7 @@ in
 
     # 用户安装的软件包列表
     home.packages = with pkgs; [
-      git impala wget foot bluetui btop yazi tree grim
-      libnotify
+      git impala wget foot bluetui btop  tree grim  libnotify
       qq pcmanfm go-musicfox
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
       materialgram
