@@ -15,22 +15,45 @@ let
       ) (builtins.readDir homeDir)
     )
   );
-# 定义 miyu 自定义 Rust 软件包
 
-  miyu = pkgs.rustPlatform.buildRustPackage rec {
+  # 定义 miyu (使用 Github Release 免编译二进制包)
+  miyu = pkgs.stdenv.mkDerivation rec {
     pname = "miyu";
     version = "0.4.5";
-    doCheck = false ;
-    src = pkgs.fetchFromGitHub {
-      owner = "SHORiN-KiWATA";
-      repo = "Miyu";
-      rev = "main";
-      sha256 = "sha256-hOzwiRRGA9NKp7mBEIQ6fR7tUchvbypFIgO7djhAsiI=";
-    };
-    cargoHash = "sha256-SBl+JcmKEonUmmFt1Zpf+2TeAhFlvRktd2IJxKHraU4=";
 
-    nativeBuildInputs = [ pkgs.pkg-config ];
-    buildInputs = [ pkgs.alsa-lib pkgs.openssl ];
+    src = pkgs.fetchurl {
+      url = "https://github.com/inecekk/Miyu/releases/download/v${version}/miyu-x86_64-linux.tar.gz";
+      hash = "sha256-EngbDv6Jh2+YWE143VVaXu75UQyvaT+TBlCGoLSPPvA=";
+    };
+
+    # 关键修复：告知 Nix 压缩包解压后直接使用当前工作目录，无需寻找子文件夹
+    sourceRoot = ".";
+
+    # 使用 autoPatchelfHook 自动修复 NixOS 下的动态库链接
+    nativeBuildInputs = [ pkgs.autoPatchelfHook ];
+
+    # 包含运行该二进制文件所需的系统动态库
+    buildInputs = with pkgs; [
+      stdenv.cc.cc.lib
+      zlib
+      alsa-lib
+      openssl
+    ];
+
+    installPhase = ''
+      runHook preInstall
+      mkdir -p $out/bin
+      cp miyu $out/bin/
+      chmod +x $out/bin/miyu
+      runHook postInstall
+    '';
+
+    meta = {
+      description = "Miyu 免编译二进制版";
+      homepage = "https://github.com/inecekk/Miyu";
+      mainProgram = "miyu";
+      platforms = [ "x86_64-linux" ];
+    };
   };
 
 in
@@ -48,7 +71,7 @@ in
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
       materialgram
       jq vscode rnote opentabletdriver
-   miyu # 自定义包
+      miyu # 引入上面的自定义包
     ];
 
     # 路径与环境变量配置
@@ -65,6 +88,8 @@ in
       QT_QPA_PLATFORM = "wayland";
       GDK_BACKEND = "wayland";
       SDL_VIDEODRIVER = "wayland";
+      # 强制 GTK 应用使用 Portal 弹窗
+      GTK_USE_PORTAL = "1"; 
     };
   };
 
@@ -79,6 +104,25 @@ in
   programs.noctalia = {
     enable = true;
     package = pkgs.noctalia;
+  };
+
+  # -------------------------------------------------------------
+  # ⭐ 修复 Zen 浏览器无法上传文件：配置 Desktop Portal 并强制覆盖冲突
+  # -------------------------------------------------------------
+  xdg.portal = {
+    enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+    ];
+    config = {
+      common = {
+        default = [ "gtk" ];
+      };
+      # 使用 lib.mkForce 强制将 Niri 的默认 portal 后端设为 gtk
+      niri = {
+        default = lib.mkForce [ "gtk" ];
+      };
+    };
   };
 
   # 3. 系统级挂载：QQ 缓存目录 tmpfs
