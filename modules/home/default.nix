@@ -70,7 +70,6 @@ in
       qq pcmanfm go-musicfox
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
       materialgram
-      jq vscode rnote opentabletdriver
       miyu # 引入上面的自定义包
     ];
 
