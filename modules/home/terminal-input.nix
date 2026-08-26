@@ -1,6 +1,6 @@
 # modules/home/terminal-input.nix
 # ==========================================
-# 终端与输入法：foot + 纯 Rime 输入法引擎
+# 终端与输入法：foot + FCITX5 (小鹤双拼 + 雾凇词库 + 中文扩展组件)
 # ==========================================
 { pkgs, ... }:
 {
@@ -22,7 +22,7 @@
     preferred=none
     [colors-dark]
     alpha=0.7
-    blur=yes #启用模糊
+    blur=yes
     foreground=e0e0e0
     background=000000
     cursor=000000 e0e0e0
@@ -54,13 +54,16 @@
     hide-when-typing=yes
   '';
 
-  # ---------- fcitx5 输入法 (纯 Rime，无多余设置组件) ----------
+  # ---------- fcitx5 输入法配置 ----------
   i18n.inputMethod = {
     enable = true;
     type = "fcitx5";
     fcitx5 = {
       waylandFrontend = true;
       addons = [
+        # 1. 引入 fcitx5-chinese-addons (包含云拼音、中文维基词库、标点/拆字增强等)
+        pkgs.qt6Packages.fcitx5-chinese-addons
+        # 2. Rime 输入法与雾凇词库
         (pkgs.fcitx5-rime.override {
           rimeDataPkgs = [ pkgs.rime-ice ];
         })
@@ -68,26 +71,53 @@
     };
   };
 
-  # ---------- Rime 小鹤双拼配置 ----------
+  # ---------- 1. FCITX5 Profile ----------
+  xdg.configFile."fcitx5/profile" = {
+    force = true;
+    text = ''
+      [GroupOrder]
+      0=Default
+
+      [Groups/0]
+      Name=Default
+      Default Layout=us
+      DefaultIM=rime
+
+      [Groups/0/Items/0]
+      Name=keyboard-us
+      Layout=
+
+      [Groups/0/Items/1]
+      Name=rime
+      Layout=
+
+      [GroupList]
+      0=Default
+    '';
+  };
+
+  # ---------- 2. Rime 配置 (极简雾凇小鹤双拼·简体) ----------
   xdg.configFile."fcitx5/rime/default.custom.yaml" = {
     force = true;
     text = ''
       patch:
         __include: rime_ice_suggestion:/
         schema_list:
-          - schema: rime_ice
-          - schema: double_pinyin_flypy
-        switcher/hotkeys:
-          - F4
+          - schema: rime_ice_flypy 
+        switches:
+          - name: zh_simp
+            reset: 1             
     '';
   };
 
-  # ---------- 输入法环境变量 ----------
+  # ---------- 3. 环境变量设置 ----------
   home.sessionVariables = {
-    QT_IM_MODULE = "fcitx";
-    XMODIFIERS = "@im=fcitx";
+    GTK_IM_MODULE   = "fcitx";
+    QT_IM_MODULE    = "fcitx";
+    XMODIFIERS      = "@im=fcitx";
+    GLFW_IM_MODULE  = "ibus";
     GLOG_minloglevel = "3";
     GLOG_logtostderr = "0";
-    GLOG_log_dir = "/dev/null";
+    GLOG_log_dir     = "/dev/null";
   };
 }

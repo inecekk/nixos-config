@@ -1,25 +1,18 @@
-# modules/users.nix
-# ==========================================
-# 系统用户账户配置
-# ==========================================
-{pkgs, ...}: {
+{ pkgs, ... }: {
   users.users.lk = {
     isNormalUser = true;
-    extraGroups = [
-      "wheel"
-      "networkmanager"
-      "bluetooth"
-      "storage"
-      "disk"
-      "video"
-      "input"
-      "mpd"
-    ];
-    #shell = pkgs.fish;
+    extraGroups = [ "wheel" "video" "input" ];
   };
 
-  system.userActivationScripts.userDirsInit.text = ''
-    mkdir -p ~/C ~/D ~/Pictures/Screenshots ~/Music ~/D/Music ~/D/Pictures/Wallpaper/WallhavenDesktop
-    chown -R lk:users ~/C ~/D ~/Pictures ~/Music ~/D/Music ~/D/Pictures
-  '';
+  security.sudo.extraRules = [
+    {
+      users = [ "lk" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/tee /sys/class/backlight/amdgpu_bl1/brightness";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
 }

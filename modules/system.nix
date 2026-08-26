@@ -10,9 +10,9 @@
   # 1. 软件包拦截覆写（从源头彻底切断隐形大包）
   # ----------------------------------------------------
   nixpkgs.config.packageOverrides = pkgs: {
-    # 彻底拦截 fcitx5-gtk（省掉近 1GB 的 GTK4 依赖树）
+    # 彻底拦截 fcitx5-gtk
     fcitx5-gtk = pkgs.emptyDirectory;
-    # 彻底拦截 GNOME Portal（防止打包整个 gnome-desktop）
+    # 彻底拦截 GNOME Portal
     xdg-desktop-portal-gnome = pkgs.emptyDirectory;
   };
 

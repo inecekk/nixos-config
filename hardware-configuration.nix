@@ -13,7 +13,6 @@
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  # 统一合并的所有挂载点配置
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-uuid/b346a5a5-5e8e-4cde-afa7-77e92d687e64";
