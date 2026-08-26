@@ -9,13 +9,6 @@
 
     systemPackages = with pkgs; [
       vim
-      procps
-      psmisc      # 系统进程维护
-      pciutils
-      usbutils    # 硬件/总线查看工具
-      polkit
-      libsecret   # 桌面密钥存储底层
-      # 剔除了 iw（无线管理留给 iwd/iwctl 即可）
     ];
   };
 

@@ -15,15 +15,6 @@
     "btrfs"
   ];
 
-  # 数位板驱动
-  environment.systemPackages = [
-    pkgs.opentabletdriver
-  ];
-
-  services.udev.packages = [
-    pkgs.opentabletdriver
-  ];
-
   # WiFi关闭省电，减少延迟和断流
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="net", KERNEL=="wlan0", RUN+="${pkgs.iw}/bin/iw dev wlan0 set power_save off"
