@@ -1,14 +1,18 @@
 # modules/home/bash.nix
-# ═══════════════════════════════
+# ==========================================
 # Bash 快捷命令与环境变量配置
-# ═══════════════════════════════
+# ==========================================
 { pkgs, ... }: {
+
+  # ═══════════════════════════════
+  # Bash 基础配置与函数扩展
+  # ═══════════════════════════════
   programs.bash = {
     enable = true;
 
     initExtra = ''
       # ═══════════════════════════════
-      # 环境变量
+      # 基础环境变量
       # ═══════════════════════════════
       export EDITOR="vim"
       export VISUAL="vim"
@@ -25,8 +29,8 @@
         echo -e "  \033[38;5;221mntest\033[0m          - 测试 NixOS 配置（消除 dirty 干扰，不改 boot）"
         echo -e "  \033[38;5;221mgens\033[0m           - 查看系统 Generations 历史版本"
         echo -e "  \033[38;5;221mnfind <pkg>\033[0m    - 搜索 Nixpkgs 软件包"
-        echo -e "  \033[38;5;221mnet\033[0m            - 重启 iwd 服务并进入 iwctl"
-        echo -e "  \033[38;5;221mipinfo\033[0m         - 查看内网与外网 IP 地址"
+        echo -e "  \033[38;5;221mnet\033[0m             - 重启 iwd 服务并进入 iwctl"
+        echo -e "  \033[38;5;221mipinfo\033[0m          - 查看内网与外网 IP 地址"
         echo -e "  \033[38;5;221mkp <port>\033[0m      - 快速杀死指定端口的占用进程"
         echo -e "  \033[38;5;221mextract <file>\033[0m - 智能解压任意格式文件"
         echo -e "  \033[38;5;221mmusic\033[0m          - 启动 tmux + MusicFox + Cava"
@@ -51,6 +55,7 @@
       alias l='ls -CF --color=auto'
       alias grep='grep --color=auto'
       alias mc='nohup mpv /home/lk/D/Music/ >/dev/null 2>&1 &'
+      alias pcmanfm='pcmanfm --no-desktop'
 
       # ═══════════════════════════════
       # NixOS 管理命令
@@ -228,18 +233,16 @@
       }
 
       # ═══════════════════════════════
-      # Git 分支辅助函数
+      # Shell 提示符 (单行紧凑高性能版)
       # ═══════════════════════════════
-      git_branch() {
+      _prompt_git_branch() {
         local branch
-        branch=$(git symbolic-ref --short HEAD 2>/dev/null)
-        [ -n "$branch" ] && echo "git:($branch)"
+        branch=$(git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+        [[ -n "$branch" ]] && echo -e " \033[38;5;135mgit:($branch)\033[0m"
       }
 
-      # ═══════════════════════════════
-      # Shell 提示符 (单行紧凑美化版)
-      # ═══════════════════════════════
-      export PS1='\[\033[38;5;111m\]\u\[\033[38;5;81m\]@\[\033[38;5;114m\]\h \[\033[38;5;250m\]· \[\033[38;5;220m\]\w \[\033[38;5;135m\]$(git_branch) \[\033[38;5;243m\]\t \[\033[38;5;114m\]\$\[\033[0m\] '
+      # 利用 PROMPT_COMMAND 预计算变量并对齐字符边界，解决长命令换行光标错位和按回车卡顿问题
+      PROMPT_COMMAND='PS1="\[\033[38;5;111m\]\u\[\033[38;5;81m\]@\[\033[38;5;114m\]\h \[\033[38;5;250m\]· \[\033[38;5;220m\]\w\[\033[0m\]$(_prompt_git_branch) \[\033[38;5;243m\]\t \[\033[38;5;114m\]\$\[\033[0m\] "'
     '';
   };
 }

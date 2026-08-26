@@ -1,6 +1,6 @@
-# modules/home/shell-tools.nix
+# modules/home/terminal-input.nix
 # ==========================================
-# 终端与输入法：foot + fcitx5
+# 终端与输入法：foot + 纯 Rime 输入法引擎
 # ==========================================
 { pkgs, ... }:
 {
@@ -54,20 +54,21 @@
     hide-when-typing=yes
   '';
 
-  # ---------- fcitx5 输入法 ----------
+  # ---------- fcitx5 输入法 (纯 Rime，无多余设置组件) ----------
   i18n.inputMethod = {
     enable = true;
-    type= "fcitx5";
+    type = "fcitx5";
     fcitx5 = {
       waylandFrontend = true;
-      addons = with pkgs; [
-        qt6Packages.fcitx5-chinese-addons
-        (fcitx5-rime.override {
-          rimeDataPkgs = [ rime-ice ];
+      addons = [
+        (pkgs.fcitx5-rime.override {
+          rimeDataPkgs = [ pkgs.rime-ice ];
         })
       ];
     };
   };
+
+  # ---------- Rime 小鹤双拼配置 ----------
   xdg.configFile."fcitx5/rime/default.custom.yaml" = {
     force = true;
     text = ''
@@ -80,8 +81,11 @@
           - F4
     '';
   };
+
+  # ---------- 输入法环境变量 ----------
   home.sessionVariables = {
     QT_IM_MODULE = "fcitx";
+    XMODIFIERS = "@im=fcitx";
     GLOG_minloglevel = "3";
     GLOG_logtostderr = "0";
     GLOG_log_dir = "/dev/null";
