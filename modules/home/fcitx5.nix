@@ -55,9 +55,9 @@
           - name: ascii_mode
             states: [ 中, 英 ]
             reset: 0        # 0 = 默认中文模式，1 = 默认西文/英文模式
-          - name: zh_simp
+          - name: simplification
             states: [ 繁, 简 ]
-            reset: 1        # 1 = 默认简体，0 = 默认繁体
+            reset: 1        # 1 = 默认简体
     '';
   };
 
