@@ -1,6 +1,7 @@
 # modules/home/terminal-input.nix
 # ==========================================
-# 终端、输入法与 Fastfetch 极简配置
+# 终端与 Fastfetch 极简配置
+# （fcitx5 输入法配置已拆分至 ./fcitx5.nix）
 # ==========================================
 { pkgs, ... }:
 {
@@ -52,6 +53,9 @@
     blink=no
     [mouse]
     hide-when-typing=yes
+    [key-bindings]
+    clipboard-paste=Control+v Control+Shift+v
+    primary-paste=Shift+Insert
   '';
 
   # ---------- fastfetch 配置（零延迟、卡片式极简布局）----------
@@ -75,55 +79,7 @@
     }
   '';
 
-  # ---------- fcitx5 输入法与雾凇小鹤双拼 ----------
-  i18n.inputMethod = {
-    enable = true;
-    type = "fcitx5";
-    fcitx5 = {
-      waylandFrontend = true;
-      addons = [
-        pkgs.qt6Packages.fcitx5-chinese-addons
-        (pkgs.fcitx5-rime.override { rimeDataPkgs = [ pkgs.rime-ice ]; })
-      ];
-    };
-  };
-
-  xdg.configFile."fcitx5/profile" = {
-    force = true;
-    text = ''
-      [GroupOrder]
-      0=Default
-      [Groups/0]
-      Name=Default
-      Default Layout=us
-      DefaultIM=rime
-      [Groups/0/Items/0]
-      Name=keyboard-us
-      [Groups/0/Items/1]
-      Name=rime
-      [GroupList]
-      0=Default
-    '';
-  };
-
-  xdg.configFile."fcitx5/rime/default.custom.yaml" = {
-    force = true;
-    text = ''
-      patch:
-        __include: rime_ice_suggestion:/
-        schema_list:
-          - schema: rime_ice_flypy
-        switches:
-          - name: zh_simp
-            reset: 1
-    '';
-  };
-
   home.sessionVariables = {
-    GTK_IM_MODULE  = "fcitx";
-    QT_IM_MODULE   = "fcitx";
-    XMODIFIERS     = "@im=fcitx";
-    GLFW_IM_MODULE = "ibus";
     GLOG_minloglevel = "3";
     GLOG_logtostderr = "0";
     GLOG_log_dir     = "/dev/null";

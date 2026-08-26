@@ -91,20 +91,19 @@
   };
 
   services.resolved.enable = true;
-
-  networking.wireless.iwd.settings = {
-    General = {
-      # 避免与 systemd-networkd 冲突，IP 分配交给 networkd
-      EnableNetworkConfiguration = false;
-    };
-    Network = {
-      EnableIPv6 = true;
-    };
-    Scan = {
-      # 禁用周期后台扫描（显著减少丢包和高延迟）
-      DisablePeriodicScan = true;
-    };
+networking.wireless.iwd.settings = {
+  General = {
+    EnableNetworkConfiguration = false;
+    RoamThreshold = -85;      # 默认约 -70，调低到几乎不会触发漫游
+    RoamThreshold5G = -85;
   };
+  Network = {
+    EnableIPv6 = true;
+  };
+  Scan = {
+    DisablePeriodicScan = true;
+  };
+};
 
   # ----------------------------------------------------
   # 4. 系统服务与后台精简

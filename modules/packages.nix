@@ -60,10 +60,11 @@
     packages = with pkgs; [
       jetbrains-mono                            # 核心英文等宽字体
       wqy_microhei                              # 中文字体
-      noto-fonts-color-emoji                         # Apple 风格 Emoji
+      noto-fonts-color-emoji                          # 彩色 Emoji 字体
     ];
+  };
 
-    fontconfig = {
+    fonts.fontconfig = {
       enable = true;
       antialias = true;                         # 开启抗锯齿
       hinting.enable = false;                   # 高分屏关闭 hinting 保持字形平滑
@@ -76,5 +77,4 @@
         emoji     = [ "Noto Color Emoji" ];     # 绑定 noto-fonts-color-emoji 的真实 Font Family
       };
     };
-  };
 }
