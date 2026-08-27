@@ -1,3 +1,5 @@
+// 在 config.kdl 中添加，忽略 NumLock / CapsLock 对快捷键的干扰
+prefer-no-csd
 input {
     touchpad {
         tap

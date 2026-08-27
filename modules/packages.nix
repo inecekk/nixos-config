@@ -22,7 +22,10 @@
   services.printing.enable = false;             # 禁用 CUPS 打印服务
   systemd.services.ModemManager.enable = false; # 禁用 3G/4G/5G 调制解调器管理
   hardware.opentabletdriver.enable = false;     # 禁用手绘板/数位板服务
-  boot.swraid.enable = false;                   # 禁用软 RAID 阵列服务
+  boot.swraid.enable = false;                    # 禁用软 RAID 阵列服务
+
+  # 电源管理服务 (适配 Wayland/Niri 与 AMD P-State)
+  services.power-profiles-daemon.enable = true;
 
   # -------------------------------------------------------------
   # 2. GNOME 遗留与桌面 Portal 优化 (完美匹配 Niri/Wayland 桌面环境)
@@ -53,18 +56,17 @@
   };
 
   # -------------------------------------------------------------
-  # 4. 字体配置 (高分屏与 Apple Emoji 渲染匹配)
+  # 4. 字体配置 (高分屏与 Emoji 渲染匹配)
   # -------------------------------------------------------------
   fonts = {
     enableDefaultPackages = false;              # 关闭默认冗余字体集
     packages = with pkgs; [
       jetbrains-mono                            # 核心英文等宽字体
-      wqy_microhei                              # 中文字体
-      noto-fonts-color-emoji                          # 彩色 Emoji 字体
+      wqy_microhei                             # 中文字体
+      noto-fonts-color-emoji                  # 彩色 Emoji 字体
     ];
-  };
 
-    fonts.fontconfig = {
+    fontconfig = {
       enable = true;
       antialias = true;                         # 开启抗锯齿
       hinting.enable = false;                   # 高分屏关闭 hinting 保持字形平滑
@@ -77,4 +79,5 @@
         emoji     = [ "Noto Color Emoji" ];     # 绑定 noto-fonts-color-emoji 的真实 Font Family
       };
     };
+  };
 }

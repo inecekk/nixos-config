@@ -61,7 +61,7 @@ in
     # 用户软件包列表 (按字母序排列)
     home.packages = with pkgs; [
       bluetui btop foot git go-musicfox impala libnotify materialgram
-      miyu pcmanfm qq tree voicefox vscode wget
+	mpvpaper   miyu pcmanfm qq tree voicefox vscode wget
       (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
     ];
     home.sessionPath = [ "$HOME/.local/bin" "/etc/profiles/per-user/lk/bin" ];

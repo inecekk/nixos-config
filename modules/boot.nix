@@ -12,34 +12,43 @@ in {
   boot = {
     kernelPackages = pkgs.linuxPackages;
     supportedFilesystems = ["ntfs"];
-    kernelModules = ["tcp_bbr"];
-    # 强制 S2idle 以避开 ACPI 深度睡眠 Bug，loglevel=3 减少日志噪音
-    kernelParams = [
-  # --- 电源管理与睡眠优化 ---
-  "mem_sleep_default=deep"          # 深度睡眠（S3，比 s2idle 更省电稳定）
-  "amd_pstate=guided"               # AMD CPU 协同调频优化
-  "amd_pmc.enable_stb=0"            # 关闭 AMD PMC 的 Telemetry Buffer 降低功耗/唤醒延迟
-  "amdgpu.runpm=0"                  # 独显/核显运行时电源管理调整
-  
-  # --- IOMMU 与硬件直通/PCIe 优化 ---
-  "amd_iommu=on"
-  "iommu=pt"
-  "pcie_aspm=force"                 # 强制启用 PCIe 省电状态
-  
-  # --- 存储与延迟优化 ---
-  "nvme_core.default_ps_max_latency_us=0" # 消除 NVMe 固态硬盘休眠延迟
-  
-  # --- 看门狗与错误处理（彻底解决关机 watchdog 报错） ---
-  "nowatchdog"
-  "nmi_watchdog=0"
+    kernelModules = ["tcp_bbr" "rtw89_8852be"]; # 显式加载 8852be 模块
+    
+    # 针对 RTL8852BE 和 AMD 6800H 的黑科技驱动参数
+    extraModprobeConfig = ''
+      # 禁用 8852be 的 PCIe 深度省电和 ASPM，彻底解决掉网/高延迟
+      options rtw89_core disable_ps_mode=y
+      options rtw89_pci disable_aspm_l1=y disable_aspm_l1ss=y
+    '';
 
-  # --- 系统杂项与 ACPI ---
-  "acpi_enforce_resources=lax"
-  "quiet"
-  "loglevel=3"
-  "mitigations=auto"
-  "systemd.default_timeout_stop_sec=9s"
-];
+    kernelParams = [
+      # --- 电源管理与 CPU 调频 ---
+      "mem_sleep_default=deep"          # 深度睡眠 (S3)
+      "amd_pstate=active"               # 改为 active，赋予 powerprofilesctl / EPP 完整的性能调优能力
+      "amd_pmc.enable_stb=0"            # 关闭 Telemetry Buffer 降低延迟
+      # 移除 amdgpu.runpm=0 恢复显卡正常电源管理，确保性能模式正常拉满
+
+      # --- IOMMU 与 PCIe 优化 ---
+      "amd_iommu=on"
+      "iommu=pt"
+      # 彻底移除 pcie_aspm=force，换为按需保护 RTL8852BE 网卡：
+      "pcie_aspm.policy=performance"    # 保证 PCIe 总线响应速度，防止网卡与 NVMe 掉线
+
+      # --- 存储与延迟优化 ---
+      "nvme_core.default_ps_max_latency_us=0" # 消除 NVMe 休眠延迟
+
+      # --- 看门狗与错误处理 ---
+      "nowatchdog"
+      "nmi_watchdog=0"
+
+      # --- 系统杂项与 ACPI ---
+      "acpi_enforce_resources=lax"
+      "quiet"
+      "loglevel=3"
+      "mitigations=auto"
+      "systemd.default_timeout_stop_sec=9s"
+    ];
+
     loader = {
       timeout = 3;
       efi.canTouchEfiVariables = false;
@@ -58,25 +67,35 @@ in {
     };
   };
 
+  # ==========================================
+  # 2. 硬件网络与性能模式配置
+  # ==========================================
+  # 禁用 NetworkManager 自身的 WiFi 省电策略
+  networking.networkmanager.wifi.powersave = false;
 
-  # 2. 睡眠前置清理任务 (防报错处理)
-systemd.services.pre-suspend-tasks = {
-  description = "睡眠前清理任务";
-  wantedBy = [ "sleep.target" ];
-  before = [ "sleep.target" ];
-  
-  script = ''
-    ${pkgs.wireplumber}/bin/wpctl suspend-node @DEFAULT_AUDIO_SINK@ 2>/dev/null || true
-    ${pkgs.alsa-utils}/bin/amixer -c 0 sset Master mute 2>/dev/null || true
-  '';
-
-  serviceConfig = {
-    Type = "oneshot";
-  };
-};
+  # 启用 power-profiles-daemon 以支持性能模式切换
+  services.power-profiles-daemon.enable = true;
 
   # ==========================================
-  # 3. 电源管理执行逻辑
+  # 3. 睡眠前置清理任务 (防报错处理)
+  # ==========================================
+  systemd.services.pre-suspend-tasks = {
+    description = "睡眠前清理任务";
+    wantedBy = [ "sleep.target" ];
+    before = [ "sleep.target" ];
+    
+    script = ''
+      ${pkgs.wireplumber}/bin/wpctl suspend-node @DEFAULT_AUDIO_SINK@ 2>/dev/null || true
+      ${pkgs.alsa-utils}/bin/amixer -c 0 sset Master mute 2>/dev/null || true
+    '';
+
+    serviceConfig = {
+      Type = "oneshot";
+    };
+  };
+
+  # ==========================================
+  # 4. 电源管理执行逻辑
   # ==========================================
   powerManagement = {
     powerDownCommands = ''
@@ -87,14 +106,6 @@ systemd.services.pre-suspend-tasks = {
 
     resumeCommands = ''
       sleep 2
-      # 仅在服务存在时尝试启动，使用 --no-block 避免挂起
-  /*  
-         if systemctl list-unit-files mpd.service | grep -q 'mpd.service'; then
-        systemctl start mpd --no-block
-      fi
-
-*/
-
       ${pkgs.bluez}/bin/bluetoothctl power on 2>/dev/null || true
       ${pkgs.networkmanager}/bin/nmcli radio wifi on 2>/dev/null || true
       ${pkgs.alsa-utils}/bin/amixer -c 0 set Master unmute 2>/dev/null || true
