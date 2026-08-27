@@ -53,11 +53,11 @@
           - schema: double_pinyin_flypy   # 小鹤双拼
         switches:
           - name: ascii_mode
-            states: [ 中, 英 ]
-            reset: 0        # 0 = 默认中文模式，1 = 默认西文/英文模式
+            states: ["中", "英"]
+            reset: 0        # 0 = 默认中文模式，1 = 默认英文模式
           - name: simplification
-            states: [ 繁, 简 ]
-            reset: 1        # 1 = 默认简体
+            states: ["汉字", "漢字"]
+            reset: 0        # 0 = 默认简体中文，1 = 默认繁体中文
     '';
   };
 

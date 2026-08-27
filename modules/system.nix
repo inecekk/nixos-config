@@ -68,9 +68,29 @@
   # 3. 网络配置 & iwd + networkd 稳定度修复
   # ----------------------------------------------------
   networking = {
-    useDHCP = false; # 关闭全局全局 DHCP，交由 networkd 按网卡配置
+    useDHCP = false; # 关闭全局 DHCP，交由 networkd 按网卡配置
     useNetworkd = true;
     wireless.iwd.enable = true;
+
+    # iwd 修正配置（将 RoamThreshold 归位至 Scan 块，修复反复断线/roam-scan）
+    wireless.iwd.settings = {
+      General = {
+        EnableNetworkConfiguration = false;
+      };
+      Network = {
+        EnableIPv6 = true;
+      };
+      Scan = {
+        DisablePeriodicScan = true; # 禁用后台定期扫描
+        RoamThreshold = -88;        # 修正：移至 [Scan] 區塊，調低 2.4G 漫遊門檻
+        RoamThreshold5G = -88;      # 修正：移至 [Scan] 區塊，調低 5G 漫遊門檻
+      };
+      # 如果你在單一 AP 環境、完全不需要 Mesh/多 AP 漫遊，可取消下一行註釋直接禁用漫遊：
+      # Roaming = {
+      #   DisableRoaming = true;
+      # };
+    };
+
     nameservers = [
       "223.5.5.5"    # 阿里 DNS（国内响应极快，避免 dae 假死）
       "119.29.29.29" # 腾讯 DNS
@@ -91,19 +111,6 @@
   };
 
   services.resolved.enable = true;
-networking.wireless.iwd.settings = {
-  General = {
-    EnableNetworkConfiguration = false;
-    RoamThreshold = -85;      # 默认约 -70，调低到几乎不会触发漫游
-    RoamThreshold5G = -85;
-  };
-  Network = {
-    EnableIPv6 = true;
-  };
-  Scan = {
-    DisablePeriodicScan = true;
-  };
-};
 
   # ----------------------------------------------------
   # 4. 系统服务与后台精简
