@@ -1,8 +1,10 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    fcitx5
+    fcitx5 
+    qt6Packages.fcitx5-configtool
     qt6Packages.fcitx5-chinese-addons
+
   ];
 
   xdg.configFile."fcitx5/conf/pinyin.conf" = {

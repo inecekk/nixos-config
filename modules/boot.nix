@@ -13,7 +13,7 @@ in {
     kernelPackages = pkgs.linuxPackages;
     supportedFilesystems = ["ntfs"];
     kernelModules = ["tcp_bbr" "rtw89_8852be"]; # 显式加载 8852be 模块
-    
+
     # 针对 RTL8852BE 和 AMD 6800H 的黑科技驱动参数
     extraModprobeConfig = ''
       # 禁用 8852be 的 PCIe 深度省电和 ASPM，彻底解决掉网/高延迟
@@ -43,10 +43,13 @@ in {
 
       # --- 系统杂项与 ACPI ---
       "acpi_enforce_resources=lax"
-      "quiet"
-      "loglevel=3"
       "mitigations=auto"
       "systemd.default_timeout_stop_sec=9s"
+
+      # --- 临时调试：定位重启卡顿位置，问题排查完后可移除 ---
+      "systemd.log_level=debug"
+      "systemd.log_target=console"
+      # 原来的 "quiet" 和 "loglevel=3" 已移除，方便观察启动全过程输出
     ];
 
     loader = {
@@ -83,7 +86,7 @@ in {
     description = "睡眠前清理任务";
     wantedBy = [ "sleep.target" ];
     before = [ "sleep.target" ];
-    
+
     script = ''
       ${pkgs.wireplumber}/bin/wpctl suspend-node @DEFAULT_AUDIO_SINK@ 2>/dev/null || true
       ${pkgs.alsa-utils}/bin/amixer -c 0 sset Master mute 2>/dev/null || true

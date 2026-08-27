@@ -43,7 +43,7 @@ binds {
         // ═══════════════════════════════════════════
         // 2. 应用启动（快捷字母键 - 聚焦已有，无则新建）
         // ═══════════════════════════════════════════
-        "Mod+Return"              hotkey-overlay-title="终端(聚焦/新建)"      { spawn-sh "wid=$(niri msg windows | awk -v RS='Window ID ' -v IGNORECASE=1 '/App ID:.*foot/ {print $1; exit}' | tr -d ':'); [ -n \"$wid\" ] && niri msg action focus-window --id \"$wid\" || foot"; }
+        "Mod+Return"              hotkey-overlay-title="终端(新建)"      { spawn-sh "foot"; }
         "Mod+Shift+Return"        hotkey-overlay-title="终端(聚焦/新建)"      { spawn-sh "wid=$(niri msg windows | awk -v RS='Window ID ' -v IGNORECASE=1 '/App ID:.*foot/ {print $1; exit}' | tr -d ':'); [ -n \"$wid\" ] && niri msg action focus-window --id \"$wid\" || foot"; }
         "Mod+E"                   hotkey-overlay-title="文件管理器(聚焦/新建)" { spawn-sh "wid=$(niri msg windows | awk -v RS='Window ID ' -v IGNORECASE=1 '/App ID:.*pcmanfm/ {print $1; exit}' | tr -d ':'); [ -n \"$wid\" ] && niri msg action focus-window --id \"$wid\" || pcmanfm"; }
         "Mod+G"                   hotkey-overlay-title="Chromium(聚焦/新建)"  { spawn-sh "wid=$(niri msg windows | awk -v RS='Window ID ' -v IGNORECASE=1 '/App ID:.*chromium/ {print $1; exit}' | tr -d ':'); [ -n \"$wid\" ] && niri msg action focus-window --id \"$wid\" || chromium"; }
