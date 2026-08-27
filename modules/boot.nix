@@ -6,42 +6,27 @@
 }: let
   scripts = import ./scripts.nix {inherit pkgs;};
 in {
-  # ==========================================
-  # 1. 引导与内核配置
-  # ==========================================
   boot = {
     kernelPackages = pkgs.linuxPackages;
     supportedFilesystems = ["ntfs"];
-    kernelModules = ["tcp_bbr" "rtw89_8852be"]; # 显式加载 8852be 模块
+    kernelModules = ["tcp_bbr" "rtw89_8852be"];
+    blacklistedKernelModules = [ "sp5100_tco" ];
 
-    # 针对 RTL8852BE 和 AMD 6800H 的黑科技驱动参数
     extraModprobeConfig = ''
-      # 禁用 8852be 的 PCIe 深度省电和 ASPM，彻底解决掉网/高延迟
       options rtw89_core disable_ps_mode=y
       options rtw89_pci disable_aspm_l1=y disable_aspm_l1ss=y
     '';
 
     kernelParams = [
-      # --- 电源管理与 CPU 调频 ---
-      "mem_sleep_default=deep"          # 深度睡眠 (S3)
-      "amd_pstate=active"               # 改为 active，赋予 powerprofilesctl / EPP 完整的性能调优能力
-      "amd_pmc.enable_stb=0"            # 关闭 Telemetry Buffer 降低延迟
-      # 移除 amdgpu.runpm=0 恢复显卡正常电源管理，确保性能模式正常拉满
-
-      # --- IOMMU 与 PCIe 优化 ---
+      "mem_sleep_default=deep"
+      "amd_pstate=active"
+      "amd_pmc.enable_stb=0"
       "amd_iommu=on"
       "iommu=pt"
-      # 彻底移除 pcie_aspm=force，换为按需保护 RTL8852BE 网卡：
-      "pcie_aspm.policy=performance"    # 保证 PCIe 总线响应速度，防止网卡与 NVMe 掉线
-
-      # --- 存储与延迟优化 ---
-      "nvme_core.default_ps_max_latency_us=0" # 消除 NVMe 休眠延迟
-
-      # --- 看门狗与错误处理 ---
+      "pcie_aspm.policy=performance"
+      "nvme_core.default_ps_max_latency_us=0"
       "nowatchdog"
       "nmi_watchdog=0"
-
-      # --- 系统杂项与 ACPI ---
       "acpi_enforce_resources=lax"
       "quiet"
       "loglevel=3"
@@ -67,18 +52,9 @@ in {
     };
   };
 
-  # ==========================================
-  # 2. 硬件网络与性能模式配置
-  # ==========================================
-  # 禁用 NetworkManager 自身的 WiFi 省电策略
   networking.networkmanager.wifi.powersave = false;
-
-  # 启用 power-profiles-daemon 以支持性能模式切换
   services.power-profiles-daemon.enable = true;
 
-  # ==========================================
-  # 3. 睡眠前置清理任务 (防报错处理)
-  # ==========================================
   systemd.services.pre-suspend-tasks = {
     description = "睡眠前清理任务";
     wantedBy = [ "sleep.target" ];
@@ -94,9 +70,6 @@ in {
     };
   };
 
-  # ==========================================
-  # 4. 电源管理执行逻辑
-  # ==========================================
   powerManagement = {
     powerDownCommands = ''
       ${pkgs.util-linux}/bin/timeout 3s ${pkgs.bluez}/bin/bluetoothctl power off 2>/dev/null || true

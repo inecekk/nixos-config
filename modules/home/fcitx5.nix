@@ -7,6 +7,7 @@
 
   ];
 
+/*
   xdg.configFile."fcitx5/conf/pinyin.conf" = {
     force = true;
     text = ''
@@ -36,7 +37,7 @@
       0=Default
     '';
   };
-
+*/
   home.sessionVariables = {
     GTK_IM_MODULE  = "fcitx";
     QT_IM_MODULE   = "fcitx";
