@@ -43,13 +43,10 @@ in {
 
       # --- 系统杂项与 ACPI ---
       "acpi_enforce_resources=lax"
+      "quiet"
+      "loglevel=3"
       "mitigations=auto"
       "systemd.default_timeout_stop_sec=9s"
-
-      # --- 临时调试：定位重启卡顿位置，问题排查完后可移除 ---
-      "systemd.log_level=debug"
-      "systemd.log_target=console"
-      # 原来的 "quiet" 和 "loglevel=3" 已移除，方便观察启动全过程输出
     ];
 
     loader = {
@@ -102,14 +99,14 @@ in {
   # ==========================================
   powerManagement = {
     powerDownCommands = ''
-      ${pkgs.bluez}/bin/bluetoothctl power off 2>/dev/null || true
+      ${pkgs.util-linux}/bin/timeout 3s ${pkgs.bluez}/bin/bluetoothctl power off 2>/dev/null || true
       ${pkgs.networkmanager}/bin/nmcli radio wifi off 2>/dev/null || true
       /run/current-system/sw/bin/pkill -9 -u lk -x 'qq|chrome|zen|vscode' 2>/dev/null || true
     '';
 
     resumeCommands = ''
       sleep 2
-      ${pkgs.bluez}/bin/bluetoothctl power on 2>/dev/null || true
+      ${pkgs.util-linux}/bin/timeout 3s ${pkgs.bluez}/bin/bluetoothctl power on 2>/dev/null || true
       ${pkgs.networkmanager}/bin/nmcli radio wifi on 2>/dev/null || true
       ${pkgs.alsa-utils}/bin/amixer -c 0 set Master unmute 2>/dev/null || true
     '';
