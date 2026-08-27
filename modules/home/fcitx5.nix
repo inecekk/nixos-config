@@ -15,14 +15,38 @@
     };
   };
 
-  # 小鹤双拼 schema 文件（Rime 官方 rime-double-pinyin 仓库，稳定可靠）
+  # 小鹤双拼 schema 文件
   xdg.dataFile."fcitx5/rime/double_pinyin_flypy.schema.yaml".source = pkgs.fetchurl {
     url = "https://raw.githubusercontent.com/rime/rime-double-pinyin/master/double_pinyin_flypy.schema.yaml";
     sha256 = "sha256-a1Iqfpy3Q0dCh6FGeFl0YL0SQ2nzJXPdY+jwTnxB1Lk=";
   };
 
-  # profile 是 fcitx5 运行时状态文件，首次启动后会被自身重写，
-  # 用 force = true 确保每次 home-manager switch 都强制覆盖为声明式配置
+  # --------------------------------------------------------------------------
+  # 核心修復：針對小鶴雙拼方案（double_pinyin_flypy）的專屬補丁
+  # 強制開啟 zh_simp（簡體），並修正狀態欄標籤為 [ 中, 英 ]
+  # --------------------------------------------------------------------------
+  xdg.dataFile."fcitx5/rime/double_pinyin_flypy.custom.yaml" = {
+    force = true;
+    text = ''
+      patch:
+        "switches/@0/reset": 0        # ascii_mode: 0 = 中文, 1 = 英文
+        "switches/@0/states": ["中", "英"]
+        "switches/@1/reset": 1        # zh_simp (簡體): 1 = 預設啟用簡體!
+        "switches/@1/states": ["漢字", "汉字"]
+    '';
+  };
+
+  # 全局預設選單補丁
+  xdg.dataFile."fcitx5/rime/default.custom.yaml" = {
+    force = true;
+    text = ''
+      patch:
+        schema_list:
+          - schema: double_pinyin_flypy   # 小鹤双拼
+    '';
+  };
+
+  # Profile 狀態文件
   xdg.configFile."fcitx5/profile" = {
     force = true;
     text = ''
@@ -38,26 +62,6 @@
       Name=rime
       [GroupList]
       0=Default
-    '';
-  };
-
-  # default.custom.yaml：
-  # 注意：fcitx5-rime 的 rime 用户数据目录在 ~/.local/share/fcitx5/rime/
-  # （XDG_DATA_HOME），不是 ~/.config/fcitx5/rime/，必须用 xdg.dataFile
-  # 而非 xdg.configFile，否则 Rime 读不到这个补丁文件。
-  xdg.dataFile."fcitx5/rime/default.custom.yaml" = {
-    force = true;
-    text = ''
-      patch:
-        schema_list:
-          - schema: double_pinyin_flypy   # 小鹤双拼
-        switches:
-          - name: ascii_mode
-            states: ["中", "英"]
-            reset: 0        # 0 = 默认中文模式，1 = 默认英文模式
-          - name: simplification
-            states: ["汉字", "漢字"]
-            reset: 0        # 0 = 默认简体中文，1 = 默认繁体中文
     '';
   };
 
