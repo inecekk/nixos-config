@@ -21,8 +21,8 @@
   services.speechd.enable = false;              # 禁用无障碍语音合成服务
   services.printing.enable = false;             # 禁用 CUPS 打印服务
   systemd.services.ModemManager.enable = false; # 禁用 3G/4G/5G 调制解调器管理
-  hardware.opentabletdriver.enable = false;     # 禁用手绘板/数位板服务
-  boot.swraid.enable = false;                    # 禁用软 RAID 阵列服务
+#   hardware.opentabletdriver.enable = false;     # 禁用手绘板/数位板服务
+#   boot.swraid.enable = false;                    # 禁用软 RAID 阵列服务
 
   # 电源管理服务 (适配 Wayland/Niri 与 AMD P-State)
   services.power-profiles-daemon.enable = true;
