@@ -4,3 +4,8 @@ result
 *.bak*
 *~
 *.swp
+# Noctalia 运行时缓存
+.local/state/noctalia/plugin-cache/
+.local/state/noctalia/wallhaven/
+.local/state/noctalia/notification_history_assets/
+.local/state/noctalia/mpvpaper/

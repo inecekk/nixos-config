@@ -1,1 +1,23 @@
-/nix/store/36nz8nkl60gzlv37kaqngjy59kbh3adi-home-manager-files/.config/fcitx5/profile
+[Groups/0]
+# Group Name
+Name=默认
+# Layout
+Default Layout=us
+# Default Input Method
+DefaultIM=shuangpin
+
+[Groups/0/Items/0]
+# Name
+Name=keyboard-us
+# Layout
+# Layout=
+
+[Groups/0/Items/1]
+# Name
+Name=shuangpin
+# Layout
+# Layout=
+
+[GroupOrder]
+0=默认
+

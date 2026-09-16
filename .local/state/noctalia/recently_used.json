@@ -1,0 +1,22 @@
+{
+  "Applications": [
+    "/usr/share/applications/code.desktop",
+    "/usr/share/applications/nwg-look.desktop",
+    "/usr/share/applications/fcitx5-configtool.desktop",
+    "/usr/share/applications/im-config.desktop",
+    "/usr/share/applications/pcmanfm.desktop",
+    "/usr/share/applications/pcmanfm-desktop-pref.desktop",
+    "/usr/share/applications/io.github.kukuruzka165.materialgram.desktop",
+    "/home/lk/.local/share/applications/zen.desktop",
+    "/usr/share/applications/mpv.desktop",
+    "/usr/share/applications/qq.desktop",
+    "/usr/share/applications/firefox-esr.desktop",
+    "/home/lk/.local/share/applications/zen-browser.desktop",
+    "/home/lk/.local/share/applications/qq.desktop",
+    "/usr/share/applications/btop.desktop",
+    "/usr/share/applications/voicefox.desktop",
+    "/usr/share/applications/org.gnome.Nautilus.desktop",
+    "/usr/share/applications/zen.desktop",
+    "/usr/share/applications/foot.desktop"
+  ]
+}

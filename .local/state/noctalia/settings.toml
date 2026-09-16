@@ -1,0 +1,264 @@
+config_version = 14
+
+[backdrop]
+blur_intensity = 0.0
+
+[bar.default]
+background_opacity = 0.69999998435378075
+capsule_opacity = 0.669999985024333
+center = [ "cat", "clock", "ram" ]
+concave_edge_corners = false
+end = [ "audio_visualizer", "media", "network_rx", "cpu", "tray", "network", "bluetooth", "volume", "battery" ]
+margin_ends = 0
+radius = 0
+shadow = false
+start = [ "launcher", "workspaces", "wallhaven", "weather" ]
+
+[location]
+address = "yangxian"
+
+[lockscreen]
+blur_intensity = 0.0
+
+[lockscreen_widgets]
+enabled = true
+schema_version = 2
+widget_order = [
+    "lockscreen-login-box@winit",
+    "lockscreen-login-box@eDP-1",
+    "lockscreen-widget-0000000000000001",
+    "lockscreen-widget-0000000000000002",
+    "lockscreen-widget-0000000000000003",
+    "lockscreen-widget-0000000000000004"
+]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@eDP-1"]
+    box_height = 150.0
+    box_width = 810.0
+    cx = 800.4373779296875
+    cy = 840.7698974609375
+    output = "eDP-1"
+    placement_height = 1000.0
+    placement_width = 1600.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@eDP-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 0.44
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = false
+        show_keyboard_layout = false
+        show_login_button = true
+        show_media = true
+        show_session_buttons = false
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@winit"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 786.0
+    cy = 1714.0
+    output = "winit"
+    placement_height = 1896.0
+    placement_width = 1572.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@winit".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000001]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 262.0
+    cy = 346.0
+    output = "eDP-1"
+    placement_height = 1000.0
+    placement_width = 1600.0
+    rotation = 0.0
+    type = "fancy_audio_visualizer"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000001.settings]
+        background = false
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000002]
+    box_height = 80.0
+    box_width = 880.0
+    cx = 790.0
+    cy = 680.0
+    output = "eDP-1"
+    placement_height = 1000.0
+    placement_width = 1600.0
+    rotation = 0.0
+    type = "audio_visualizer"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000002.settings]
+        background_opacity = 0.0
+        bands = 104
+        centered = false
+        color_2 = "error"
+        show_when_idle = true
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000003]
+    box_height = 80.0
+    box_width = 400.0
+    cx = 817.0
+    cy = 215.0
+    output = "eDP-1"
+    placement_height = 1000.0
+    placement_width = 1600.0
+    rotation = 0.0
+    type = "clock"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000003.settings]
+        background_opacity = 0.23000000000000001
+        color = "tertiary"
+        format = "%D  %T  "
+
+    [lockscreen_widgets.widget.lockscreen-widget-0000000000000004]
+    box_height = 160.0
+    box_width = 208.0
+    cx = 1301.4373779296875
+    cy = 335.0
+    output = "eDP-1"
+    placement_height = 1000.0
+    placement_width = 1600.0
+    rotation = -0.0
+    type = "sysmon"
+
+        [lockscreen_widgets.widget.lockscreen-widget-0000000000000004.settings]
+        background_opacity = 0.47999999999999998
+        stat = "cpu_usage"
+        stat2 = "cpu_temp"
+
+[notification]
+background_opacity = 0.65999998524785042
+history_retention_hours = 72
+offset_x = 10
+
+[osd]
+enabled = false
+
+[plugin_settings."noctalia/wallhaven"]
+api_key = "bDSZC5u5X41yi1Wktm7XF8LDTJLaDARv"
+download_dir = "/home/lk/Pictures/wallpapers/WALL"
+
+[plugins]
+enabled = [ "dotnetrob/cat", "noctalia/mpvpaper", "noctalia/wallhaven" ]
+
+[shell]
+avatar_path = "/home/lk/Pictures/wallpapers/16X10/wallhaven-vqy2jp_7000x4375.jpg"
+clipboard_history_max_entries = 50
+external_ip_enabled = true
+lang = "zh-Hans"
+settings_show_advanced = false
+
+    [shell.launcher]
+    app_grid = true
+
+    [shell.panel]
+    background_blur = false
+    launcher_position = "top_left"
+
+    [shell.screenshot]
+    confirm_region = true
+
+[theme]
+builtin = "Catppuccin"
+source = "community"
+
+[wallpaper]
+directory = "/home/lk/Pictures/wallpapers"
+
+    [wallpaper.default]
+    path = "/home/lk/Pictures/wallpapers/WALL/wallhaven-72rd8e.jpg"
+
+    [wallpaper.last]
+    path = "/home/lk/Pictures/wallpapers/WALL/wallhaven-72rd8e.jpg"
+
+    [wallpaper.monitors.eDP-1]
+    path = "/home/lk/Pictures/wallpapers/WALL/wallhaven-72rd8e.jpg"
+
+    [[wallpaper.favorite]]
+    path = "/home/lk/Pictures/wallpapers/360/134298742718217581.jpg"
+    theme_mode = "auto"
+
+[widget.audio_visualizer]
+color_2 = "error"
+
+[widget.battery]
+color = "secondary"
+
+[widget.cat]
+cat_size = 23
+font_scale = 1.3400000000000001
+poll_interval = 1
+run_threshold = 0
+show_cpu_percent = true
+type = "dotnetrob/cat:cat"
+walk_threshold = 0
+
+[widget.clock]
+color = "primary"
+format = "%T %D"
+
+[widget.cpu]
+custom_image_colorize = true
+stat = "cpu_freq"
+visualization = "none"
+
+[widget.launcher]
+glyph = "brand-debian"
+
+[widget.media]
+color = "tertiary"
+
+[widget.network]
+icon_color = "hover"
+show_label = false
+
+[widget.network_rx]
+color = "error"
+show_glyph = false
+visualization = "none"
+
+[widget.ram]
+color = "hover"
+visualization = "none"
+
+[widget.tray]
+color = "#691414"
+
+[widget.volume]
+color = "#9EA24E"
+
+[widget.wallhaven]
+color = "secondary"
+type = "noctalia/wallhaven:wallhaven"
+
+[widget.weather]
+color = "hover"

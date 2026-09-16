@@ -1,25 +1,47 @@
-// 在 config.kdl 中添加，忽略 NumLock / CapsLock 对快捷键的干扰
+// 环境变量
+spawn-at-startup "dbus-update-activation-environment" "--systemd" "WAYLAND_DISPLAY" "XDG_CURRENT_DESKTOP"
+
+environment {
+    GDK_BACKEND "wayland"
+    QT_QPA_PLATFORM "wayland;xcb"
+    SDL_VIDEODRIVER "wayland"
+    MOZ_ENABLE_WAYLAND "1"
+    ELECTRON_OZONE_PLATFORM_HINT "auto"
+    _JAVA_AWT_WM_NONREPARENTING "1"
+}
 prefer-no-csd
+
+// 输入设备
 input {
     touchpad {
         tap
         natural-scroll
     }
+    focus-follows-mouse
 }
+
 cursor {
     xcursor-size 20
 }
+
 output "eDP-1" {
     scale 2.0
 }
+
 hotkey-overlay {
     skip-at-startup
 }
+
+// ========== 概览设置 ==========
 overview {
-    zoom 1
+    zoom 0.5
+    backdrop-color "#00000080"
+    workspace-shadow {
+        on
+    }
 }
 
-// 优化1：缩短动画 duration，减少 GPU 着色器执行时间
+// ========== 动画系统 ==========
 animations {
     workspace-switch {
         spring damping-ratio=0.62 stiffness=400 epsilon=0.0001
@@ -84,12 +106,16 @@ animations {
     }
 }
 
+// ========== 布局 ==========
 layout {
     background-color "transparent"
     gaps 8
     struts {
-        right -2
-    }
+	left  2
+	right 2
+	top 1
+	bottom 1
+	}
     preset-column-widths {
         proportion 0.25
         proportion 0.5
@@ -98,8 +124,16 @@ layout {
     default-column-width {
         proportion 0.5
     }
+    tab-indicator {
+        active-color "#ffb68f"
+        inactive-color "#773200"
+        urgent-color "#ffb4ab"
+    }
+    insert-hint {
+        color "#ffb68f80"
+    }
     focus-ring {
-        width 1.5
+        width 2
         active-gradient from="#ef4444cc" to="#e879f9cc" angle=90 in="oklch longer hue" relative-to="workspace-view"
         inactive-color "#50505020"
     }
@@ -114,34 +148,40 @@ layout {
     }
 }
 
+// ========== 模糊效果 ==========
 blur {
-    passes 2
-    offset 1.8
+    passes 4
+    offset 2.5
     noise 0.03
     saturation 1.3
 }
 
+// ========== 窗口规则 ==========
+// 全局默认规则
 window-rule {
-    open-maximized false
     default-column-width {
         proportion 0.5
     }
     default-window-height {
         proportion 1.0
     }
-    open-maximized-to-edges false
     opacity 0.85
-    background-effect {
-        blur false
-    }
+    geometry-corner-radius 12
+    clip-to-geometry true
+    draw-border-with-background false
 }
+
+// Zen 浏览器
 window-rule {
-    match app-id="^zen$"
+    match app-id=r#"^(zen|zen-alpha|zen-browser|zen-bin)$"#
     open-maximized true
     background-effect {
         blur true
+        xray true
     }
 }
+
+// Foot 终端
 window-rule {
     match app-id="^foot$"
     open-maximized false
@@ -149,71 +189,78 @@ window-rule {
         proportion 0.5
     }
     background-effect {
-        blur true
+        blur false
+        xray false
     }
 }
+
+// musicfox
 window-rule {
     match app-id="^foot$" title="^musicfox$"
-    opacity 0.95
+    opacity 0.5
     default-window-height {
         proportion 1.0
     }
 }
+
+// SpaceFM
 window-rule {
     match app-id="^spacefm"
     opacity 0.92
     background-effect {
         blur true
+        xray true
     }
 }
-window-rule {
-    match is-window-cast-target=false
-    draw-border-with-background false
-    geometry-corner-radius 12
-    clip-to-geometry true
+// ========== Noctalia 图层规则 ==========
+// 壁纸 - 不模糊，作为背景
+layer-rule {
+    match namespace="^noctalia-wallpaper$"
+    place-within-backdrop true
+    background-effect {
+	    blur false
+	    xray false
+    }
 }
 
+
+// Noctalia 设置界面
 layer-rule {
-    match namespace="^noctalia-bar"
+    match namespace="^noctalia-settings$"
     background-effect {
-        blur true
+        blur false
+        xray false
     }
 }
+
+
+// Noctalia 其他组件
+layer-rule {
+    match namespace="^noctalia-(bar-.*|panel|attached-panel|notification|dock|osd|launcher|clipboard|control-center|overlay|greeter)$"
+    background-effect {
+        blur false
+        xray false
+    }
+}
+// Fcitx5 输入法
 layer-rule {
     match namespace="^fcitx"
     background-effect {
+        blur true
         xray true
-        blur true
-    }
-}
-layer-rule {
-    match namespace="^noctalia-(notification|dock|osd)$"
-    background-effect {
-        xray true
-        blur true
-    }
-}
-layer-rule {
-    match namespace="^noctalia-wallpaper$"
-    background-effect {
-        blur false
-    }
-}
-layer-rule {
-    match namespace="^noctalia-(panel|attached-panel)$"
-    background-effect {
-        xray false
-        blur true
     }
 }
 
-switch-events {
-    lid-close {
-        spawn "qs" "-c" "noctalia-shell" "ipc" "call" "sessionMenu" "lockAndSuspend"
-    }
-}
-spawn-at-startup "sh" "-c" "sleep 1 && noctalia"
-spawn-at-startup "sh" "-c" "sleep 3 && fcitx5"
-spawn-at-startup "wl-paste" "--watch" "cliphist" "store"
+
+spawn-at-startup "sh" "-c" "noctalia"
+spawn-at-startup "sh" "-c" "fcitx5"
+spawn-at-startup "sh" "-c" "while true; do sleep 3600; fcitx5 -r -d; done"
 
 include "binds.kdl"
+
+recent-windows {
+    highlight {
+        active-color "#ffb68f"
+        urgent-color "#ffb4ab"
+    }
+}
