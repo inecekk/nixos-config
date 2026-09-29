@@ -1,6 +1,12 @@
 {
   description = "lk 的 NixOS + Niri + Noctalia 配置";
 
+  # Denial 二进制缓存,命中后不用编译 Flutter engine
+  nixConfig = {
+    extra-substituters = [ "https://denial.cachix.org" ];
+    extra-trusted-public-keys = [ "denial.cachix.org-1:wd8YTnvPmugFrtdMJWtR1XdVknR3/g2nmBJkT+vAruo=" ];
+  };
+
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -28,6 +34,9 @@
       url = "github:daeuniverse/flake.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # 不能加 follows,必须用它自己锁定的 nixpkgs 才能命中缓存
+    denial.url = "github:denialwm/denial";
   };
 
   outputs = { self, nixpkgs, home-manager, ... } @ inputs:

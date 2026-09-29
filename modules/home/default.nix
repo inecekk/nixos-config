@@ -38,11 +38,11 @@ in
     imports = autoImports;
     home.stateVersion = "26.11";
 
-    # ⚠️ 绝对不要在这里放 fcitx5 / qt6Packages.fcitx5-chinese-addons / fcitx5-gtk 等任何 fcitx5 相关包
     home.packages = with pkgs; [
       btop foot git go-musicfox  libnotify materialgram
       brightnessctl mpvpaper miyu pcmanfm qq tree voicefox vscode wget
-      (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
+      pkgs.ffmpeg_4   yazi
+	(inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
     ];
 
     home.sessionPath = [ "$HOME/.local/bin" "/etc/profiles/per-user/lk/bin" ];
@@ -62,8 +62,6 @@ in
     };
   };
 
-  # ============================================================
-  # fcitx5 + Rime（系统级，与 programs.niri 平级）
   # ============================================================
   i18n.inputMethod = {
     enable = true;

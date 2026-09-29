@@ -1,0 +1,11 @@
+{ inputs, config, ... }:
+{
+  # 引入 Denial 官方 NixOS 模块
+  imports = [ inputs.denial.nixosModules.default ];
+
+  # 启用 Denial(只注册 Wayland 会话,不改显示管理器和自动登录)
+  programs.denial.enable = true;
+
+  # 把 denial-session、denialctl 等命令加入 PATH
+  environment.systemPackages = [ config.programs.denial.package ];
+}
