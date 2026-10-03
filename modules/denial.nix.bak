@@ -1,3 +1,4 @@
+/*
 { inputs, config, ... }:
 {
   # 引入 Denial 官方 NixOS 模块

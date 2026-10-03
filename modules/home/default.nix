@@ -39,10 +39,9 @@ in
     home.stateVersion = "26.11";
 
     home.packages = with pkgs; [
-      btop foot git go-musicfox  libnotify materialgram
+     btop foot git go-musicfox  libnotify materialgram
       brightnessctl mpvpaper miyu pcmanfm qq tree voicefox vscode wget
-      pkgs.ffmpeg_4   yazi
-	(inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
+   pkgs.python3 google-chrome (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
     ];
 
     home.sessionPath = [ "$HOME/.local/bin" "/etc/profiles/per-user/lk/bin" ];
