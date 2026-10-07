@@ -16,6 +16,7 @@
   programs.fuse.userAllowOther = true;
 
   environment = {
+    etc."xdg/autostart/gnome-keyring-secrets.desktop".text = "[Desktop Entry]\nType=Application\nName=GNOME Keyring\nHidden=true\n";
     pathsToLink = [
       "/share/applications"
       "/share/xdg-desktop-portal"
@@ -100,7 +101,7 @@
     resolved.enable = true;
     printing.enable = false;
     speechd.enable = lib.mkForce false;
-    gvfs.enable = true;
+    gvfs.enable = false;
     vnstat.enable = true;
 
     logind.settings.Login = {

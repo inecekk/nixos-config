@@ -25,6 +25,8 @@
   };
 
   # ----------------------------------------------------
+  # systemd 服务配置
+  # ----------------------------------------------------
   systemd.services.dae = {
     wantedBy = lib.mkForce [];
 
@@ -62,4 +64,21 @@
       Unit = "dae.service";
     };
   };
+
+  # ----------------------------------------------------
+  # 允许 wheel 用户免 sudo 管理 dae
+  # ----------------------------------------------------
+  security.polkit.enable = true;
+
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id == "org.freedesktop.systemd1.manage-units" &&
+          action.lookup("unit") == "dae.service" &&
+          (action.lookup("verb") == "restart" ||
+           action.lookup("verb") == "reload") &&
+          subject.isInGroup("wheel")) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
 }
