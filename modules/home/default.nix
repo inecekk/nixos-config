@@ -41,7 +41,7 @@ in
     home.packages = with pkgs; [
      btop foot git go-musicfox  libnotify
      brightnessctl mpvpaper  miyu pcmanfm qq tree voicefox vscode wget
- pycharm  pkgs.python3 google-chrome
+ pycharm  pkgs.python3 google-chrome  telegram-desktop
     ];
 
     home.sessionPath = [ "$HOME/.local/bin" "/etc/profiles/per-user/lk/bin" ];
@@ -94,4 +94,7 @@ in
     fsType = "tmpfs";
     options = [ "size=1M" "nr_inodes=64" "uid=1000" "gid=100" "mode=0755" "x-systemd.requires-mounts-for=/home/lk/.config/QQ" ];
   };
+
+
+
 }

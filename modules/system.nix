@@ -1,6 +1,11 @@
 { pkgs, lib, ... }:
 {
   hardware.bluetooth.enable = true;
+  fileSystems."/nix/var/nix/builds" = {
+    device = "tmpfs";
+    fsType = "tmpfs";
+    options = [ "size=8G" "mode=0755" ];
+  };
   imports = [
     ./iwd.nix
   ];
