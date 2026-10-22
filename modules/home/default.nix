@@ -41,7 +41,7 @@ in
     home.packages = with pkgs; [
      btop foot git go-musicfox  libnotify materialgram
       brightnessctl mpvpaper  miyu pcmanfm qq tree voicefox vscode wget
-   pkgs.python3 google-chrome (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
+ pycharm  pkgs.python3 google-chrome (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
     ];
 
     home.sessionPath = [ "$HOME/.local/bin" "/etc/profiles/per-user/lk/bin" ];
