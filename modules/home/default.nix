@@ -39,9 +39,9 @@ in
     home.stateVersion = "26.11";
 
     home.packages = with pkgs; [
-     btop foot git go-musicfox  libnotify materialgram
-      brightnessctl mpvpaper  miyu pcmanfm qq tree voicefox vscode wget
- pycharm  pkgs.python3 google-chrome (inputs.zen-browser.packages.${stdenv.hostPlatform.system}.default)
+     btop foot git go-musicfox  libnotify
+     brightnessctl mpvpaper  miyu pcmanfm qq tree voicefox vscode wget
+ pycharm  pkgs.python3 google-chrome
     ];
 
     home.sessionPath = [ "$HOME/.local/bin" "/etc/profiles/per-user/lk/bin" ];
@@ -78,7 +78,7 @@ in
 
   programs.niri = { enable = true; package = pkgs.niri; };
   services.upower.enable = true;
-  programs.noctalia = { enable = true; package = pkgs.noctalia; };
+  programs.noctalia = { enable = true; package = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default; };
 
   xdg.portal = {
     enable = true;

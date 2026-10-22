@@ -1,5 +1,6 @@
 { pkgs, lib, ... }:
 {
+  hardware.bluetooth.enable = true;
   imports = [
     ./iwd.nix
   ];

@@ -2,6 +2,8 @@
 
 {
   nix = {
+    daemonCPUSchedPolicy = "batch";
+    daemonIOSchedClass = "best-effort";
     settings = {
       substituters = [
         "https://cache.nixos.org"
@@ -16,8 +18,8 @@
       experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
       builders-use-substitutes = true;
-      max-jobs = "auto";
-      cores = 0;
+      max-jobs = 1;
+      cores = 4;
       connect-timeout = 5;
       fallback = true;
     };
