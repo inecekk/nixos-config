@@ -68,11 +68,10 @@ in
     fcitx5 = {
       addons = with pkgs; [
         fcitx5-gtk
-        qt6Packages.fcitx5-chinese-addons   # 中文引擎
-        qt6Packages.fcitx5-configtool       # GUI 配置工具
+        qt6Packages.fcitx5-chinese-addons   
       ];
       waylandFrontend = true;
-      ignoreUserConfig = false;   # 保留 ~/.config/fcitx5 控制权
+      ignoreUserConfig = false;   
     };
   };
 
